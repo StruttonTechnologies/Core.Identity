@@ -12,7 +12,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ST.Core.Identity.Application\ST.Core.Identity.Application.csproj" />
     <ProjectReference Include="..\ST.Core.Identity.Domain\ST.Core.Identity.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Authorization\" />
   </ItemGroup>
 
 </Project>
