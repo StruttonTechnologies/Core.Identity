@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using Microsoft.AspNetCore.Identity;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ST.Core.Identity.Domain.Authentication.Interfaces.User
@@ -10,29 +11,8 @@ namespace ST.Core.Identity.Domain.Authentication.Interfaces.User
     public interface IUserUpdater<TUser>
         where TUser : class
     {
-        /// <summary>
-        /// Updates the specified user asynchronously.
-        /// </summary>
-        Task<TUser> UpdateAsync(TUser user, CancellationToken cancellationToken = default);
-
-        /// <summary>
-        /// Updates the password for the specified user asynchronously.
-        /// </summary>
-        Task<bool> UpdatePasswordAsync(TUser user, string newPassword, CancellationToken cancellationToken = default);
-
-        /// <summary>
-        /// Updates the email for the specified user asynchronously.
-        /// </summary>
-        Task<bool> UpdateEmailAsync(TUser user, string newEmail, CancellationToken cancellationToken = default);
-
-        /// <summary>
-        /// Updates the username for the specified user asynchronously.
-        /// </summary>
-        Task<bool> UpdateUsernameAsync(TUser user, string newUsername, CancellationToken cancellationToken = default);
-
-        /// <summary>
-        /// Deletes the specified user asynchronously.
-        /// </summary>
-        Task<bool> DeleteAsync(TUser user, CancellationToken cancellationToken = default);
+        Task<IdentityResult> UpdateEmailAsync(TUser user, string newEmail, CancellationToken cancellationToken);
+        Task<IdentityResult> UpdateUsernameAsync(TUser user, string newUsername, CancellationToken cancellationToken);
+        Task<IdentityResult> UpdatePhoneNumberAsync(TUser user, string newPhoneNumber, CancellationToken cancellationToken);
     }
 }
