@@ -27,6 +27,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ST.Core.Identity.Dtos", "ST
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ST.Core.Identity.DI", "ST.Core.Identity.DI\ST.Core.Identity.DI.csproj", "{58CDD0C8-EDF2-4FB1-BD75-2D538BF1B08B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ST.Core.Identity.Testing.Toolkit", "ST.Core.Identity.Testing.Toolkit\ST.Core.Identity.Testing.Toolkit.csproj", "{102B1639-A821-406C-B55A-83B07A9471DA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -73,6 +75,10 @@ Global
 		{58CDD0C8-EDF2-4FB1-BD75-2D538BF1B08B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{58CDD0C8-EDF2-4FB1-BD75-2D538BF1B08B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{58CDD0C8-EDF2-4FB1-BD75-2D538BF1B08B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{102B1639-A821-406C-B55A-83B07A9471DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{102B1639-A821-406C-B55A-83B07A9471DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{102B1639-A821-406C-B55A-83B07A9471DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{102B1639-A821-406C-B55A-83B07A9471DA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -88,6 +94,7 @@ Global
 		{C9F24CDC-3F2E-48CB-8F35-D9C441DE01B5} = {5A05A583-4CCE-498A-B3A9-AF370EC14DAF}
 		{344C756C-CD02-4038-855A-2DBC50FAA013} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{58CDD0C8-EDF2-4FB1-BD75-2D538BF1B08B} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{102B1639-A821-406C-B55A-83B07A9471DA} = {5A05A583-4CCE-498A-B3A9-AF370EC14DAF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5A6B4083-2ADD-4A37-A3C5-3E0CD991968F}

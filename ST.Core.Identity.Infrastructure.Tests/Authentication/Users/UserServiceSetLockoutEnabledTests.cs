@@ -1,0 +1,71 @@
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
+using Moq;
+using ST.Core.Identity.Infrastructure.Authentication.UserManagement;
+using ST.Core.Identity.Testing.Toolkit.Mocks.UserManager.Lockout;
+using ST.Core.Identity.Testing.Toolkit.Models;
+
+namespace ST.Core.Identity.Infrastructure.Tests.Authentication.Users
+{
+    public partial class TestUserServiceTests
+    {
+        [Fact]
+        public async Task SetLockoutEnabledAsync_ReturnsSuccess_WhenSetSuccessful()
+        {
+            var user = new TestUser { UserName = "testuser" };
+            var enabled = true;
+            var userManager = SetLockoutEnabledAsyncMock.WithSuccess();
+            var logger = new Mock<ILogger<UserIdentityService<TestUser>>>();
+            var service = new TestUserIdentityService(userManager.Object, logger.Object);
+
+            var result = await service.SetLockoutEnabledAsync(user, enabled);
+
+            Assert.True(result.Succeeded);
+            userManager.Verify(um => um.SetLockoutEnabledAsync(user, enabled), Times.Once);
+        }
+
+        [Fact]
+        public async Task SetLockoutEnabledAsync_ReturnsFailed_WhenUserManagerReturnsFailed()
+        {
+            var user = new TestUser { UserName = "testuser" };
+            var enabled = true;
+            var error = new IdentityError { Description = "Set lockout failed." };
+            var userManager = SetLockoutEnabledAsyncMock.WithFailure(error.Description);
+            var logger = new Mock<ILogger<UserIdentityService<TestUser>>>();
+            var service = new TestUserIdentityService(userManager.Object, logger.Object);
+
+            var result = await service.SetLockoutEnabledAsync(user, enabled);
+
+            Assert.False(result.Succeeded);
+            Assert.Contains(result.Errors, e => e.Description == "Set lockout failed.");
+            userManager.Verify(um => um.SetLockoutEnabledAsync(user, enabled), Times.Once);
+        }
+
+        [Fact]
+        public async Task SetLockoutEnabledAsync_ReturnsFailed_WhenUserManagerThrows()
+        {
+            var user = new TestUser { UserName = "testuser" };
+            var enabled = true;
+            var userManager = SetLockoutEnabledAsyncMock.WithException(new InvalidOperationException("Simulated failure"));
+            var logger = new Mock<ILogger<UserIdentityService<TestUser>>>();
+            var service = new TestUserIdentityService(userManager.Object, logger.Object);
+
+            var result = await service.SetLockoutEnabledAsync(user, enabled);
+
+            Assert.False(result.Succeeded);
+            Assert.Contains(result.Errors, e => e.Description.Contains("Simulated failure"));
+            userManager.Verify(um => um.SetLockoutEnabledAsync(user, enabled), Times.Once);
+        }
+
+        [Fact]
+        public async Task SetLockoutEnabledAsync_ThrowsArgumentNullException_WhenUserIsNull()
+        {
+            var enabled = true;
+            var userManager = SetLockoutEnabledAsyncMock.WithSuccess();
+            var logger = new Mock<ILogger<UserIdentityService<TestUser>>>();
+            var service = new TestUserIdentityService(userManager.Object, logger.Object);
+
+            await Assert.ThrowsAsync<ArgumentNullException>(() => service.SetLockoutEnabledAsync(null!, enabled));
+        }
+    }
+}
