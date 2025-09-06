@@ -1,0 +1,7 @@
+using MediatR;
+using ST.Core.Identity.Dtos.Authorization.Claims;
+
+namespace ST.Core.Identity.Application.Contracts.Authorization.Claims.Commands
+{
+    public record AddRoleClaimCommand(AddRoleClaimRequestDto Dto) : IRequest<ReplaceClaimRequestDto>;
+}
