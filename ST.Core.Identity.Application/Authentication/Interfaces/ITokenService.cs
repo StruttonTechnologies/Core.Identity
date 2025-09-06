@@ -1,27 +1,32 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ST.Core.Identity.Application.Authentication.Interfaces
 {
+    /// <summary>
+    /// Defines operations for generating and validating JWT tokens.
+    /// </summary>
     public interface ITokenService
     {
         /// <summary>
-        /// Generates a JWT token from a ClaimsPrincipal.
+        /// Generates a JWT token from the provided ClaimsPrincipal using configured options.
         /// </summary>
-        string GenerateToken(ClaimsPrincipal principal, DateTime expiresAt);
+        /// <param name="principal">The authenticated user principal.</param>
+        /// <returns>A signed JWT token string.</returns>
+        string GenerateToken(ClaimsPrincipal principal);
 
         /// <summary>
-        /// Parses a JWT token and returns the ClaimsPrincipal.
+        /// Validates a JWT token and returns the associated ClaimsPrincipal, or null if invalid.
         /// </summary>
-        ClaimsPrincipal ValidateToken(string token);
+        /// <param name="token">The JWT token string to validate.</param>
+        /// <returns>The ClaimsPrincipal if valid; otherwise, null.</returns>
+        ClaimsPrincipal? ValidateToken(string token);
 
         /// <summary>
-        /// Returns the expiration time for a new token.
+        /// Extracts the expiration timestamp from a JWT token.
         /// </summary>
-        DateTime GetExpiration();
+        /// <param name="token">The JWT token string.</param>
+        /// <returns>The expiration DateTime if available; otherwise, null.</returns>
+        DateTime? GetExpiration(string token);
     }
 }

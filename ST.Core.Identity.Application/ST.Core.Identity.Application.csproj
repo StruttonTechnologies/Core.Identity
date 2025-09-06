@@ -21,7 +21,6 @@
 
   <ItemGroup>
     <Folder Include="Authentication\Handlers\" />
-    <Folder Include="Authentication\Services\" />
     <Folder Include="Authorization\" />
   </ItemGroup>
 
