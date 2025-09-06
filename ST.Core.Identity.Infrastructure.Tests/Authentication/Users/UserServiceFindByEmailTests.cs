@@ -16,7 +16,7 @@ namespace ST.Core.Identity.Infrastructure.Tests.Authentication.Users
             var email = "testuser@example.com";
             var user = new TestUser { Email = email };
             var userManager = FindByEmailAsyncMock.WithUser(user);
-            var logger = new Mock<ILogger<UserIdentityService<TestUser>>>();
+            var logger = new Mock<ILogger<AuthenticationUserService<TestUser>>>();
             var service = new TestUserIdentityService(userManager.Object, logger.Object);
 
             // Act
@@ -33,7 +33,7 @@ namespace ST.Core.Identity.Infrastructure.Tests.Authentication.Users
             // Arrange
             var email = "notfound@example.com";
             var userManager = FindByEmailAsyncMock.WithNull();
-            var logger = new Mock<ILogger<UserIdentityService<TestUser>>>();
+            var logger = new Mock<ILogger<AuthenticationUserService<TestUser>>>();
             var service = new TestUserIdentityService(userManager.Object, logger.Object);
 
             // Act
@@ -50,7 +50,7 @@ namespace ST.Core.Identity.Infrastructure.Tests.Authentication.Users
             // Arrange
             var email = "error@example.com";
             var userManager = FindByEmailAsyncMock.WithException(new InvalidOperationException("Simulated failure"));
-            var logger = new Mock<ILogger<UserIdentityService<TestUser>>>();
+            var logger = new Mock<ILogger<AuthenticationUserService<TestUser>>>();
             var service = new TestUserIdentityService(userManager.Object, logger.Object);
 
             // Act
@@ -68,7 +68,7 @@ namespace ST.Core.Identity.Infrastructure.Tests.Authentication.Users
         {
             // Arrange
             var userManager = FindByEmailAsyncMock.WithNull();
-            var logger = new Mock<ILogger<UserIdentityService<TestUser>>>();
+            var logger = new Mock<ILogger<AuthenticationUserService<TestUser>>>();
             var service = new TestUserIdentityService(userManager.Object, logger.Object);
 
             // Act & Assert

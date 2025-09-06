@@ -16,7 +16,7 @@ namespace ST.Core.Identity.Infrastructure.Tests.Authentication.Users
             var token = "token";
             var newPassword = "newPassword";
             var userManager = ResetPasswordAsyncMock.WithSuccess();
-            var logger = new Mock<ILogger<UserIdentityService<TestUser>>>();
+            var logger = new Mock<ILogger<AuthenticationUserService<TestUser>>>();
             var service = new TestUserIdentityService(userManager.Object, logger.Object);
 
             var result = await service.ResetPasswordAsync(user, token, newPassword);
@@ -33,7 +33,7 @@ namespace ST.Core.Identity.Infrastructure.Tests.Authentication.Users
             var newPassword = "newPassword";
             var error = new IdentityError { Description = "Reset failed." };
             var userManager = ResetPasswordAsyncMock.WithFailure(error.Description);
-            var logger = new Mock<ILogger<UserIdentityService<TestUser>>>();
+            var logger = new Mock<ILogger<AuthenticationUserService<TestUser>>>();
             var service = new TestUserIdentityService(userManager.Object, logger.Object);
 
             var result = await service.ResetPasswordAsync(user, token, newPassword);
@@ -50,7 +50,7 @@ namespace ST.Core.Identity.Infrastructure.Tests.Authentication.Users
             var token = "reset-token";
             var newPassword = "newPassword";
             var userManager = ResetPasswordAsyncMock.WithException(new InvalidOperationException("Simulated failure"));
-            var logger = new Mock<ILogger<UserIdentityService<TestUser>>>();
+            var logger = new Mock<ILogger<AuthenticationUserService<TestUser>>>();
             var service = new TestUserIdentityService(userManager.Object, logger.Object);
 
             var result = await service.ResetPasswordAsync(user, token, newPassword);
@@ -69,7 +69,7 @@ namespace ST.Core.Identity.Infrastructure.Tests.Authentication.Users
         public async Task ResetPasswordAsync_ThrowsForInvalidArguments(string? userType, string? token, string? newPassword, Type expectedException)
         {
             var userManager = ResetPasswordAsyncMock.WithSuccess();
-            var logger = new Mock<ILogger<UserIdentityService<TestUser>>>();
+            var logger = new Mock<ILogger<AuthenticationUserService<TestUser>>>();
             var service = new TestUserIdentityService(userManager.Object, logger.Object);
 
             TestUser? user = userType == null ? null : new TestUser { UserName = "testuser" };

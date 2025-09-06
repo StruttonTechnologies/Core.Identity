@@ -15,7 +15,7 @@ namespace ST.Core.Identity.Infrastructure.Tests.Authentication.Users
             var user = new TestUser { UserName = "testuser" };
             var lockoutEnd = DateTimeOffset.UtcNow.AddDays(1);
             var userManager = SetLockoutEndDateAsyncMock.WithSuccess();
-            var logger = new Mock<ILogger<UserIdentityService<TestUser>>>();
+            var logger = new Mock<ILogger<AuthenticationUserService<TestUser>>>();
             var service = new TestUserIdentityService(userManager.Object, logger.Object);
 
             var result = await service.SetLockoutEndDateAsync(user, lockoutEnd);
@@ -31,7 +31,7 @@ namespace ST.Core.Identity.Infrastructure.Tests.Authentication.Users
             var lockoutEnd = DateTimeOffset.UtcNow.AddDays(1);
             var error = new IdentityError { Description = "Set lockout end date failed." };
             var userManager = SetLockoutEndDateAsyncMock.WithFailure(error.Description);
-            var logger = new Mock<ILogger<UserIdentityService<TestUser>>>();
+            var logger = new Mock<ILogger<AuthenticationUserService<TestUser>>>();
             var service = new TestUserIdentityService(userManager.Object, logger.Object);
 
             var result = await service.SetLockoutEndDateAsync(user, lockoutEnd);
@@ -47,7 +47,7 @@ namespace ST.Core.Identity.Infrastructure.Tests.Authentication.Users
             var user = new TestUser { UserName = "testuser" };
             var endDate = DateTimeOffset.UtcNow.AddDays(1);
             var userManager = SetLockoutEndDateAsyncMock.WithException(new InvalidOperationException("Simulated failure"));
-            var logger = new Mock<ILogger<UserIdentityService<TestUser>>>();
+            var logger = new Mock<ILogger<AuthenticationUserService<TestUser>>>();
             var service = new TestUserIdentityService(userManager.Object, logger.Object);
 
             var result = await service.SetLockoutEndDateAsync(user, endDate);
@@ -62,7 +62,7 @@ namespace ST.Core.Identity.Infrastructure.Tests.Authentication.Users
         {
             var lockoutEnd = DateTimeOffset.UtcNow.AddDays(1);
             var userManager = SetLockoutEndDateAsyncMock.WithSuccess();
-            var logger = new Mock<ILogger<UserIdentityService<TestUser>>>();
+            var logger = new Mock<ILogger<AuthenticationUserService<TestUser>>>();
             var service = new TestUserIdentityService(userManager.Object, logger.Object);
 
             await Assert.ThrowsAsync<ArgumentNullException>(() => service.SetLockoutEndDateAsync(null!, lockoutEnd));

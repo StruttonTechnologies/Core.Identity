@@ -9,7 +9,7 @@ namespace ST.Core.Identity.Infrastructure.Authentication.UserManagement
         /// Provides base functionality for user services, including registration, lookup, and update operations.
         /// </summary>
         /// <typeparam name="TUser">The user entity type, derived from IdentityUser.</typeparam>
-        public abstract partial class UserIdentityService<TUser> :
+        public abstract partial class AuthenticationUserService<TUser> :
             IUserLookupService<TUser>,
             //IUserRegistration<TUser>,
             IUserUpdater<TUser>,
@@ -23,15 +23,15 @@ namespace ST.Core.Identity.Infrastructure.Authentication.UserManagement
             /// The user manager instance used for user operations.
             /// </summary>
             protected readonly UserManager<TUser> _userManager;
-            protected readonly ILogger<UserIdentityService<TUser>> _logger;
+            protected readonly ILogger<AuthenticationUserService<TUser>> _logger;
 
 
             /// <summary>
-            /// Initializes a new instance of the <see cref="UserIdentityService{TUser}"/> class.
+            /// Initializes a new instance of the <see cref="AuthenticationUserService{TUser}"/> class.
             /// </summary>
             /// <param name="userManager">The user manager to use for user operations.</param>
             /// <exception cref="ArgumentNullException">Thrown when <paramref name="userManager"/> is null.</exception>
-            protected UserIdentityService(UserManager<TUser> userManager, ILogger<UserIdentityService<TUser>> logger)
+            protected AuthenticationUserService(UserManager<TUser> userManager, ILogger<AuthenticationUserService<TUser>> logger)
             {
                 _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
                 _logger = logger ?? throw new ArgumentNullException(nameof(logger));

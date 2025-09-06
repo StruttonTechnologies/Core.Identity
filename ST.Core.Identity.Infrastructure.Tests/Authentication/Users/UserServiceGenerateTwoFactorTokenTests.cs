@@ -16,7 +16,7 @@ namespace ST.Core.Identity.Infrastructure.Tests.Authentication.Users
             var tokenProvider = "provider";
             var expectedToken = "2fa-token";
             var userManager = GenerateTwoFactorTokenAsyncMock.WithToken(expectedToken);
-            var logger = new Mock<ILogger<UserIdentityService<TestUser>>>();
+            var logger = new Mock<ILogger<AuthenticationUserService<TestUser>>>();
             var service = new TestUserIdentityService(userManager.Object, logger.Object);
 
             var result = await service.GenerateTwoFactorTokenAsync(user, tokenProvider);
@@ -31,7 +31,7 @@ namespace ST.Core.Identity.Infrastructure.Tests.Authentication.Users
             var user = new TestUser { UserName = "testuser" };
             var tokenProvider = "provider";
             var userManager = GenerateTwoFactorTokenAsyncMock.WithException(new InvalidOperationException("Simulated failure"));
-            var logger = new Mock<ILogger<UserIdentityService<TestUser>>>();
+            var logger = new Mock<ILogger<AuthenticationUserService<TestUser>>>();
             var service = new TestUserIdentityService(userManager.Object, logger.Object);
 
             var result = await service.GenerateTwoFactorTokenAsync(user, tokenProvider);
@@ -47,7 +47,7 @@ namespace ST.Core.Identity.Infrastructure.Tests.Authentication.Users
         public async Task GenerateTwoFactorTokenAsync_ThrowsForInvalidArguments(string? userType, string? tokenProvider, Type expectedException)
         {
             var userManager = GenerateTwoFactorTokenAsyncMock.WithToken("any-token");
-            var logger = new Mock<ILogger<UserIdentityService<TestUser>>>();
+            var logger = new Mock<ILogger<AuthenticationUserService<TestUser>>>();
             var service = new TestUserIdentityService(userManager.Object, logger.Object);
 
             TestUser? user = userType == null ? null : new TestUser { UserName = "testuser" };

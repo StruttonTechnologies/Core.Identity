@@ -15,7 +15,7 @@ namespace ST.Core.Identity.Infrastructure.Tests.Authentication.Users
             var user = new TestUser { UserName = "testuser" };
             var enabled = true;
             var userManager = SetTwoFactorEnabledAsyncMock.WithSuccess();
-            var logger = new Mock<ILogger<UserIdentityService<TestUser>>>();
+            var logger = new Mock<ILogger<AuthenticationUserService<TestUser>>>();
             var service = new TestUserIdentityService(userManager.Object, logger.Object);
 
             var result = await service.SetTwoFactorEnabledAsync(user, enabled);
@@ -31,7 +31,7 @@ namespace ST.Core.Identity.Infrastructure.Tests.Authentication.Users
             var enabled = true;
             var error = new IdentityError { Description = "Set two-factor failed." };
             var userManager = SetTwoFactorEnabledAsyncMock.WithFailure(error.Description);
-            var logger = new Mock<ILogger<UserIdentityService<TestUser>>>();
+            var logger = new Mock<ILogger<AuthenticationUserService<TestUser>>>();
             var service = new TestUserIdentityService(userManager.Object, logger.Object);
 
             var result = await service.SetTwoFactorEnabledAsync(user, enabled);
@@ -47,7 +47,7 @@ namespace ST.Core.Identity.Infrastructure.Tests.Authentication.Users
             var user = new TestUser { UserName = "testuser" };
             var enabled = true;
             var userManager = SetTwoFactorEnabledAsyncMock.WithException(new InvalidOperationException("Simulated failure"));
-            var logger = new Mock<ILogger<UserIdentityService<TestUser>>>();
+            var logger = new Mock<ILogger<AuthenticationUserService<TestUser>>>();
             var service = new TestUserIdentityService(userManager.Object, logger.Object);
 
             var result = await service.SetTwoFactorEnabledAsync(user, enabled);
@@ -62,7 +62,7 @@ namespace ST.Core.Identity.Infrastructure.Tests.Authentication.Users
         {
             var enabled = true;
             var userManager = SetTwoFactorEnabledAsyncMock.WithSuccess();
-            var logger = new Mock<ILogger<UserIdentityService<TestUser>>>();
+            var logger = new Mock<ILogger<AuthenticationUserService<TestUser>>>();
             var service = new TestUserIdentityService(userManager.Object, logger.Object);
 
             await Assert.ThrowsAsync<ArgumentNullException>(() => service.SetTwoFactorEnabledAsync(null!, enabled));

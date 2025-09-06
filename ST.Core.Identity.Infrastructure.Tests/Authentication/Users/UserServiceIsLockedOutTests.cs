@@ -15,7 +15,7 @@ namespace ST.Core.Identity.Infrastructure.Tests.Authentication.Users
             var user = new TestUser { UserName = "testuser" };
             var cancellationToken = CancellationToken.None;
             var userManager = IsLockedOutAsyncMock.WithValue(true);
-            var logger = new Mock<ILogger<UserIdentityService<TestUser>>>();
+            var logger = new Mock<ILogger<AuthenticationUserService<TestUser>>>();
             var service = new TestUserIdentityService(userManager.Object, logger.Object);
 
             var result = await service.IsLockedOutAsync(user, cancellationToken);
@@ -30,7 +30,7 @@ namespace ST.Core.Identity.Infrastructure.Tests.Authentication.Users
             var user = new TestUser { UserName = "testuser" };
             var cancellationToken = CancellationToken.None;
             var userManager = IsLockedOutAsyncMock.WithValue(false);
-            var logger = new Mock<ILogger<UserIdentityService<TestUser>>>();
+            var logger = new Mock<ILogger<AuthenticationUserService<TestUser>>>();
             var service = new TestUserIdentityService(userManager.Object, logger.Object);
 
             var result = await service.IsLockedOutAsync(user, cancellationToken);
@@ -45,7 +45,7 @@ namespace ST.Core.Identity.Infrastructure.Tests.Authentication.Users
             var user = new TestUser { UserName = "testuser" };
             var cancellationToken = CancellationToken.None;
             var userManager = IsLockedOutAsyncMock.WithException(new InvalidOperationException("Simulated failure"));
-            var logger = new Mock<ILogger<UserIdentityService<TestUser>>>();
+            var logger = new Mock<ILogger<AuthenticationUserService<TestUser>>>();
             var service = new TestUserIdentityService(userManager.Object, logger.Object);
 
             var result = await service.IsLockedOutAsync(user, cancellationToken);
@@ -59,7 +59,7 @@ namespace ST.Core.Identity.Infrastructure.Tests.Authentication.Users
         {
             var cancellationToken = CancellationToken.None;
             var userManager = IsLockedOutAsyncMock.WithValue(true);
-            var logger = new Mock<ILogger<UserIdentityService<TestUser>>>();
+            var logger = new Mock<ILogger<AuthenticationUserService<TestUser>>>();
             var service = new TestUserIdentityService(userManager.Object, logger.Object);
 
             await Assert.ThrowsAsync<ArgumentNullException>(() => service.IsLockedOutAsync(null!, cancellationToken));

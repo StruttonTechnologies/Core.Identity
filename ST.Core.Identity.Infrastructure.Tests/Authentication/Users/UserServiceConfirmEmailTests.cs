@@ -16,7 +16,7 @@ namespace ST.Core.Identity.Infrastructure.Tests.Authentication.Users
             var user = new TestUser { UserName = "testuser" };
             var token = "valid-token";
             var userManager = ConfirmEmailAsyncMock.WithSuccess();
-            var logger = new Mock<ILogger<UserIdentityService<TestUser>>>();
+            var logger = new Mock<ILogger<AuthenticationUserService<TestUser>>>();
             var service = new TestUserIdentityService(userManager.Object, logger.Object);
 
             // Act
@@ -35,7 +35,7 @@ namespace ST.Core.Identity.Infrastructure.Tests.Authentication.Users
             var token = "invalid-token";
             var error = new IdentityError { Description = "Email confirmation failed." };
             var userManager = ConfirmEmailAsyncMock.WithFailure(error.Description);
-            var logger = new Mock<ILogger<UserIdentityService<TestUser>>>();
+            var logger = new Mock<ILogger<AuthenticationUserService<TestUser>>>();
             var service = new TestUserIdentityService(userManager.Object, logger.Object);
 
             // Act
@@ -54,7 +54,7 @@ namespace ST.Core.Identity.Infrastructure.Tests.Authentication.Users
             var user = new TestUser { UserName = "testuser" };
             var token = "any-token";
             var userManager = ConfirmEmailAsyncMock.WithCustomResult((u, t) => throw new InvalidOperationException("Simulated failure"));
-            var logger = new Mock<ILogger<UserIdentityService<TestUser>>>();
+            var logger = new Mock<ILogger<AuthenticationUserService<TestUser>>>();
             var service = new TestUserIdentityService(userManager.Object, logger.Object);
 
             // Act
@@ -74,7 +74,7 @@ namespace ST.Core.Identity.Infrastructure.Tests.Authentication.Users
         {
             // Arrange
             var userManager = ConfirmEmailAsyncMock.WithSuccess();
-            var logger = new Mock<ILogger<UserIdentityService<TestUser>>>();
+            var logger = new Mock<ILogger<AuthenticationUserService<TestUser>>>();
             var service = new TestUserIdentityService(userManager.Object, logger.Object);
 
             TestUser? user = userType == null ? null : new TestUser { UserName = "testuser" };

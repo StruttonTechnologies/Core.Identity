@@ -15,7 +15,7 @@ namespace ST.Core.Identity.Infrastructure.Tests.Authentication.Users
             // Arrange
             var user = new TestUser { UserName = "testuser", Id = "some-id" };
             var userManager = AccessFailedAsyncMock.WithSuccess();
-            var logger = new Mock<ILogger<UserIdentityService<TestUser>>>();
+            var logger = new Mock<ILogger<AuthenticationUserService<TestUser>>>();
             var service = new TestUserIdentityService(userManager.Object, logger.Object);
 
             // Act
@@ -32,7 +32,7 @@ namespace ST.Core.Identity.Infrastructure.Tests.Authentication.Users
             // Arrange
             var user = new TestUser { UserName = "testuser", Id = "some-id" };
             var userManager = AccessFailedAsyncMock.WithException(new InvalidOperationException("Simulated failure"));
-            var logger = new Mock<ILogger<UserIdentityService<TestUser>>>();
+            var logger = new Mock<ILogger<AuthenticationUserService<TestUser>>>();
             var service = new TestUserIdentityService(userManager.Object, logger.Object);
 
             // Act
@@ -49,7 +49,7 @@ namespace ST.Core.Identity.Infrastructure.Tests.Authentication.Users
         {
             // Arrange
             var userManager = AccessFailedAsyncMock.WithSuccess();
-            var logger = new Mock<ILogger<UserIdentityService<TestUser>>>();
+            var logger = new Mock<ILogger<AuthenticationUserService<TestUser>>>();
             var service = new TestUserIdentityService(userManager.Object, logger.Object);
 
             // Act & Assert

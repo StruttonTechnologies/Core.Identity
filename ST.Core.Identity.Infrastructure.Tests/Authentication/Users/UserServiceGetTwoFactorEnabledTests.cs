@@ -15,7 +15,7 @@ namespace ST.Core.Identity.Infrastructure.Tests.Authentication.Users
             var user = new TestUser { UserName = "testuser" };
             var cancellationToken = CancellationToken.None;
             var userManager = GetTwoFactorEnabledAsyncMock.WithValue(true);
-            var logger = new Mock<ILogger<UserIdentityService<TestUser>>>();
+            var logger = new Mock<ILogger<AuthenticationUserService<TestUser>>>();
             var service = new TestUserIdentityService(userManager.Object, logger.Object);
 
             var result = await service.GetTwoFactorEnabledAsync(user, cancellationToken);
@@ -30,7 +30,7 @@ namespace ST.Core.Identity.Infrastructure.Tests.Authentication.Users
             var user = new TestUser { UserName = "testuser" };
             var cancellationToken = CancellationToken.None;
             var userManager = GetTwoFactorEnabledAsyncMock.WithValue(false);
-            var logger = new Mock<ILogger<UserIdentityService<TestUser>>>();
+            var logger = new Mock<ILogger<AuthenticationUserService<TestUser>>>();
             var service = new TestUserIdentityService(userManager.Object, logger.Object);
 
             var result = await service.GetTwoFactorEnabledAsync(user, cancellationToken);
@@ -45,7 +45,7 @@ namespace ST.Core.Identity.Infrastructure.Tests.Authentication.Users
             var user = new TestUser { UserName = "testuser" };
             var cancellationToken = CancellationToken.None;
             var userManager = GetTwoFactorEnabledAsyncMock.WithException(new InvalidOperationException("Simulated failure"));
-            var logger = new Mock<ILogger<UserIdentityService<TestUser>>>();
+            var logger = new Mock<ILogger<AuthenticationUserService<TestUser>>>();
             var service = new TestUserIdentityService(userManager.Object, logger.Object);
 
             var result = await service.GetTwoFactorEnabledAsync(user, cancellationToken);
@@ -59,7 +59,7 @@ namespace ST.Core.Identity.Infrastructure.Tests.Authentication.Users
         {
             var cancellationToken = CancellationToken.None;
             var userManager = GetTwoFactorEnabledAsyncMock.WithValue(true);
-            var logger = new Mock<ILogger<UserIdentityService<TestUser>>>();
+            var logger = new Mock<ILogger<AuthenticationUserService<TestUser>>>();
             var service = new TestUserIdentityService(userManager.Object, logger.Object);
 
             await Assert.ThrowsAsync<ArgumentNullException>(() => service.GetTwoFactorEnabledAsync(null!, cancellationToken));

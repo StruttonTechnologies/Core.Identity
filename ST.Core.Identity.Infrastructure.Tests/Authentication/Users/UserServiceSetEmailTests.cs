@@ -15,7 +15,7 @@ namespace ST.Core.Identity.Infrastructure.Tests.Authentication.Users
             var user = new TestUser { UserName = "testuser" };
             var email = "user@example.com";
             var userManager = SetEmailAsyncMock.WithSuccess();
-            var logger = new Mock<ILogger<UserIdentityService<TestUser>>>();
+            var logger = new Mock<ILogger<AuthenticationUserService<TestUser>>>();
             var service = new TestUserIdentityService(userManager.Object, logger.Object);
 
             var result = await service.SetEmailAsync(user, email);
@@ -31,7 +31,7 @@ namespace ST.Core.Identity.Infrastructure.Tests.Authentication.Users
             var email = "user@example.com";
             var error = new IdentityError { Description = "Set email failed." };
             var userManager = SetEmailAsyncMock.WithFailure(error.Description);
-            var logger = new Mock<ILogger<UserIdentityService<TestUser>>>();
+            var logger = new Mock<ILogger<AuthenticationUserService<TestUser>>>();
             var service = new TestUserIdentityService(userManager.Object, logger.Object);
 
             var result = await service.SetEmailAsync(user, email);
@@ -47,7 +47,7 @@ namespace ST.Core.Identity.Infrastructure.Tests.Authentication.Users
             var user = new TestUser { UserName = "testuser" };
             var newEmail = "new@example.com";
             var userManager = SetEmailAsyncMock.WithException(new InvalidOperationException("Simulated failure"));
-            var logger = new Mock<ILogger<UserIdentityService<TestUser>>>();
+            var logger = new Mock<ILogger<AuthenticationUserService<TestUser>>>();
             var service = new TestUserIdentityService(userManager.Object, logger.Object);
 
             var result = await service.SetEmailAsync(user, newEmail);
@@ -64,7 +64,7 @@ namespace ST.Core.Identity.Infrastructure.Tests.Authentication.Users
         public async Task SetEmailAsync_ThrowsForInvalidArguments(string? userType, string? email, Type expectedException)
         {
             var userManager = SetEmailAsyncMock.WithSuccess();
-            var logger = new Mock<ILogger<UserIdentityService<TestUser>>>();
+            var logger = new Mock<ILogger<AuthenticationUserService<TestUser>>>();
             var service = new TestUserIdentityService(userManager.Object, logger.Object);
 
             TestUser? user = userType == null ? null : new TestUser { UserName = "testuser" };

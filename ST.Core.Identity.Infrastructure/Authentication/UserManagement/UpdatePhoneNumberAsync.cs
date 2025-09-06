@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ST.Core.Identity.Infrastructure.Authentication.UserManagement
 {
-    public abstract partial class UserIdentityService<TUser>
+    public abstract partial class AuthenticationUserService<TUser>
         where TUser : IdentityUser, new() 
     {
         /// <summary>

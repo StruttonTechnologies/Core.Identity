@@ -16,7 +16,7 @@ namespace ST.Core.Identity.Infrastructure.Tests.Authentication.Users
             var currentPassword = "OldP@ssword123";
             var newPassword = "NewP@ssword456";
             var userManager = ChangePasswordAsyncMock.WithSuccess();
-            var logger = new Mock<ILogger<UserIdentityService<TestUser>>>();
+            var logger = new Mock<ILogger<AuthenticationUserService<TestUser>>>();
             var service = new TestUserIdentityService(userManager.Object, logger.Object);
 
             // Act
@@ -36,7 +36,7 @@ namespace ST.Core.Identity.Infrastructure.Tests.Authentication.Users
             var newPassword = "NewP@ssword456";
             var errorDescription = "Password change failed.";
             var userManager = ChangePasswordAsyncMock.WithFailure(errorDescription);
-            var logger = new Mock<ILogger<UserIdentityService<TestUser>>>();
+            var logger = new Mock<ILogger<AuthenticationUserService<TestUser>>>();
             var service = new TestUserIdentityService(userManager.Object, logger.Object);
 
             // Act
@@ -56,7 +56,7 @@ namespace ST.Core.Identity.Infrastructure.Tests.Authentication.Users
             var currentPassword = "OldP@ssword123";
             var newPassword = "NewP@ssword456";
             var userManager = ChangePasswordAsyncMock.WithCustomResult((_, _, _) => throw new InvalidOperationException("Simulated failure"));
-            var logger = new Mock<ILogger<UserIdentityService<TestUser>>>();
+            var logger = new Mock<ILogger<AuthenticationUserService<TestUser>>>();
             var service = new TestUserIdentityService(userManager.Object, logger.Object);
 
             // Act
@@ -78,7 +78,7 @@ namespace ST.Core.Identity.Infrastructure.Tests.Authentication.Users
         {
             // Arrange
             var userManager = ChangePasswordAsyncMock.WithSuccess();
-            var logger = new Mock<ILogger<UserIdentityService<TestUser>>>();
+            var logger = new Mock<ILogger<AuthenticationUserService<TestUser>>>();
             var service = new TestUserIdentityService(userManager.Object, logger.Object);
 
             TestUser? user = userType == null ? null : new TestUser { UserName = "testuser" };

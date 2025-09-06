@@ -16,7 +16,7 @@ namespace ST.Core.Identity.Infrastructure.Tests.Authentication.Users
             var providerKey = "provider-key";
             var user = new TestUser { UserName = "testuser" };
             var userManager = FindByLoginAsyncMock.WithUser(user);
-            var logger = new Mock<ILogger<UserIdentityService<TestUser>>>();
+            var logger = new Mock<ILogger<AuthenticationUserService<TestUser>>>();
             var service = new TestUserIdentityService(userManager.Object, logger.Object);
 
             var result = await service.FindByLoginAsync(loginProvider, providerKey);
@@ -31,7 +31,7 @@ namespace ST.Core.Identity.Infrastructure.Tests.Authentication.Users
             var loginProvider = "Google";
             var providerKey = "notfound-key";
             var userManager = FindByLoginAsyncMock.WithNull();
-            var logger = new Mock<ILogger<UserIdentityService<TestUser>>>();
+            var logger = new Mock<ILogger<AuthenticationUserService<TestUser>>>();
             var service = new TestUserIdentityService(userManager.Object, logger.Object);
 
             var result = await service.FindByLoginAsync(loginProvider, providerKey);
@@ -46,7 +46,7 @@ namespace ST.Core.Identity.Infrastructure.Tests.Authentication.Users
             var loginProvider = "Google";
             var providerKey = "error-key";
             var userManager = FindByLoginAsyncMock.WithException(new InvalidOperationException("Simulated failure"));
-            var logger = new Mock<ILogger<UserIdentityService<TestUser>>>();
+            var logger = new Mock<ILogger<AuthenticationUserService<TestUser>>>();
             var service = new TestUserIdentityService(userManager.Object, logger.Object);
 
             var result = await service.FindByLoginAsync(loginProvider, providerKey);
@@ -63,7 +63,7 @@ namespace ST.Core.Identity.Infrastructure.Tests.Authentication.Users
         public async Task FindByLoginAsync_ThrowsForInvalidArguments(string? loginProvider, string? providerKey, Type expectedException)
         {
             var userManager = FindByLoginAsyncMock.WithNull();
-            var logger = new Mock<ILogger<UserIdentityService<TestUser>>>();
+            var logger = new Mock<ILogger<AuthenticationUserService<TestUser>>>();
             var service = new TestUserIdentityService(userManager.Object, logger.Object);
 
             await Assert.ThrowsAsync(expectedException, () => service.FindByLoginAsync(loginProvider!, providerKey!));

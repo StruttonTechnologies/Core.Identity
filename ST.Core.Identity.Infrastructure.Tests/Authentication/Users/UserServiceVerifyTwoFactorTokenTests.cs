@@ -20,7 +20,7 @@ namespace ST.Core.Identity.Infrastructure.Tests.Authentication.Users
             var tokenProvider = "provider";
             var token = "token";
             var userManager = VerifyTwoFactorTokenAsyncMock.WithTrue();
-            var logger = new Mock<ILogger<UserIdentityService<TestUser>>>();
+            var logger = new Mock<ILogger<AuthenticationUserService<TestUser>>>();
             var service = new TestUserIdentityService(userManager.Object, logger.Object);
 
             // Act
@@ -39,7 +39,7 @@ namespace ST.Core.Identity.Infrastructure.Tests.Authentication.Users
             var tokenProvider = "provider";
             var token = "invalid";
             var userManager = VerifyTwoFactorTokenAsyncMock.WithFalse();
-            var logger = new Mock<ILogger<UserIdentityService<TestUser>>>();
+            var logger = new Mock<ILogger<AuthenticationUserService<TestUser>>>();
             var service = new TestUserIdentityService(userManager.Object, logger.Object);
 
             // Act
@@ -58,7 +58,7 @@ namespace ST.Core.Identity.Infrastructure.Tests.Authentication.Users
             var tokenProvider = "provider";
             var token = "token";
             var userManager = VerifyTwoFactorTokenAsyncMock.WithCustomResult((_, _, _) => throw new InvalidOperationException("Simulated failure"));
-            var logger = new Mock<ILogger<UserIdentityService<TestUser>>>();
+            var logger = new Mock<ILogger<AuthenticationUserService<TestUser>>>();
             var service = new TestUserIdentityService(userManager.Object, logger.Object);
 
             // Act
@@ -79,7 +79,7 @@ namespace ST.Core.Identity.Infrastructure.Tests.Authentication.Users
         {
             // Arrange
             var userManager = VerifyTwoFactorTokenAsyncMock.WithTrue();
-            var logger = new Mock<ILogger<UserIdentityService<TestUser>>>();
+            var logger = new Mock<ILogger<AuthenticationUserService<TestUser>>>();
             var service = new TestUserIdentityService(userManager.Object, logger.Object);
 
             TestUser? user = userType == null ? null : new TestUser();

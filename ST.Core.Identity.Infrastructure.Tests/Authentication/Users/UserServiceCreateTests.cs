@@ -18,7 +18,7 @@ namespace ST.Core.Identity.Infrastructure.Tests.Authentication.Users
             var password = "SecureP@ssword123";
 
             var userManager = CreateAsyncMock.WithSuccess();
-            var logger = new Mock<ILogger<UserIdentityService<TestUser>>>();
+            var logger = new Mock<ILogger<AuthenticationUserService<TestUser>>>();
             var service = new TestUserIdentityService(userManager.Object, logger.Object);
 
             // Act
@@ -38,7 +38,7 @@ namespace ST.Core.Identity.Infrastructure.Tests.Authentication.Users
             var password = "SecureP@ssword123";
 
             var userManagerMock = CreateAsyncMock.WithFailure("Password too weak");
-            var logger = new Mock<ILogger<UserIdentityService<TestUser>>>();
+            var logger = new Mock<ILogger<AuthenticationUserService<TestUser>>>();
             var service = new TestUserIdentityService(userManagerMock.Object, logger.Object);
 
             // Act & Assert
@@ -58,7 +58,7 @@ namespace ST.Core.Identity.Infrastructure.Tests.Authentication.Users
         {
             // Arrange
             var userManagerMock = MockUserManagerFactory.Create();
-            var logger = new Mock<ILogger<UserIdentityService<TestUser>>>();
+            var logger = new Mock<ILogger<AuthenticationUserService<TestUser>>>();
             var service = new TestUserIdentityService(userManagerMock.Object, logger.Object);
 
             TestUser? user = userType == null ? null : new TestUser { UserName = "testuser" };

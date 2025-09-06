@@ -14,7 +14,7 @@ namespace ST.Core.Identity.Infrastructure.Tests.Authentication.Users
         {
             var user = new TestUser { UserName = "testuser" };
             var userManager = RemovePasswordAsyncMock.WithSuccess();
-            var logger = new Mock<ILogger<UserIdentityService<TestUser>>>();
+            var logger = new Mock<ILogger<AuthenticationUserService<TestUser>>>();
             var service = new TestUserIdentityService(userManager.Object, logger.Object);
 
             var result = await service.RemovePasswordAsync(user);
@@ -29,7 +29,7 @@ namespace ST.Core.Identity.Infrastructure.Tests.Authentication.Users
             var user = new TestUser { UserName = "testuser" };
             var error = new IdentityError { Description = "Password removal failed." };
             var userManager = RemovePasswordAsyncMock.WithFailure(error.Description);
-            var logger = new Mock<ILogger<UserIdentityService<TestUser>>>();
+            var logger = new Mock<ILogger<AuthenticationUserService<TestUser>>>();
             var service = new TestUserIdentityService(userManager.Object, logger.Object);
 
             var result = await service.RemovePasswordAsync(user);
@@ -44,7 +44,7 @@ namespace ST.Core.Identity.Infrastructure.Tests.Authentication.Users
         {
             var user = new TestUser { UserName = "testuser" };
             var userManager = RemovePasswordAsyncMock.WithException(new InvalidOperationException("Simulated failure"));
-            var logger = new Mock<ILogger<UserIdentityService<TestUser>>>();
+            var logger = new Mock<ILogger<AuthenticationUserService<TestUser>>>();
             var service = new TestUserIdentityService(userManager.Object, logger.Object);
 
             var result = await service.RemovePasswordAsync(user);
@@ -58,7 +58,7 @@ namespace ST.Core.Identity.Infrastructure.Tests.Authentication.Users
         public async Task RemovePasswordAsync_ThrowsArgumentNullException_WhenUserIsNull()
         {
             var userManager = RemovePasswordAsyncMock.WithSuccess();
-            var logger = new Mock<ILogger<UserIdentityService<TestUser>>>();
+            var logger = new Mock<ILogger<AuthenticationUserService<TestUser>>>();
             var service = new TestUserIdentityService(userManager.Object, logger.Object);
 
             await Assert.ThrowsAsync<ArgumentNullException>(() => service.RemovePasswordAsync(null!));

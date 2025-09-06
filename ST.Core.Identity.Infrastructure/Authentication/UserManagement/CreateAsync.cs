@@ -11,7 +11,7 @@ namespace ST.Core.Identity.Infrastructure.Authentication.UserManagement
     /// Provides base functionality for user services.
     /// </summary>
     /// <typeparam name="TUser">The type representing a user.</typeparam>
-    public abstract partial class UserIdentityService<TUser> 
+    public abstract partial class AuthenticationUserService<TUser> 
         where TUser : IdentityUser, new()
     {
         /// <summary>

@@ -15,7 +15,7 @@ namespace ST.Core.Identity.Infrastructure.Tests.Authentication.Users
             var user = new TestUser { UserName = "testuser" };
             var expectedToken = "email-token";
             var userManager = GenerateEmailConfirmationTokenAsyncMock.WithToken(expectedToken);
-            var logger = new Mock<ILogger<UserIdentityService<TestUser>>>();
+            var logger = new Mock<ILogger<AuthenticationUserService<TestUser>>>();
             var service = new TestUserIdentityService(userManager.Object, logger.Object);
 
             var result = await service.GenerateEmailConfirmationTokenAsync(user);
@@ -29,7 +29,7 @@ namespace ST.Core.Identity.Infrastructure.Tests.Authentication.Users
         {
             var user = new TestUser { UserName = "testuser" };
             var userManager = GenerateEmailConfirmationTokenAsyncMock.WithException(new InvalidOperationException("Simulated failure"));
-            var logger = new Mock<ILogger<UserIdentityService<TestUser>>>();
+            var logger = new Mock<ILogger<AuthenticationUserService<TestUser>>>();
             var service = new TestUserIdentityService(userManager.Object, logger.Object);
 
             var result = await service.GenerateEmailConfirmationTokenAsync(user);
@@ -43,7 +43,7 @@ namespace ST.Core.Identity.Infrastructure.Tests.Authentication.Users
         public async Task GenerateEmailConfirmationTokenAsync_ThrowsForInvalidArguments(TestUser? user, Type expectedException)
         {
             var userManager = GenerateEmailConfirmationTokenAsyncMock.WithToken("any-token");
-            var logger = new Mock<ILogger<UserIdentityService<TestUser>>>();
+            var logger = new Mock<ILogger<AuthenticationUserService<TestUser>>>();
             var service = new TestUserIdentityService(userManager.Object, logger.Object);
 
             await Assert.ThrowsAsync(expectedException, () => service.GenerateEmailConfirmationTokenAsync(user!));

@@ -15,11 +15,11 @@ namespace ST.Core.Identity.Infrastructure.Tests.Authentication.Users
     /// Concrete subclass of UserIdentityService for testing.
     /// Enables instantiation with mock dependencies.
     /// </summary>
-    public class TestUserIdentityService : UserIdentityService<TestUser>
+    public class TestUserIdentityService : AuthenticationUserService<TestUser>
     {
         public TestUserIdentityService(
             UserManager<TestUser> userManager,
-            ILogger<UserIdentityService<TestUser>> logger)
+            ILogger<AuthenticationUserService<TestUser>> logger)
             : base(userManager, logger)
         {
         }

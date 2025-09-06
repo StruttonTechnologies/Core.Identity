@@ -16,7 +16,7 @@ namespace ST.Core.Identity.Infrastructure.Tests.Authentication.Users
             var password = "SecureP@ssword123";
 
             var userManager = AddPasswordAsyncMock.WithSuccess();
-            var logger = new Mock<ILogger<UserIdentityService<TestUser>>>();
+            var logger = new Mock<ILogger<AuthenticationUserService<TestUser>>>();
             var service = new TestUserIdentityService(userManager.Object, logger.Object);
 
             // Act
@@ -35,7 +35,7 @@ namespace ST.Core.Identity.Infrastructure.Tests.Authentication.Users
             var password = "SecureP@ssword123";
 
             var userManager = AddPasswordAsyncMock.WithFailure("Password add failed.");
-            var logger = new Mock<ILogger<UserIdentityService<TestUser>>>();
+            var logger = new Mock<ILogger<AuthenticationUserService<TestUser>>>();
             var service = new TestUserIdentityService(userManager.Object, logger.Object);
 
             // Act
@@ -54,7 +54,7 @@ namespace ST.Core.Identity.Infrastructure.Tests.Authentication.Users
         public async Task AddPasswordAsync_ThrowsForInvalidArguments(string? userType, string? password, Type expectedException)
         {
             var userManager = AddPasswordAsyncMock.WithSuccess();
-            var logger = new Mock<ILogger<UserIdentityService<TestUser>>>();
+            var logger = new Mock<ILogger<AuthenticationUserService<TestUser>>>();
             var service = new TestUserIdentityService(userManager.Object, logger.Object);
 
             TestUser? user = userType == null ? null : new TestUser { UserName = "testuser" };

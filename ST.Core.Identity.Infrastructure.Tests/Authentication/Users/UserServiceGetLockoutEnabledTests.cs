@@ -14,7 +14,7 @@ namespace ST.Core.Identity.Infrastructure.Tests.Authentication.Users
         {
             var user = new TestUser { UserName = "testuser" };
             var userManager = GetLockoutEnabledAsyncMock.WithValue(true);  // For enabled
-            var logger = new Mock<ILogger<UserIdentityService<TestUser>>>();
+            var logger = new Mock<ILogger<AuthenticationUserService<TestUser>>>();
             var service = new TestUserIdentityService(userManager.Object, logger.Object);
 
             var result = await service.GetLockoutEnabledAsync(user);
@@ -28,7 +28,7 @@ namespace ST.Core.Identity.Infrastructure.Tests.Authentication.Users
         {
             var user = new TestUser { UserName = "testuser" };
             var userManager = GetLockoutEnabledAsyncMock.WithValue(false); // For disabled
-            var logger = new Mock<ILogger<UserIdentityService<TestUser>>>();
+            var logger = new Mock<ILogger<AuthenticationUserService<TestUser>>>();
             var service = new TestUserIdentityService(userManager.Object, logger.Object);
 
             var result = await service.GetLockoutEnabledAsync(user);
@@ -42,7 +42,7 @@ namespace ST.Core.Identity.Infrastructure.Tests.Authentication.Users
         {
             var user = new TestUser { UserName = "testuser" };
             var userManager = GetLockoutEnabledAsyncMock.WithException(new InvalidOperationException("Simulated failure"));
-            var logger = new Mock<ILogger<UserIdentityService<TestUser>>>();
+            var logger = new Mock<ILogger<AuthenticationUserService<TestUser>>>();
             var service = new TestUserIdentityService(userManager.Object, logger.Object);
 
             var result = await service.GetLockoutEnabledAsync(user);
@@ -55,7 +55,7 @@ namespace ST.Core.Identity.Infrastructure.Tests.Authentication.Users
         public async Task GetLockoutEnabledAsync_ThrowsArgumentNullException_WhenUserIsNull()
         {
             var userManager = GetLockoutEnabledAsyncMock.WithEnabled();
-            var logger = new Mock<ILogger<UserIdentityService<TestUser>>>();
+            var logger = new Mock<ILogger<AuthenticationUserService<TestUser>>>();
             var service = new TestUserIdentityService(userManager.Object, logger.Object);
 
             await Assert.ThrowsAsync<ArgumentNullException>(() => service.GetLockoutEnabledAsync(null!));
