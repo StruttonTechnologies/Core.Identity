@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ST.Core.Identity.Infrastructure.Authorization
 {
-    public abstract partial class UserAuthorizationService<TUser> 
+    public abstract partial class UserAuthorizationManager<TUser> 
         where TUser : IdentityUser, new()
     {
         /// <summary>

@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
-using ST.Core.Identity.Domain.Authentication.Interfaces.User;
-using ST.Core.Identity.Domain.Authorization.Interfaces;
+using ST.Core.Identity.Domain.Authentication.Interfaces.UserManager;
 
 namespace ST.Core.Identity.Infrastructure.Authentication.UserManagement
 {
@@ -10,13 +9,12 @@ namespace ST.Core.Identity.Infrastructure.Authentication.UserManagement
         /// </summary>
         /// <typeparam name="TUser">The user entity type, derived from IdentityUser.</typeparam>
         public abstract partial class AuthenticationUserService<TUser> :
+            IUserLockoutManager<TUser>,
             IUserLookupService<TUser>,
-            //IUserRegistration<TUser>,
-            IUserUpdater<TUser>,
-            IUserAuthenticationService<TUser>,
-            IUserLockoutService<TUser>,
-            IUserTwoFactorService<TUser>,
-            IUserMaintenanceService<TUser>
+            IUserManager<TUser>,
+            IUserPasswordManager<TUser>,
+            IUserTokenManager<TUser>,
+            IUserTwoFactorManager<TUser>
             where TUser : IdentityUser, new()
         {
             /// <summary>

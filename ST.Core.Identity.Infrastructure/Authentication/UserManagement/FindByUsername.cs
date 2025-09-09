@@ -21,8 +21,8 @@ namespace ST.Core.Identity.Infrastructure.Authentication.UserManagement
         /// </returns>
         public virtual async Task<TUser?> FindByUsernameAsync(string username, CancellationToken cancellationToken = default)
         {
-            if (string.IsNullOrEmpty(username))
-                throw new ArgumentException("Username must not be null or empty.", nameof(username));
+
+            ArgumentNullException.ThrowIfNullOrWhiteSpace(username);
 
             try
             {
@@ -31,7 +31,7 @@ namespace ST.Core.Identity.Infrastructure.Authentication.UserManagement
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to find user by username {Username}", username);
-                return null;
+                throw;
             }
         }
     }

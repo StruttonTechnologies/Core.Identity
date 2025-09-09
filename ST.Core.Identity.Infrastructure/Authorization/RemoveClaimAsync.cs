@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ST.Core.Identity.Infrastructure.Authorization
 {
-    public abstract partial class UserAuthorizationService<TUser> where TUser : IdentityUser, new()
+    public abstract partial class UserAuthorizationManager<TUser> where TUser : IdentityUser, new()
     {
         /// <summary>
         /// Asynchronously removes a claim from the specified user.

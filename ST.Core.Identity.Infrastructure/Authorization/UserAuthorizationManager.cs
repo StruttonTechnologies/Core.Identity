@@ -10,16 +10,16 @@ using System.Threading.Tasks;
 
 namespace ST.Core.Identity.Infrastructure.Authorization
 {
-    public abstract partial class UserAuthorizationService<TUser> :
-        IUserAuthorizationService<TUser>
+    public abstract partial class UserAuthorizationManager<TUser> :
+        IUserAuthorizationManager<TUser>
         where TUser : IdentityUser, new()
     {
         /// <summary>
         /// The user manager instance used for user operations.
         /// </summary>
-        protected readonly ILogger<UserAuthorizationService<TUser>> _logger;
+        protected readonly ILogger<UserAuthorizationManager<TUser>> _logger;
         protected readonly UserManager<TUser> _userManager;
-        public UserAuthorizationService(UserManager<TUser> userManager, ILogger<UserAuthorizationService<TUser>> logger)
+        public UserAuthorizationManager(UserManager<TUser> userManager, ILogger<UserAuthorizationManager<TUser>> logger)
         {
             _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
