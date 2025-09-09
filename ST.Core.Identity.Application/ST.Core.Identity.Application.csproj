@@ -20,8 +20,21 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Authentication\Handlers\" />
-    <Folder Include="Authorization\" />
+    <Folder Include="Authentication\Handlers\Logins\Commands\" />
+    <Folder Include="Authentication\Handlers\Logins\Queries\" />
+    <Folder Include="Authentication\Handlers\JwtTokens\Queries\" />
+    <Folder Include="Authentication\Handlers\TwoFactor\Commands\" />
+    <Folder Include="Authentication\Handlers\TwoFactor\Queries\" />
+    <Folder Include="Authentication\Handlers\User\Commands\" />
+    <Folder Include="Authentication\Handlers\User\Queries\" />
+    <Folder Include="Authentication\Handlers\Lockout\Commands\" />
+    <Folder Include="Authentication\Handlers\Lockout\Queries\" />
+    <Folder Include="Authentication\Handlers\ApiTokens\Queries\" />
+    <Folder Include="Authentication\Services\Logins\" />
+    <Folder Include="Authorization\Claims\Commands\" />
+    <Folder Include="Authorization\Claims\Queries\" />
+    <Folder Include="Authorization\Roles\Commands\" />
+    <Folder Include="Authorization\Roles\Queries\" />
   </ItemGroup>
 
 </Project>

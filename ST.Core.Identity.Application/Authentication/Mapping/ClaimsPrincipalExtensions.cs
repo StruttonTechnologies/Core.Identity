@@ -1,6 +1,5 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using ST.Core.Identity.Application.Authentication.Models;
-using ST.Core.Identity.Dtos.Authentication;
 using ST.Core.Identity.Dtos.Authentication.Logins;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;

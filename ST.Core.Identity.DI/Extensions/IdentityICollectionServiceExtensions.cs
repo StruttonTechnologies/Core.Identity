@@ -1,7 +1,7 @@
 ﻿using ST.Core.Identity.Application.Extensions;
-using ST.Core.Identity.Infrastructure.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using ST.Core.Identity.Infrastructure;
 
 namespace ST.Core.Identity.DI.Extensions
 {
