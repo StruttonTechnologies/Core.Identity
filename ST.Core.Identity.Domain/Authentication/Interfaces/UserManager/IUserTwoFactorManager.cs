@@ -5,13 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ST.Core.Identity.Domain.Authentication.Interfaces.User
+namespace ST.Core.Identity.Domain.Authentication.Interfaces.UserManager
 {
     /// <summary>
     /// Provides methods for managing and retrieving two-factor authentication settings for a user.
     /// </summary>
     /// <typeparam name="TUser">The type of the user, which must inherit from <see cref="IdentityUser"/>.</typeparam>
-    public interface IUserTwoFactorService<TUser>
+    public interface IUserTwoFactorManager<TUser>
         where TUser : IdentityUser
     {
         /// <summary>

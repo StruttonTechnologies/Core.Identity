@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ST.Core.Identity.Domain.Authorization.Interfaces
 {
-    public interface IUserAuthorizationService<TUser> 
+    public interface IUserAuthorizationManager<TUser> 
         where TUser : IdentityUser
     {
         Task<IdentityResult> AddClaimAsync(TUser user, Claim claim, CancellationToken cancellationToken);

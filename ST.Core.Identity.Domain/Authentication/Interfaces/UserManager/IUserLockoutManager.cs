@@ -5,13 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ST.Core.Identity.Domain.Authentication.Interfaces.User
+namespace ST.Core.Identity.Domain.Authentication.Interfaces.UserManager
 {
     /// <summary>
     /// Provides lockout management operations for a user.
     /// </summary>
     /// <typeparam name="TUser">The type of the user, derived from <see cref="IdentityUser"/>.</typeparam>
-    public interface IUserLockoutService<TUser>
+    public interface IUserLockoutManager<TUser>
         where TUser : IdentityUser
     {
         /// <summary>
@@ -67,5 +67,6 @@ namespace ST.Core.Identity.Domain.Authentication.Interfaces.User
         /// <param name="enabled">True to enable lockout; false to disable.</param>
         /// <param name="cancellationToken">A cancellation token.</param>
         Task<IdentityResult> SetLockoutEnabledAsync(TUser user, bool enabled, CancellationToken cancellationToken);
+
     }
 }
