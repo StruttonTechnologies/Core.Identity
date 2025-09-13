@@ -12,7 +12,7 @@ namespace ST.Core.Identity.Domain.Authentication.Interfaces.UserManager
     /// </summary>
     /// <typeparam name="TUser">The type of the user entity.</typeparam>
     public interface IUserLookupManager<TUser>
-        where TUser : IdentityUser
+        where TUser : class
     {
         /// <summary>
         /// Finds a user by their unique identifier.

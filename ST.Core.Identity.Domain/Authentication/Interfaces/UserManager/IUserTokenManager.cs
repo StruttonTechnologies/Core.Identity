@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace ST.Core.Identity.Domain.Authentication.Interfaces.UserManager
 {
     public interface IUserTokenManager<TUser>
-        where TUser : IdentityUser
+        where TUser : class
     {
         /// <summary>
         /// Generates a user token for a specific purpose.

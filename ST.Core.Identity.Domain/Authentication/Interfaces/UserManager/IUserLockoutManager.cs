@@ -12,7 +12,7 @@ namespace ST.Core.Identity.Domain.Authentication.Interfaces.UserManager
     /// </summary>
     /// <typeparam name="TUser">The type of the user, derived from <see cref="IdentityUser"/>.</typeparam>
     public interface IUserLockoutManager<TUser>
-        where TUser : IdentityUser
+        where TUser : class
     {
         /// <summary>
         /// Increments the access failed count for the specified user.

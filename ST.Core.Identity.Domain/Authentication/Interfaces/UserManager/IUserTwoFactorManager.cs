@@ -12,7 +12,7 @@ namespace ST.Core.Identity.Domain.Authentication.Interfaces.UserManager
     /// </summary>
     /// <typeparam name="TUser">The type of the user, which must inherit from <see cref="IdentityUser"/>.</typeparam>
     public interface IUserTwoFactorManager<TUser>
-        where TUser : IdentityUser
+        where TUser : class
     {
         /// <summary>
         /// Asynchronously determines whether two-factor authentication is enabled for the specified user.

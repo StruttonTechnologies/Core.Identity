@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using ST.Core.Identity.Domain.Authentication.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,8 @@ using System.Threading.Tasks;
 namespace ST.Core.Identity.Domain.Authorization.Interfaces
 {
     public interface IUserAuthorizationManager<TUser> 
-        where TUser : IdentityUser
+        where TUser : class
+
     {
         Task<IdentityResult> AddClaimAsync(TUser user, Claim claim, CancellationToken cancellationToken);
         Task<IdentityResult> AddClaimsAsync(TUser user, IEnumerable<Claim> claims, CancellationToken cancellationToken);

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace ST.Core.Identity.Domain.Authentication.Interfaces.UserManager
 {
     public interface IUserManager<TUser>
-        where TUser :IdentityUser
+        where TUser : class
     {
         Task<IdentityResult> UpdateEmailAsync(TUser user, string newEmail, CancellationToken cancellationToken);
         Task<IdentityResult> UpdateUsernameAsync(TUser user, string newUsername, CancellationToken cancellationToken);

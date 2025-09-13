@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace ST.Core.Identity.Domain.Authentication.Interfaces.UserManager
 {
     public interface IUserPasswordManager<in TUser> 
-        where TUser : IdentityUser
+        where TUser : class
     {
         /// <summary>
         /// Checks if the specified password is valid for the given user.
