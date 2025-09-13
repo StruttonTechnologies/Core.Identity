@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ST.Core.Identity.Domain.Authorization.Entities
+namespace ST.Core.Identity.Domain.Authentication.Entities
 {
     /// <summary>
     /// Represents a refresh token used for renewing authentication sessions.
