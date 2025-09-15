@@ -1,0 +1,78 @@
+﻿using ST.Core.Identity.Infrastructure.Tests.Authentication.UserManagement.Setup;
+using ST.Core.Identity.Testing.Setup.Factories;
+using Microsoft.AspNetCore.Identity;
+using System;
+using System.Threading.Tasks;
+using Xunit;
+using System.Linq;
+
+namespace ST.Core.Identity.Infrastructure.Tests.Authentication.UserManagement.AuthenticationUserService
+{
+    /// <summary>
+    /// Unit tests for <see cref="AuthenticationUserService{TUser}.SetUserNameAsync"/>.
+    /// Validates username assignment logic, input validation, and exception handling.
+    /// </summary>
+    public class SetUserNameAsyncTests : AuthenticationUserServiceTestBase
+    {
+        /// <summary>
+        /// Verifies that setting a valid username succeeds.
+        /// </summary>
+        [Fact]
+        public async Task SetUserNameAsync_ValidUserName_Succeeds()
+        {
+            var user = TestAppUserIdentityFactory.Create("originalUser");
+            await UserManager.CreateAsync(user);
+
+            var result = await Service.SetUserNameAsync(user, "newUserName");
+
+            Assert.True(result.Succeeded);
+            var updatedUser = await UserManager.FindByIdAsync(user.Id);
+            Assert.Equal("newUserName", updatedUser!.UserName);
+        }
+
+        /// <summary>
+        /// Verifies that passing a null user throws <see cref="ArgumentNullException"/>.
+        /// </summary>
+        [Fact]
+        public async Task SetUserNameAsync_NullUser_ThrowsArgumentNullException()
+        {
+            var exception = await Record.ExceptionAsync(() => Service.SetUserNameAsync(null!, "newUserName"));
+
+            Assert.NotNull(exception);
+            Assert.IsType<ArgumentNullException>(exception);
+        }
+
+        /// <summary>
+        /// Verifies that passing a null or empty username throws <see cref="ArgumentNullException"/>.
+        /// </summary>
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        public async Task SetUserNameAsync_InvalidUserName_ThrowsArgumentNullException(string? userName)
+        {
+            var user = TestAppUserIdentityFactory.Create("originalUser");
+            await UserManager.CreateAsync(user);
+
+            var exception = await Record.ExceptionAsync(() => Service.SetUserNameAsync(user, userName));
+
+            Assert.NotNull(exception);
+            Assert.IsType<ArgumentNullException>(exception);
+        }
+
+        /// <summary>
+        /// Verifies that an exception during username assignment returns a failed result and logs the error.
+        /// </summary>
+        [Fact]
+        public async Task SetUserNameAsync_ThrowsException_ReturnsFailedResult()
+        {
+            var user = TestAppUserIdentityFactory.Create("originalUser");
+            await UserManager.CreateAsync(user);
+            await UserManager.DeleteAsync(user); // Simulate failure
+
+            var result = await Service.SetUserNameAsync(user, "newUserName");
+
+            Assert.False(result.Succeeded);
+            Assert.Contains("Exception:", result.Errors.First().Description);
+        }
+    }
+}

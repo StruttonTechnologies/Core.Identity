@@ -23,7 +23,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ST.Core.Identity.Application\ST.Core.Identity.Application.csproj" />
-    <ProjectReference Include="..\ST.Core.Identity.Testing.Toolkit\ST.Core.Identity.Testing.Toolkit.csproj" />
     <ProjectReference Include="..\ST.Core.Identity.Testing\ST.Core.Identity.Testing.csproj" />
   </ItemGroup>
 

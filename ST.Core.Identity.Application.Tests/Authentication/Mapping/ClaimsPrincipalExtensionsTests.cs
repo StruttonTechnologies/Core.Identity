@@ -126,7 +126,7 @@ namespace ST.Core.Identity.Application.Tests.Authentication.Mapping
         {
             // Arrange
             var principal = new ClaimsPrincipal(); // No identity
-            var options = new JwtTokenOptions("issuer", "audience", "key", null, 60);
+            var options = new JwtTokenOptions("issuer", "audience", "key", null!, 60);
 
             // Act & Assert
             var ex = Assert.Throws<InvalidOperationException>(() => principal.ToToken(options));
@@ -138,7 +138,7 @@ namespace ST.Core.Identity.Application.Tests.Authentication.Mapping
         {
             // Arrange
             var principal = new ClaimsPrincipal(new ClaimsIdentity()); // No claims
-            var options = new JwtTokenOptions("issuer", "audience", "key", null, 60);
+            var options = new JwtTokenOptions("issuer", "audience", "key", null!, 60);
 
             // Act & Assert
             var ex = Assert.Throws<InvalidOperationException>(() => principal.ToToken(options));

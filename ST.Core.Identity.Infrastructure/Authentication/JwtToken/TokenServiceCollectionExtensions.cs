@@ -3,7 +3,6 @@ using Microsoft.Extensions.DependencyInjection;
 using ST.Core.Identity.Application.Authentication.Models;
 using ST.Core.Identity.Domain.Authentication.Interfaces.Jwtoken;
 using ST.Core.Identity.Domain.Authentication.Interfaces.Token;
-using ST.Core.Identity.Infrastructure.Authentication.Token;
 using System;
 using System.Collections.Generic;
 using System.Linq;

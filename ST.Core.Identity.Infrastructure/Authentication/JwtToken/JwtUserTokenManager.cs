@@ -7,7 +7,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace ST.Core.Identity.Infrastructure.Authentication.Token
+namespace ST.Core.Identity.Infrastructure.Authentication.JwtToken
 {
     public class JwtUserTokenManager : IJwtUserTokenManager
     {
@@ -18,7 +18,7 @@ namespace ST.Core.Identity.Infrastructure.Authentication.Token
             _refreshTokenStore = refreshTokenStore;
         }
 
-        public async Task<string> GenerateAccessTokenAsync(string userId, string userName, string email, IEnumerable<string> roles, CancellationToken cancellationToken)
+        public Task<string> GenerateAccessTokenAsync(string userId, string userName, string email, IEnumerable<string> roles, CancellationToken cancellationToken)
         {
             var identity = new ClaimsIdentity("Identity.Application");
 
@@ -46,7 +46,10 @@ namespace ST.Core.Identity.Infrastructure.Authentication.Token
                 signingCredentials: creds
             );
 
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
+            return Task.FromResult(tokenString);
+
+
         }
 
         public async Task<string> GenerateRefreshTokenAsync(string userId, string username, CancellationToken cancellationToken)

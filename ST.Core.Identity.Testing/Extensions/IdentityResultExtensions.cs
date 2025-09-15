@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.Diagnostics.CodeAnalysis;
 
-namespace ST.Core.Identity.Testing.Toolkit.Extensions
+namespace ST.Core.Identity.Testing.Extensions
 {
     /// <summary>
     /// Provides extension methods for <see cref="IdentityResult"/>.
