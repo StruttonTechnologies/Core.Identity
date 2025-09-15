@@ -15,24 +15,38 @@ namespace ST.Core.Identity.Application.Authentication.Mapping
         /// <summary>
         /// Maps a <see cref="ClaimsPrincipal"/> to a <see cref="LoginResponseDto"/>.
         /// </summary>
-        public static LoginResponseDto ToDto(this ClaimsPrincipal principal, string token, DateTime expiresAt)
+        public static LoginResponseDto ToDto(this ClaimsPrincipal principal, string accessToken, string refreshToken, DateTime expiresAt)
         {
-            var identity = principal.Identity as ClaimsIdentity;
+            if (principal?.Identity is not ClaimsIdentity identity || !identity.IsAuthenticated)
+            {
+                return new LoginResponseDto(
+                    AccessToken: accessToken,
+                    RefreshToken: refreshToken,
+                    ExpiresAt: expiresAt,
+                    UserId: Guid.Empty,
+                    Username: string.Empty,
+                    Provider: "Unknown",
+                    IsNewUser: false,
+                    RequiresTwoFactor: false
+                );
+            }
 
-            var userId = identity?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            var username = identity?.FindFirst(ClaimTypes.Name)?.Value ?? string.Empty;
-            var roles = identity?.FindAll(ClaimTypes.Role).Select(c => c.Value).ToArray() ?? Array.Empty<string>();
+            var userId = identity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var username = identity.FindFirst(ClaimTypes.Name)?.Value ?? string.Empty;
+            var provider = identity.FindFirst("provider")?.Value ?? "Local";
+            var isNewUser = identity.FindFirst("is_new_user")?.Value == "true";
+            var requiresTwoFactor = identity.FindFirst("requires_2fa")?.Value == "true";
 
             return new LoginResponseDto(
-                identity?.IsAuthenticated ?? false,
-                token,
-                expiresAt,
-                roles,
-                Guid.TryParse(userId, out var parsedId) ? parsedId : Guid.Empty,
-                username
+                AccessToken: accessToken,
+                RefreshToken: refreshToken,
+                ExpiresAt: expiresAt,
+                UserId: Guid.TryParse(userId, out var parsedId) ? parsedId : Guid.Empty,
+                Username: username,
+                Provider: provider,
+                IsNewUser: isNewUser,
+                RequiresTwoFactor: requiresTwoFactor
             );
-
-
         }
 
         /// <summary>

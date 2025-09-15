@@ -10,7 +10,7 @@ namespace ST.Core.Identity.Infrastructure.Authentication.UserManagement
         /// <typeparam name="TUser">The user entity type, derived from IdentityUser.</typeparam>
         public abstract partial class AuthenticationUserService<TUser> :
             IUserLockoutManager<TUser>,
-            IUserLookupService<TUser>,
+            IUserLookupManager<TUser>,
             IUserManager<TUser>,
             IUserPasswordManager<TUser>,
             IUserTokenManager<TUser>,

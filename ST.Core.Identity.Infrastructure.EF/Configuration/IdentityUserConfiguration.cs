@@ -13,7 +13,6 @@ namespace ST.Core.Identity.Infrastructure.EF.Configuration
 
             entity.Property(u => u.CreateDate).IsRequired();
             entity.Property(u => u.ProviderName).HasMaxLength(128);
-            entity.Property(u => u.IsDeleted).IsRequired();
             entity.Property(u => u.IsActive).IsRequired();
 
             entity.HasOne(u => u.Person)

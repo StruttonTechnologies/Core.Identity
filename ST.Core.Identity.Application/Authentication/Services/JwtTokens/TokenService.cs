@@ -1,12 +1,75 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
+using Microsoft.IdentityModel.Tokens;
+using ST.Core.Identity.Application.Authentication.Models;
+using ST.Core.Identity.Application.Authentication.Services.Tokens;
 
-namespace ST.Core.Identity.Application.Authentication.Services.Tokens
+namespace ST.Core.Identity.Application.Authentication.Services.JwtTokens
 {
-    internal class TokenService
+    /// <summary>
+    /// Service responsible for generating and revoking JWT access tokens.
+    /// </summary>
+    public class TokenService : ITokenService
     {
+        private readonly JwtTokenOptions _options;
+        private static readonly ConcurrentDictionary<string, DateTime> _revokedTokens = new();
+
+        public TokenService(JwtTokenOptions options)
+        {
+            _options = options ?? throw new ArgumentNullException(nameof(options));
+        }
+
+        public string GenerateToken(ClaimsPrincipal principal)
+        {
+            if (principal?.Identity is not ClaimsIdentity identity)
+                throw new InvalidOperationException("ClaimsPrincipal must have a ClaimsIdentity.");
+
+            if (!identity.Claims.Any())
+                throw new InvalidOperationException("ClaimsPrincipal must contain claims to generate a token.");
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.Key));
+            var credentials = _options.Credentials ?? new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var jti = Guid.NewGuid().ToString(); // Unique token ID
+
+            var claims = identity.Claims.ToList();
+            claims.Add(new Claim(JwtRegisteredClaimNames.Jti, jti));
+
+            var token = new JwtSecurityToken(
+                issuer: _options.Issuer,
+                audience: _options.Audience,
+                claims: claims,
+                notBefore: DateTime.UtcNow,
+                expires: DateTime.UtcNow.AddMinutes(_options.ExpirationMinutes),
+                signingCredentials: credentials
+            );
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        public DateTime GetExpirationTime() => DateTime.UtcNow.AddMinutes(_options.ExpirationMinutes);
+
+        public void RevokeToken(string token)
+        {
+            var jwt = new JwtSecurityTokenHandler().ReadJwtToken(token);
+            var jti = jwt.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Jti)?.Value;
+
+            if (!string.IsNullOrEmpty(jti))
+            {
+                _revokedTokens[jti] = jwt.ValidTo;
+            }
+        }
+
+        public bool IsTokenRevoked(string token)
+        {
+            var jwt = new JwtSecurityTokenHandler().ReadJwtToken(token);
+            var jti = jwt.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Jti)?.Value;
+
+            return !string.IsNullOrEmpty(jti) && _revokedTokens.ContainsKey(jti);
+        }
     }
 }

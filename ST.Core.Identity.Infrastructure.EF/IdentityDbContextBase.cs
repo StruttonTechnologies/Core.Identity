@@ -12,21 +12,21 @@ using System.Threading.Tasks;
 
 namespace ST.Core.Identity.Infrastructure.EF
 {
-    public abstract class IdentityDbContextBase<TUser, TPerson>
-    : IdentityDbContext<TUser, IdentityRole<Guid>, Guid>
-    where TUser : IdentityUserBase<TPerson>
-    where TPerson : class
-    {
-        public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
+    //public abstract class IdentityDbContextBase<TUser, TPerson>
+    //: IdentityDbContext<TUser, IdentityRole<Guid>, Guid>
+    //where TUser : IdentityUserBase<TPerson>
+    //where TPerson : class
+    //{
+    //    public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
 
-        protected IdentityDbContextBase(DbContextOptions options) : base(options) { }
+    //    protected IdentityDbContextBase(DbContextOptions options) : base(options) { }
 
-        protected override void OnModelCreating(ModelBuilder builder)
-        {
-            base.OnModelCreating(builder);
+    //    protected override void OnModelCreating(ModelBuilder builder)
+    //    {
+    //        base.OnModelCreating(builder);
 
-            RefreshTokenConfiguration.Configure(builder.Entity<RefreshToken>());
-            IdentityUserConfiguration.Configure<TUser, TPerson>(builder.Entity<TUser>());
-        }
-    }
+    //        RefreshTokenConfiguration.Configure(builder.Entity<RefreshToken>());
+    //        IdentityUserConfiguration.Configure<TUser, TPerson>(builder.Entity<TUser>());
+    //    }
+    //}
 }

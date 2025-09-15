@@ -1,12 +1,13 @@
+using Microsoft.IdentityModel.Tokens;
+using ST.Core.Identity.Application.Authentication.Models;
+using ST.Core.Identity.Application.Authentication.Services.JwtTokens;
+using ST.Core.Identity.Application.Authentication.Services.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-using ST.Core.Identity.Application.Authentication.Models;
-using ST.Core.Identity.Application.Authentication.Services;
 using Xunit;
 
 namespace ST.Core.Identity.Application.Tests.Authentication.Services
@@ -24,11 +25,11 @@ namespace ST.Core.Identity.Application.Tests.Authentication.Services
         private static ClaimsPrincipal GetPrincipal()
         {
             var claims = new List<Claim>
-        {
-            new Claim(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString()),
-            new Claim(ClaimTypes.Name, "testuser"),
-            new Claim(ClaimTypes.Role, "Admin")
-        };
+            {
+                new Claim(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString()),
+                new Claim(ClaimTypes.Name, "testuser"),
+                new Claim(ClaimTypes.Role, "Admin")
+            };
             var identity = new ClaimsIdentity(claims, "TestAuthType");
             return new ClaimsPrincipal(identity);
         }
@@ -37,8 +38,7 @@ namespace ST.Core.Identity.Application.Tests.Authentication.Services
         public void GenerateToken_ReturnsValidJwt()
         {
             // Arrange
-            var options = Options.Create(GetOptions());
-            var service = new TokenService(options);
+            var service = new TokenService(GetOptions());
             var principal = GetPrincipal();
 
             // Act
@@ -46,60 +46,69 @@ namespace ST.Core.Identity.Application.Tests.Authentication.Services
 
             // Assert
             Assert.False(string.IsNullOrWhiteSpace(token));
-            var handler = new JwtSecurityTokenHandler();
-            var jwt = handler.ReadJwtToken(token);
+            var jwt = new JwtSecurityTokenHandler().ReadJwtToken(token);
             Assert.Equal("issuer", jwt.Issuer);
             Assert.Equal("audience", jwt.Audiences.First());
             Assert.Contains(jwt.Claims, c => c.Type == ClaimTypes.Name && c.Value == "testuser");
+            Assert.Contains(jwt.Claims, c => c.Type == JwtRegisteredClaimNames.Jti);
         }
 
         [Fact]
-        public void ValidateToken_ReturnsPrincipal_WhenTokenIsValid()
+        public void GetExpirationTime_ReturnsFutureTimestamp()
         {
             // Arrange
-            var options = Options.Create(GetOptions());
-            var service = new TokenService(options);
-            var principal = GetPrincipal();
-            var token = service.GenerateToken(principal);
+            var service = new TokenService(GetOptions());
 
             // Act
-            var validated = service.ValidateToken(token);
+            var expiration = service.GetExpirationTime();
 
             // Assert
-            Assert.NotNull(validated);
-            Assert.Equal("testuser", validated.Identity.Name);
-        }
-
-        [Fact]
-        public void ValidateToken_ReturnsNull_WhenTokenIsInvalid()
-        {
-            // Arrange
-            var options = Options.Create(GetOptions());
-            var service = new TokenService(options);
-            var invalidToken = "invalid.token.value";
-
-            // Act
-            var validated = service.ValidateToken(invalidToken);
-
-            // Assert
-            Assert.Null(validated);
-        }
-
-        [Fact]
-        public void GetExpiration_ReturnsExpirationDate()
-        {
-            // Arrange
-            var options = Options.Create(GetOptions());
-            var service = new TokenService(options);
-            var principal = GetPrincipal();
-            var token = service.GenerateToken(principal);
-
-            // Act
-            var expiration = service.GetExpiration(token);
-
-            // Assert
-            Assert.NotNull(expiration);
             Assert.True(expiration > DateTime.UtcNow);
+            Assert.True(expiration <= DateTime.UtcNow.AddMinutes(60));
         }
-    } 
+
+        [Fact]
+        public void RevokeToken_MarksTokenAsRevoked()
+        {
+            // Arrange
+            var service = new TokenService(GetOptions());
+            var principal = GetPrincipal();
+            var token = service.GenerateToken(principal);
+
+            // Act
+            service.RevokeToken(token);
+
+            // Assert
+            Assert.True(service.IsTokenRevoked(token));
+        }
+
+        [Fact]
+        public void IsTokenRevoked_ReturnsFalse_ForUnrevokedToken()
+        {
+            // Arrange
+            var service = new TokenService(GetOptions());
+            var principal = GetPrincipal();
+            var token = service.GenerateToken(principal);
+
+            // Act
+            var isRevoked = service.IsTokenRevoked(token);
+
+            // Assert
+            Assert.False(isRevoked);
+        }
+
+        [Fact]
+        public void IsTokenRevoked_ReturnsFalse_ForMalformedToken()
+        {
+            // Arrange
+            var service = new TokenService(GetOptions());
+            var malformedToken = "not.a.valid.jwt";
+
+            // Act
+            var isRevoked = service.IsTokenRevoked(malformedToken);
+
+            // Assert
+            Assert.False(isRevoked);
+        }
+    }
 }

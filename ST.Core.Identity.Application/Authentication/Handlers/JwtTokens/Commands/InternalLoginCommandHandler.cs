@@ -9,18 +9,18 @@ using System.Threading.Tasks;
 
 namespace ST.Core.Identity.Application.Authentication.Handlers.JwtTokens.Commands
 {
-    public class InternalLoginCommandHandler : IRequestHandler<InternalLoginCommand, LoginResponseDto>
+    public class InternalLoginCommandHandler //: IRequestHandler<InternalLoginCommand, LoginResponseDto>
     {
-        private readonly IInternalLoginOrchestrationService _orchestration;
+    //    private readonly IInternalLoginOrchestrationService _orchestration;
 
-        public InternalLoginCommandHandler(IInternalLoginOrchestrationService orchestration)
-        {
-            _orchestration = orchestration;
-        }
+    //    public InternalLoginCommandHandler(IInternalLoginOrchestrationService orchestration)
+    //    {
+    //        _orchestration = orchestration;
+    //    }
 
-        public async Task<LoginResponseDto> Handle(InternalLoginCommand request, CancellationToken cancellationToken)
-        {
-            return await _orchestration.AuthenticateAsync(request.LoginRequestDto, cancellationToken);
-        }
+    //    public async Task<LoginResponseDto> Handle(InternalLoginCommand request, CancellationToken cancellationToken)
+    //    {
+    //        return await _orchestration.AuthenticateAsync(request.LoginRequestDto, cancellationToken);
+    //    }
     }
 }

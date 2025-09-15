@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using ST.Core.Identity.Infrastructure.Authentication.UserManagement;
-using ST.Core.Identity.Testing.Toolkit.Models;
+using ST.Core.Identity.Infrastructure.Tests.SetUp.Models;
+using ST.Core.Identity.Testing.Setup.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,11 +15,11 @@ namespace ST.Core.Identity.Infrastructure.Tests.Authentication.Mocks
     /// Concrete subclass of UserIdentityService for testing purposes.
     /// Enables instantiation of the abstract base with mockable dependencies.
     /// </summary>
-    public class TestUserIdentityService : AuthenticationUserService<TestUser>
+    public class TestUserIdentityService : AuthenticationUserService<TestAppIdentityUser>
     {
         public TestUserIdentityService(
-            UserManager<TestUser> userManager,
-            ILogger<AuthenticationUserService<TestUser>> logger)
+            UserManager<TestAppIdentityUser> userManager,
+            ILogger<AuthenticationUserService<TestAppIdentityUser>> logger)
             : base(userManager, logger)
         {
         }

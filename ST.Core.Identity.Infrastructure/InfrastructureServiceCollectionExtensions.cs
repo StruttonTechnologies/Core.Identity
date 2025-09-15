@@ -14,7 +14,7 @@ namespace ST.Core.Identity.Infrastructure
         public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddUserManagerServices(configuration);
-            services.AddTokenServices(configuration);
+            //services.AddJwtTokenServices(configuration);
             // Add other grouped registrations
 
             return services;
