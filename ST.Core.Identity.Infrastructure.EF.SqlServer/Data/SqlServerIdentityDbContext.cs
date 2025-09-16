@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ST.Core.Identity.Domain.Authentication;
-using ST.Core.Identity.Domain.Authentication.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -11,8 +11,4 @@
     <ProjectReference Include="..\ST.Core.Identity.Dtos\ST.Core.Identity.Dtos.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Extensions\" />
-  </ItemGroup>
-
 </Project>

@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="JwtToken\" />
+    <Folder Include="UserManager\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ST.Core.Registration" Version="1.0.0-alpha" />
+  </ItemGroup>
+
+</Project>

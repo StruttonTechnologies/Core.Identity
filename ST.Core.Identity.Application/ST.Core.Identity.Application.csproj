@@ -10,6 +10,7 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.9" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.9" />
     <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="9.0.9" />
+    <PackageReference Include="ST.Core.Registration" Version="1.0.0-alpha" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.14.0" />
   </ItemGroup>
 
@@ -17,6 +18,7 @@
     <ProjectReference Include="..\ST.Core.Identity.Application.Contracts\ST.Core.Identity.Application.Contracts.csproj" />
     <ProjectReference Include="..\ST.Core.Identity.Domain\ST.Core.Identity.Domain.csproj" />
     <ProjectReference Include="..\ST.Core.Identity.Dtos\ST.Core.Identity.Dtos.csproj" />
+    <ProjectReference Include="..\ST.Core.IdentityAccess.Contracts\ST.Core.IdentityAccess.Contracts.csproj" />
   </ItemGroup>
 
   <ItemGroup>

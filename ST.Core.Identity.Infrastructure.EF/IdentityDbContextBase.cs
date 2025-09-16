@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using ST.Core.Identity.Domain.Authentication.Entities;
 using ST.Core.Identity.Infrastructure.EF.Configuration;
 using System;
 using System.Collections.Generic;

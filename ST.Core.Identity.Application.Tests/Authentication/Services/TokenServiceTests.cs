@@ -1,50 +1,42 @@
-using Microsoft.IdentityModel.Tokens;
-using ST.Core.Identity.Application.Authentication.Models;
+using Microsoft.Extensions.Logging;
 using ST.Core.Identity.Application.Authentication.Services.JwtTokens;
-using ST.Core.Identity.Application.Authentication.Services.Tokens;
+using ST.Core.Identity.Fakes.Builders;
+using ST.Core.Identity.Fakes.Factories;
 using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
-using System.Text;
 using Xunit;
 
 namespace ST.Core.Identity.Application.Tests.Authentication.Services
 {
+    /// <summary>
+    /// Unit tests for <see cref="TokenService"/>.
+    /// Validates token generation, expiration, revocation, and malformed token handling.
+    /// </summary>
     public class TokenServiceTests
     {
-        private static JwtTokenOptions GetOptions()
+        private readonly ILogger<TokenService> _logger = MockLoggerFactory.Create<TokenService>();
+        private readonly TokenService _service;
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="TokenServiceTests"/> using default token options and a mock logger.
+        /// </summary>
+        public TokenServiceTests()
         {
-            var key = "supersecretkey1234567890supersecretkey";
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
-            var creds = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-            return new JwtTokenOptions("issuer", "audience", key, creds, 60);
+            _service = new TokenService(JwtTokenOptionsFactory.CreateDefault(), _logger);
         }
 
-        private static ClaimsPrincipal GetPrincipal()
-        {
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString()),
-                new Claim(ClaimTypes.Name, "testuser"),
-                new Claim(ClaimTypes.Role, "Admin")
-            };
-            var identity = new ClaimsIdentity(claims, "TestAuthType");
-            return new ClaimsPrincipal(identity);
-        }
-
+        /// <summary>
+        /// Verifies that <see cref="TokenService.GenerateToken"/> returns a valid JWT containing expected claims.
+        /// </summary>
         [Fact]
         public void GenerateToken_ReturnsValidJwt()
         {
-            // Arrange
-            var service = new TokenService(GetOptions());
-            var principal = GetPrincipal();
+            var principal = TestClaimsPrincipalBuilder.CreateDefault();
 
-            // Act
-            var token = service.GenerateToken(principal);
+            var token = _service.GenerateToken(principal);
 
-            // Assert
             Assert.False(string.IsNullOrWhiteSpace(token));
             var jwt = new JwtSecurityTokenHandler().ReadJwtToken(token);
             Assert.Equal("issuer", jwt.Issuer);
@@ -53,61 +45,56 @@ namespace ST.Core.Identity.Application.Tests.Authentication.Services
             Assert.Contains(jwt.Claims, c => c.Type == JwtRegisteredClaimNames.Jti);
         }
 
+        /// <summary>
+        /// Verifies that <see cref="TokenService.GetExpirationTime"/> returns a timestamp in the future within expected bounds.
+        /// </summary>
         [Fact]
         public void GetExpirationTime_ReturnsFutureTimestamp()
         {
-            // Arrange
-            var service = new TokenService(GetOptions());
+            var expiration = _service.GetExpirationTime();
 
-            // Act
-            var expiration = service.GetExpirationTime();
-
-            // Assert
             Assert.True(expiration > DateTime.UtcNow);
             Assert.True(expiration <= DateTime.UtcNow.AddMinutes(60));
         }
 
+        /// <summary>
+        /// Verifies that <see cref="TokenService.RevokeToken"/> marks a token as revoked and <see cref="TokenService.IsTokenRevoked"/> returns true.
+        /// </summary>
         [Fact]
         public void RevokeToken_MarksTokenAsRevoked()
         {
-            // Arrange
-            var service = new TokenService(GetOptions());
-            var principal = GetPrincipal();
-            var token = service.GenerateToken(principal);
+            var principal = TestClaimsPrincipalBuilder.CreateDefault();
+            var token = _service.GenerateToken(principal);
 
-            // Act
-            service.RevokeToken(token);
+            _service.RevokeToken(token);
 
-            // Assert
-            Assert.True(service.IsTokenRevoked(token));
+            Assert.True(_service.IsTokenRevoked(token));
         }
 
+        /// <summary>
+        /// Verifies that <see cref="TokenService.IsTokenRevoked"/> returns false for a token that has not been revoked.
+        /// </summary>
         [Fact]
         public void IsTokenRevoked_ReturnsFalse_ForUnrevokedToken()
         {
-            // Arrange
-            var service = new TokenService(GetOptions());
-            var principal = GetPrincipal();
-            var token = service.GenerateToken(principal);
+            var principal = TestClaimsPrincipalBuilder.CreateDefault();
+            var token = _service.GenerateToken(principal);
 
-            // Act
-            var isRevoked = service.IsTokenRevoked(token);
+            var isRevoked = _service.IsTokenRevoked(token);
 
-            // Assert
             Assert.False(isRevoked);
         }
 
+        /// <summary>
+        /// Verifies that <see cref="TokenService.IsTokenRevoked"/> returns false for a malformed token and does not throw.
+        /// </summary>
         [Fact]
         public void IsTokenRevoked_ReturnsFalse_ForMalformedToken()
         {
-            // Arrange
-            var service = new TokenService(GetOptions());
             var malformedToken = "not.a.valid.jwt";
 
-            // Act
-            var isRevoked = service.IsTokenRevoked(malformedToken);
+            var isRevoked = _service.IsTokenRevoked(malformedToken);
 
-            // Assert
             Assert.False(isRevoked);
         }
     }

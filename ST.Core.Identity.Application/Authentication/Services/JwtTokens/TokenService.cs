@@ -4,6 +4,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using ST.Core.Identity.Application.Authentication.Models;
 using ST.Core.Identity.Application.Authentication.Services.Tokens;
@@ -16,11 +17,13 @@ namespace ST.Core.Identity.Application.Authentication.Services.JwtTokens
     public class TokenService : ITokenService
     {
         private readonly JwtTokenOptions _options;
+        private readonly ILogger<TokenService> _logger;
         private static readonly ConcurrentDictionary<string, DateTime> _revokedTokens = new();
 
-        public TokenService(JwtTokenOptions options)
+        public TokenService(JwtTokenOptions options, ILogger<TokenService> logger)
         {
             _options = options ?? throw new ArgumentNullException(nameof(options));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         public string GenerateToken(ClaimsPrincipal principal)
@@ -34,7 +37,7 @@ namespace ST.Core.Identity.Application.Authentication.Services.JwtTokens
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.Key));
             var credentials = _options.Credentials ?? new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-            var jti = Guid.NewGuid().ToString(); // Unique token ID
+            var jti = Guid.NewGuid().ToString();
 
             var claims = identity.Claims.ToList();
             claims.Add(new Claim(JwtRegisteredClaimNames.Jti, jti));
@@ -55,21 +58,52 @@ namespace ST.Core.Identity.Application.Authentication.Services.JwtTokens
 
         public void RevokeToken(string token)
         {
-            var jwt = new JwtSecurityTokenHandler().ReadJwtToken(token);
-            var jti = jwt.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Jti)?.Value;
-
-            if (!string.IsNullOrEmpty(jti))
+            try
             {
-                _revokedTokens[jti] = jwt.ValidTo;
+                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(token);
+                var jti = jwt.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Jti)?.Value;
+
+                if (!string.IsNullOrEmpty(jti))
+                {
+                    _revokedTokens[jti] = jwt.ValidTo;
+                    _logger.LogInformation("Token revoked: {Jti}", jti);
+                }
+                else
+                {
+                    _logger.LogWarning("Token revocation skipped: JTI not found.");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to revoke token.");
             }
         }
 
         public bool IsTokenRevoked(string token)
         {
-            var jwt = new JwtSecurityTokenHandler().ReadJwtToken(token);
-            var jti = jwt.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Jti)?.Value;
+            try
+            {
+                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(token);
+                var jti = jwt?.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Jti)?.Value;
 
-            return !string.IsNullOrEmpty(jti) && _revokedTokens.ContainsKey(jti);
+                var isRevoked = jti != null && _revokedTokens.ContainsKey(jti);
+                if (isRevoked)
+                {
+                    _logger.LogInformation("Token is revoked: {Jti}", jti);
+                }
+
+                return isRevoked;
+            }
+            catch (SecurityTokenException ex)
+            {
+                _logger.LogWarning(ex, "Token parsing failed. Treating as non-revoked.");
+                return false;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unexpected error during token revocation check.");
+                return false;
+            }
         }
     }
 }

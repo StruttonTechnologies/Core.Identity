@@ -3,8 +3,6 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using ST.Core.Identity.Domain.Authentication.Entities;
-using ST.Core.Identity.Infrastructure.EF.SqlServer.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;

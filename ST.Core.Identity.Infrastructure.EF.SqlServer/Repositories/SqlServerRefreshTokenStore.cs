@@ -1,6 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ST.Core.Identity.Domain.Authentication.Entities;
-using ST.Core.Identity.Domain.Authentication.Interfaces.Jwtoken;
 using ST.Core.Identity.Infrastructure.EF;
 
 namespace ST.Core.Identity.Infrastructure.EF.SqlServer.Stores

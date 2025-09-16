@@ -16,6 +16,7 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="9.0.9" />
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="9.0.9" />
+    <PackageReference Include="ST.Core.Registration" Version="1.0.0-alpha" />
   </ItemGroup>
 
   <ItemGroup>
@@ -24,12 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Extensions\" />
     <Folder Include="Configuration\UserManager\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Authentication\JwtToken\JwtUserTokenManager.cs" />
   </ItemGroup>
 
 </Project>

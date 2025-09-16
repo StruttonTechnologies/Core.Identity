@@ -1,4 +1,4 @@
-﻿using ST.Core.Identity.Domain.Authentication.Entities;
+﻿using ST.Core.Identity.Domain.Entities;
 using System.ComponentModel.DataAnnotations;
 
 namespace ST.Core.Identity.Infrastructure.EF.Configuration

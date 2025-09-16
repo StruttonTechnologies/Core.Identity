@@ -8,12 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Authentication\Users\**" />
-    <EmbeddedResource Remove="Authentication\Users\**" />
-    <None Remove="Authentication\Users\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="6.0.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -30,17 +24,11 @@
   <ItemGroup>
     <ProjectReference Include="..\ST.Core.Identity.Infrastructure\ST.Core.Identity.Infrastructure.csproj" />
     <ProjectReference Include="..\ST.Core.Identity.Testing\ST.Core.Identity.Testing.csproj" />
+    <ProjectReference Include="..\ST.Core.Identity.UserManager.Testing\ST.Core.Identity.UserManager.Testing.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Using Include="Xunit" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Authentication\UserManagerService\" />
-    <Folder Include="SetUp\Mocks\" />
-    <Folder Include="SetUp\Configuration\" />
-    <Folder Include="SetUp\Validators\" />
   </ItemGroup>
 
 </Project>

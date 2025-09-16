@@ -1,11 +1,9 @@
-﻿using ST.Core.Identity.Application.Authentication.Abstractions.Orchistration.Login;
-using ST.Core.Identity.Domain.Authentication.Interfaces.Token;
-using ST.Core.Identity.Domain.Authentication.Interfaces.UserManager;
-using ST.Core.Identity.Domain.Authorization.Interfaces;
-using ST.Core.Identity.Dtos.Authentication.Logins;
+﻿using ST.Core.Identity.Dtos.Authentication.Logins;
+using ST.Core.IdentityAccess.Contracts.Jwtoken;
+using ST.Core.IdentityAccess.Contracts.UserManager;
 using System.Security;
 
-namespace ST.Core.Identity.Application.Authentication.Abstractions.Orchestration.Login
+namespace ST.Core.Identity.Application.Authentication.Abstractions.Orchistration.Login
 {
     /// <summary>
     /// Provides internal login authentication services for users.

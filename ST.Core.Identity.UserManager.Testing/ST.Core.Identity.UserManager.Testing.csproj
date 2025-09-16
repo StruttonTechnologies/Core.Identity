@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ST.Core.Identity.Infrastructure\ST.Core.Identity.Infrastructure.csproj" />
+    <ProjectReference Include="..\ST.Core.Identity.Testing\ST.Core.Identity.Testing.csproj" />
+    <ProjectReference Include="..\ST.Core.IdentityAccess.UserManager\ST.Core.IdentityAccess.UserManager.csproj" />
+  </ItemGroup>
+
+</Project>
