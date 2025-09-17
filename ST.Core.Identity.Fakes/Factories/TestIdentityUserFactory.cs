@@ -18,7 +18,6 @@ namespace ST.Core.Identity.Fakes.Factories
                 Id = Guid.NewGuid().ToString(),
                 UserName = "test.user",
                 EmailConfirmed = true,
-                PasswordHash = "hashed-password",
                 SecurityStamp = Guid.NewGuid().ToString(),
                 ConcurrencyStamp = Guid.NewGuid().ToString(),
                 LockoutEnabled = false,
