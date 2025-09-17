@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using ST.Core.Identity.Fakes.Factories;
 using ST.Core.IdentityAccess.Fakes.UserManager;
+using ST.Core.IdentityAccess.Fakes.UserManager.Providers;
 
 namespace ST.Core.IdentityAccess.UserManager.Tests.Services.Authentication
 {
@@ -13,15 +14,21 @@ namespace ST.Core.IdentityAccess.UserManager.Tests.Services.Authentication
         /// <summary>
         /// Verifies that a valid token returns <c>true</c>.
         /// </summary>
-        [Fact]
-        public async Task VerifyTwoFactorTokenAsync_ValidToken_ReturnsTrue()
+        [Theory]
+        [InlineData("Phone")]
+        [InlineData("Email")]
+        [InlineData("Custom2FA")]
+        public async Task VerifyTwoFactorTokenAsync_ValidToken_ReturnsTrue(string provider)
         {
+            var tokenProvider = new FakeTwoFactorTokenProvider();
+            UserManager.RegisterTokenProvider(provider, tokenProvider);
+
             var user = TestAppUserIdentityFactory.CreateDefault();
             await UserManager.CreateAsync(user);
             await UserManager.SetTwoFactorEnabledAsync(user, true);
 
-            var token = await UserManager.GenerateTwoFactorTokenAsync(user, TokenOptions.DefaultPhoneProvider);
-            var result = await Service.VerifyTwoFactorTokenAsync(user, TokenOptions.DefaultPhoneProvider, token);
+            var token = await UserManager.GenerateTwoFactorTokenAsync(user, provider);
+            var result = await Service.VerifyTwoFactorTokenAsync(user, provider, token);
 
             Assert.True(result);
         }
@@ -58,9 +65,9 @@ namespace ST.Core.IdentityAccess.UserManager.Tests.Services.Authentication
         /// Verifies that passing a null or empty token provider throws <see cref="ArgumentNullException"/>.
         /// </summary>
         [Theory]
-        [InlineData(null)]
-        [InlineData("")]
-        public async Task VerifyTwoFactorTokenAsync_InvalidProvider_ThrowsArgumentNullException(string? provider)
+        [InlineData(null, typeof(ArgumentNullException))]
+        [InlineData("", typeof(ArgumentException))]
+        public async Task VerifyTwoFactorTokenAsync_InvalidProvider_ThrowsExpectedException(string? provider, Type expectedExceptionType)
         {
             var user = TestAppUserIdentityFactory.CreateDefault();
             await UserManager.CreateAsync(user);
@@ -69,16 +76,17 @@ namespace ST.Core.IdentityAccess.UserManager.Tests.Services.Authentication
                 Service.VerifyTwoFactorTokenAsync(user, provider!, "token"));
 
             Assert.NotNull(exception);
-            Assert.IsType<ArgumentNullException>(exception);
+            Assert.IsType(expectedExceptionType, exception);
         }
+
 
         /// <summary>
         /// Verifies that passing a null or empty token throws <see cref="ArgumentNullException"/>.
         /// </summary>
         [Theory]
-        [InlineData(null)]
-        [InlineData("")]
-        public async Task VerifyTwoFactorTokenAsync_InvalidToken_ThrowsArgumentNullException(string? token)
+        [InlineData(null, typeof(ArgumentNullException))]
+        [InlineData("", typeof(ArgumentException))]
+        public async Task VerifyTwoFactorTokenAsync_InvalidToken_ThrowsArgumentNullException(string? token, Type expectedExceptionType)
         {
             var user = TestAppUserIdentityFactory.CreateDefault();
             await UserManager.CreateAsync(user);
@@ -87,7 +95,7 @@ namespace ST.Core.IdentityAccess.UserManager.Tests.Services.Authentication
                 Service.VerifyTwoFactorTokenAsync(user, TokenOptions.DefaultPhoneProvider, token!));
 
             Assert.NotNull(exception);
-            Assert.IsType<ArgumentNullException>(exception);
+            Assert.IsType(expectedExceptionType, exception);
         }
 
         /// <summary>

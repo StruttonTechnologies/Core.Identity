@@ -2,6 +2,7 @@
 using ST.Core.Identity.Fakes.Factories;
 using ST.Core.Identity.Fakes.Models;
 using ST.Core.IdentityAccess.Fakes.UserManager;
+using ST.Core.IdentityAccess.Fakes.UserManager.Providers;
 
 namespace ST.Core.IdentityAccess.UserManager.Tests.Services.Authentication
 {
@@ -19,9 +20,11 @@ namespace ST.Core.IdentityAccess.UserManager.Tests.Services.Authentication
         {
             var user = TestAppUserIdentityFactory.CreateDefault();
             await UserManager.CreateAsync(user);
-            UserManager.RegisterTokenProvider("CustomProvider", new EmailTokenProvider<TestAppIdentityUser>());
+            
+            var provider = new FakeTwoFactorTokenProvider();
+            UserManager.RegisterTokenProvider("TestProvider", provider);
 
-            var token = await Service.GenerateUserTokenAsync(user, "CustomProvider", "CustomPurpose");
+            var token = await Service.GenerateUserTokenAsync(user, "TestProvider", "CustomPurpose");
 
             Assert.False(string.IsNullOrWhiteSpace(token));
         }

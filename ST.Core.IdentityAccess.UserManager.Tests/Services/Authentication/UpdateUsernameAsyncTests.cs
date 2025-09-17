@@ -1,4 +1,5 @@
 ﻿using ST.Core.Identity.Fakes.Factories;
+using ST.Core.Identity.Fakes.Validators;
 using ST.Core.IdentityAccess.Fakes.UserManager;
 
 namespace ST.Core.IdentityAccess.UserManager.Tests.Services.Authentication
@@ -61,10 +62,13 @@ namespace ST.Core.IdentityAccess.UserManager.Tests.Services.Authentication
             var user = TestAppUserIdentityFactory.Create("originalUser");
             await UserManager.CreateAsync(user);
 
+            UserManager.UserValidators.Clear();
+            UserManager.UserValidators.Add(new UserNameFormatValidator());
+
             var result = await Service.UpdateUsernameAsync(user, ""); // Empty string
 
             Assert.False(result.Succeeded);
-            Assert.Contains("Invalid", string.Join(", ", result.Errors.Select(e => e.Description)));
+            Assert.Contains("Username must be at least 3 characters long", string.Join(", ", result.Errors.Select(e => e.Description)));
         }
 
         /// <summary>
@@ -80,7 +84,7 @@ namespace ST.Core.IdentityAccess.UserManager.Tests.Services.Authentication
             var result = await Service.UpdateUsernameAsync(user, "newUserName");
 
             Assert.False(result.Succeeded);
-            Assert.Contains("Exception occurred:", result.Errors.First().Description);
+            Assert.Contains("User not found in store.", result.Errors.First().Description);
         }
     }
 }

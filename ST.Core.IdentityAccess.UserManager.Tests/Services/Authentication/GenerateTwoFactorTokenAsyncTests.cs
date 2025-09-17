@@ -2,6 +2,7 @@
 using ST.Core.Identity.Fakes.Factories;
 using ST.Core.Identity.Fakes.Models;
 using ST.Core.IdentityAccess.Fakes.UserManager;
+using ST.Core.IdentityAccess.Fakes.UserManager.Providers;
 
 namespace ST.Core.IdentityAccess.UserManager.Tests.Services.Authentication
 {
@@ -19,12 +20,16 @@ namespace ST.Core.IdentityAccess.UserManager.Tests.Services.Authentication
         {
             var user = TestAppUserIdentityFactory.CreateDefault();
             await UserManager.CreateAsync(user);
-            UserManager.RegisterTokenProvider("TestProvider", new EmailTokenProvider<TestAppIdentityUser>());
+
+            var provider = new FakeTwoFactorTokenProvider(); 
+            UserManager.RegisterTokenProvider("TestProvider", provider);
 
             var token = await Service.GenerateTwoFactorTokenAsync(user, "TestProvider");
 
             Assert.False(string.IsNullOrWhiteSpace(token));
         }
+
+
 
         /// <summary>
         /// Verifies that passing a null user throws <see cref="ArgumentNullException"/>.

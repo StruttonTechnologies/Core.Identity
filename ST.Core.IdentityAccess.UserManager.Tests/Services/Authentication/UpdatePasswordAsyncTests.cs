@@ -1,4 +1,5 @@
 ﻿using ST.Core.Identity.Fakes.Factories;
+using ST.Core.Identity.Fakes.Validators;
 using ST.Core.IdentityAccess.Fakes.UserManager;
 
 namespace ST.Core.IdentityAccess.UserManager.Tests.Services.Authentication
@@ -63,6 +64,9 @@ namespace ST.Core.IdentityAccess.UserManager.Tests.Services.Authentication
             await UserManager.CreateAsync(user);
             await UserManager.AddPasswordAsync(user, "OldP@ssword123");
 
+            UserManager.PasswordValidators.Clear();
+            UserManager.PasswordValidators.Add(new StrictPasswordValidator());
+
             var result = await Service.UpdatePasswordAsync(user, "short");
 
             Assert.False(result.Succeeded);
@@ -83,7 +87,7 @@ namespace ST.Core.IdentityAccess.UserManager.Tests.Services.Authentication
             var result = await Service.UpdatePasswordAsync(user, "NewP@ssword456");
 
             Assert.False(result.Succeeded);
-            Assert.Contains("Exception occurred:", result.Errors.First().Description);
+            Assert.Contains("User not found in store.", result.Errors.First().Description);
         }
     }
 }

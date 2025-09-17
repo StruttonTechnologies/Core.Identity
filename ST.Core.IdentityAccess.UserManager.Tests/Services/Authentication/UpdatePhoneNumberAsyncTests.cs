@@ -1,5 +1,7 @@
 ﻿using ST.Core.Identity.Fakes.Factories;
+using ST.Core.Identity.Fakes.Validators;
 using ST.Core.IdentityAccess.Fakes.UserManager;
+using ST.Core.IdentityAccess.Fakes.UserManager.Providers;
 
 namespace ST.Core.IdentityAccess.UserManager.Tests.Services.Authentication
 {
@@ -15,14 +17,20 @@ namespace ST.Core.IdentityAccess.UserManager.Tests.Services.Authentication
         [Fact]
         public async Task UpdatePhoneNumberAsync_ValidPhoneNumber_ReturnsSuccess()
         {
+            var tokenProvider = new FakeTwoFactorTokenProvider();
+            UserManager.RegisterTokenProvider("Phone", tokenProvider);
+
             var user = TestAppUserIdentityFactory.CreateDefault();
             await UserManager.CreateAsync(user);
 
-            var result = await Service.UpdatePhoneNumberAsync(user, "555-1234");
+            UserManager.UserValidators.Clear();
+            UserManager.UserValidators.Add(new PhoneNumberFormatValidator());
+
+            var result = await Service.UpdatePhoneNumberAsync(user, "+15551234567");
 
             Assert.True(result.Succeeded);
             var updatedUser = await UserManager.FindByIdAsync(user.Id);
-            Assert.Equal("555-1234", updatedUser!.PhoneNumber);
+            Assert.Equal("+15551234567", updatedUser!.PhoneNumber);
         }
 
         /// <summary>
@@ -61,10 +69,14 @@ namespace ST.Core.IdentityAccess.UserManager.Tests.Services.Authentication
             var user = TestAppUserIdentityFactory.CreateDefault();
             await UserManager.CreateAsync(user);
 
+            UserManager.UserValidators.Clear();
+            UserManager.UserValidators.Add(new PhoneNumberFormatValidator());
+
+
             var result = await Service.UpdatePhoneNumberAsync(user, "invalid-phone");
 
             Assert.False(result.Succeeded);
-            Assert.Contains("Invalid", string.Join(", ", result.Errors.Select(e => e.Description)));
+            Assert.Contains("Phone number must be in valid internation", string.Join(", ", result.Errors.Select(e => e.Description)));
         }
 
         /// <summary>
@@ -80,7 +92,7 @@ namespace ST.Core.IdentityAccess.UserManager.Tests.Services.Authentication
             var result = await Service.UpdatePhoneNumberAsync(user, "555-1234");
 
             Assert.False(result.Succeeded);
-            Assert.Contains("Exception occurred:", result.Errors.First().Description);
+            Assert.Contains("User not found in store.", result.Errors.First().Description);
         }
     }
 }

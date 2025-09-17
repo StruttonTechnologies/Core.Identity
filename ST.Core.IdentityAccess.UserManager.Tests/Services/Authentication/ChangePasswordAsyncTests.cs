@@ -47,10 +47,6 @@ namespace ST.Core.IdentityAccess.UserManager.Tests.Services.Authentication
             var originalPassword = "OldP@ssword123";
             var newPassword = "NewP@ssword456";
 
-            await UserManager.CreateAsync(user);
-            await UserManager.AddPasswordAsync(user, originalPassword);
-            await UserManager.DeleteAsync(user); // Simulate failure
-
             var result = await Service.ChangePasswordAsync(user, originalPassword, newPassword);
 
             Assert.False(result.Succeeded);

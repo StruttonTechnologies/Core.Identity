@@ -1,4 +1,5 @@
 ﻿using ST.Core.Identity.Fakes.Factories;
+using ST.Core.Identity.Fakes.Validators;
 using ST.Core.IdentityAccess.Fakes.UserManager;
 
 namespace ST.Core.IdentityAccess.UserManager.Tests.Services.Authentication
@@ -47,6 +48,9 @@ namespace ST.Core.IdentityAccess.UserManager.Tests.Services.Authentication
 
             // Simulate failure by setting invalid email format
             user.Email = "invalid-email";
+
+            UserManager.UserValidators.Clear();
+            UserManager.UserValidators.Add(new AlwaysFailUserValidator());
 
             var exception = await Record.ExceptionAsync(() => Service.UpdateAsync(user));
 

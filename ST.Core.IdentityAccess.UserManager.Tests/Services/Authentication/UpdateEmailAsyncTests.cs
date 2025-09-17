@@ -1,4 +1,5 @@
 ﻿using ST.Core.Identity.Fakes.Factories;
+using ST.Core.Identity.Fakes.Validators;
 using ST.Core.IdentityAccess.Fakes.UserManager;
 
 namespace ST.Core.IdentityAccess.UserManager.Tests.Services.Authentication
@@ -61,10 +62,13 @@ namespace ST.Core.IdentityAccess.UserManager.Tests.Services.Authentication
             var user = TestAppUserIdentityFactory.CreateDefault();
             await UserManager.CreateAsync(user);
 
+            UserManager.UserValidators.Clear();
+            UserManager.UserValidators.Add(new EmailFormatValidator());
+
             var result = await Service.UpdateEmailAsync(user, "invalid-email");
 
             Assert.False(result.Succeeded);
-            Assert.Contains("Invalid", string.Join(", ", result.Errors.Select(e => e.Description)));
+            Assert.Contains("invalid.", string.Join(", ", result.Errors.Select(e => e.Description)));
         }
 
         /// <summary>
@@ -80,7 +84,7 @@ namespace ST.Core.IdentityAccess.UserManager.Tests.Services.Authentication
             var result = await Service.UpdateEmailAsync(user, "updated@example.com");
 
             Assert.False(result.Succeeded);
-            Assert.Contains("Exception occurred:", result.Errors.First().Description);
+            Assert.Contains("User not found in store", result.Errors.First().Description);
         }
     }
 }

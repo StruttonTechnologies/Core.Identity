@@ -76,6 +76,7 @@ namespace ST.Core.IdentityAccess.UserManager.Tests.Services.Authentication
             var token = await UserManager.GenerateEmailConfirmationTokenAsync(user);
             await UserManager.DeleteAsync(user); // Simulate failure
 
+            user.Id = Guid.NewGuid().ToString();  // Change ID to simulate not found
             var result = await Service.ConfirmEmailAsync(user, token);
 
             Assert.False(result.Succeeded);

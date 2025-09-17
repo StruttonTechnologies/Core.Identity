@@ -29,7 +29,7 @@ namespace ST.Core.IdentityAccess.UserManager.Tests.Services.Authentication
             Assert.True(result.Succeeded);
 
             var updatedUser = await UserManager.FindByIdAsync(user.Id);
-            Assert.Equal(1, updatedUser!.AccessFailedCount); // ✅ Updated expectation
+            Assert.Equal(1, updatedUser!.AccessFailedCount); 
         }
 
 
@@ -52,13 +52,9 @@ namespace ST.Core.IdentityAccess.UserManager.Tests.Services.Authentication
         [Fact]
         public async Task AccessFailedAsync_ThrowsException_ReturnsFailedResult()
         {
-            var user = TestAppUserIdentityFactory.CreateDefault();
-            await UserManager.CreateAsync(user);
-
-            // Simulate failure by removing user from store before calling AccessFailedAsync
-            await UserManager.DeleteAsync(user);
-
+            var user = TestAppUserIdentityFactory.CreateDefault(); 
             var result = await Service.AccessFailedAsync(user);
+
 
             Assert.False(result.Succeeded);
             Assert.Contains("Exception:", result.Errors.First().Description);

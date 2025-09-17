@@ -40,15 +40,17 @@ namespace ST.Core.IdentityAccess.UserManager.Tests.Services.Authentication
         /// </summary>
         /// <param name="username">The username input to test.</param>
         [Theory]
-        [InlineData(null)]
-        [InlineData("")]
-        public async Task FindByUsernameAsync_InvalidUsername_ThrowsArgumentNullException(string? username)
+        [InlineData(null, typeof(ArgumentNullException))]
+        [InlineData("", typeof(ArgumentException))]
+        public async Task FindByUsernameAsync_InvalidUsername_ThrowsExpectedException(string? username, Type expectedExceptionType)
         {
             var exception = await Record.ExceptionAsync(() => Service.FindByUsernameAsync(username!));
 
             Assert.NotNull(exception);
-            Assert.IsType<ArgumentNullException>(exception);
+            Assert.IsType(expectedExceptionType, exception);
         }
+
+
 
         /// <summary>
         /// Verifies that an exception during lookup is propagated and logged.
@@ -56,11 +58,11 @@ namespace ST.Core.IdentityAccess.UserManager.Tests.Services.Authentication
         [Fact]
         public async Task FindByUsernameAsync_ThrowsException_PropagatesException()
         {
-            var user = TestAppUserIdentityFactory.Create("testuser");
+            var user = TestAppUserIdentityFactory.Create("simulate-exception");
             await UserManager.CreateAsync(user);
             await UserManager.DeleteAsync(user); // Simulate failure
 
-            var exception = await Record.ExceptionAsync(() => Service.FindByUsernameAsync("testuser"));
+            var exception = await Record.ExceptionAsync(() => Service.FindByUsernameAsync("simulate-exception"));
 
             Assert.NotNull(exception);
             Assert.IsType<InvalidOperationException>(exception); // Or whatever exception your store throws

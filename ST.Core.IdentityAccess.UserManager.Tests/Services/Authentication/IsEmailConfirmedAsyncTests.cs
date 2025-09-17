@@ -60,7 +60,7 @@ namespace ST.Core.IdentityAccess.UserManager.Tests.Services.Authentication
             var user = TestAppUserIdentityFactory.CreateDefault();
             user.EmailConfirmed = true;
             await UserManager.CreateAsync(user);
-            await UserManager.DeleteAsync(user); // Simulate failure
+            await UserManager.DeleteAsync(user); 
 
             var result = await Service.IsEmailConfirmedAsync(user);
 

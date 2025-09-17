@@ -38,12 +38,12 @@ namespace ST.Core.IdentityAccess.UserManager.Tests.Services.Authentication
         }
 
         /// <summary>
-        /// Verifies that passing a null or empty username throws <see cref="ArgumentNullException"/>.
+        /// Verifies that passing a null or empty username throws the expected exception.
         /// </summary>
         [Theory]
-        [InlineData(null)]
-        [InlineData("")]
-        public async Task SetUserNameAsync_InvalidUserName_ThrowsArgumentNullException(string? userName)
+        [InlineData(null, typeof(ArgumentNullException))]
+        [InlineData("", typeof(ArgumentException))]
+        public async Task SetUserNameAsync_InvalidUserName_ThrowsExpectedException(string? userName, Type expectedExceptionType)
         {
             var user = TestAppUserIdentityFactory.Create("originalUser");
             await UserManager.CreateAsync(user);
@@ -51,8 +51,10 @@ namespace ST.Core.IdentityAccess.UserManager.Tests.Services.Authentication
             var exception = await Record.ExceptionAsync(() => Service.SetUserNameAsync(user, userName));
 
             Assert.NotNull(exception);
-            Assert.IsType<ArgumentNullException>(exception);
+            Assert.IsType(expectedExceptionType, exception);
         }
+
+
 
         /// <summary>
         /// Verifies that an exception during username assignment returns a failed result and logs the error.

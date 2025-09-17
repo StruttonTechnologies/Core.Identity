@@ -57,11 +57,6 @@ namespace ST.Core.IdentityAccess.UserManager.Tests.Services.Authentication
         {
             var user = TestAppUserIdentityFactory.CreateDefault();
             var password = "ValidP@ssword123";
-
-            await UserManager.CreateAsync(user);
-            await UserManager.AddPasswordAsync(user, password);
-            await UserManager.DeleteAsync(user); // Simulate failure
-
             var result = await Service.CheckPasswordAsync(user, password);
 
             Assert.False(result);
