@@ -9,5 +9,6 @@ namespace ST.Core.Identity.Dtos.Authorization.Claims
     /// <summary>
     /// Represents the data required to add a claim to a user.
     /// </summary>
+    ///  [ExcludeFromCodeCoverage]
     public record AddClaimRequestDto(Guid UserId,string ClaimType,string ClaimValue);
 }
