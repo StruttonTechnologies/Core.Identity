@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using ST.Core.Identity.Fakes.Models;
-using ST.Core.Identity.Infrastructure.Tests.SetUp.Models;
 using ST.Core.IdentityAccess.UserManager.Authentication;
 using System;
 using System.Collections.Generic;

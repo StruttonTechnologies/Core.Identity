@@ -3,7 +3,6 @@ using Microsoft.Extensions.Logging;
 using ST.Core.IdentityAccess.Fakes.Stores;
 using ST.Core.Identity.Fakes.Models;
 using ST.Core.IdentityAccess.UserManager;
-using ST.Core.Identity.Infrastructure.Tests.SetUp.Models;
 using ST.Core.IdentityAccess.UserManager.Authentication;
 
 namespace ST.Core.IdentityAccess.Fakes.UserManager
