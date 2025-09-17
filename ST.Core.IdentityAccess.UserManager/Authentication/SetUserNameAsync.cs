@@ -23,7 +23,7 @@ namespace ST.Core.IdentityAccess.UserManager.Authentication
         public virtual async Task<IdentityResult> SetUserNameAsync(TUser user, string? userName, CancellationToken cancellationToken = default)
         {
             ArgumentNullException.ThrowIfNull(user);
-            ArgumentNullException.ThrowIfNullOrEmpty(userName);
+            ArgumentNullException.ThrowIfNullOrWhiteSpace(userName);
             
 
             try

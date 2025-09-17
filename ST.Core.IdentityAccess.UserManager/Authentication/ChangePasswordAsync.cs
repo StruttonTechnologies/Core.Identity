@@ -29,7 +29,19 @@ namespace ST.Core.IdentityAccess.UserManager.Authentication
 
             try
             {
-                return await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
+                var result = await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
+
+                if (!result.Succeeded)
+                {
+                    var wrappedErrors = result.Errors.Select(e => new IdentityError
+                    {
+                        Description = $"Exception: {e.Description}"
+                    });
+
+                    return IdentityResult.Failed(wrappedErrors.ToArray());
+                }
+
+                return result;
             }
             catch (Exception ex)
             {

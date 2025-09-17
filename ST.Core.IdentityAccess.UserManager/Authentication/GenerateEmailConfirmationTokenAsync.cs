@@ -21,11 +21,14 @@ namespace ST.Core.IdentityAccess.UserManager.Authentication
         /// </returns>
         public virtual async Task<string> GenerateEmailConfirmationTokenAsync(TUser user, CancellationToken cancellationToken = default)
         {
-            if (user == null)
-                throw new ArgumentNullException(nameof(user));
+            ArgumentNullException.ThrowIfNull(user);
 
             try
             {
+                var existingUser = await _userManager.FindByIdAsync(user.Id);
+                if (existingUser == null)
+                    throw new InvalidOperationException($"User {user.Id} not found in store.");
+
                 return await _userManager.GenerateEmailConfirmationTokenAsync(user);
             }
             catch (Exception ex)

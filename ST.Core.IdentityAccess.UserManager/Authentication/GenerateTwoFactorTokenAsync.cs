@@ -22,8 +22,8 @@ namespace ST.Core.IdentityAccess.UserManager.Authentication
         /// </returns>
         public virtual async Task<string> GenerateTwoFactorTokenAsync(TUser user, string tokenProvider, CancellationToken cancellationToken = default)
         {
-            if (user == null)
-                throw new ArgumentNullException(nameof(user));
+            ArgumentNullException.ThrowIfNull(user);
+            
             if (string.IsNullOrEmpty(tokenProvider))
                 throw new ArgumentException("Token provider must not be null or empty.", nameof(tokenProvider));
 

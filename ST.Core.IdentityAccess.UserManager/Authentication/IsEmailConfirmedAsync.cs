@@ -21,16 +21,19 @@ namespace ST.Core.IdentityAccess.UserManager.Authentication
         /// </returns>
         public virtual async Task<bool> IsEmailConfirmedAsync(TUser user, CancellationToken cancellationToken = default)
         {
-            if (user == null)
-                throw new ArgumentNullException(nameof(user));
+            ArgumentNullException.ThrowIfNull(user);
 
             try
             {
+                var existingUser = await _userManager.FindByIdAsync(user.Id);
+                if (existingUser == null)
+                    throw new InvalidOperationException($"User {user.Id} not found in store.");
+
                 return await _userManager.IsEmailConfirmedAsync(user);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed to check if email is confirmed for user {UserId}", user?.Id);
+                _logger.LogError(ex, "Failed to check email confirmation for user {UserId}", user?.Id);
                 return false;
             }
         }

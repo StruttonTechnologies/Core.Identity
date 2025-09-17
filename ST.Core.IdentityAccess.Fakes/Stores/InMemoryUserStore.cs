@@ -1,219 +1,276 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.Collections.Concurrent;
 using ST.Core.Identity.Fakes.Models;
+
 namespace ST.Core.IdentityAccess.Fakes.Stores
 {
-    /// <summary>
-    /// In-memory implementation of <see cref="IUserStore{TUser}"/> and <see cref="IUserLockoutStore{TUser}"/>
-    /// for <see cref="TestAppIdentityUser"/>. Used for testing purposes.
-    /// </summary>
+
     public class InMemoryUserStore :
         IUserStore<TestAppIdentityUser>,
-        IUserLockoutStore<TestAppIdentityUser>
-    {
-        /// <summary>
-        /// Stores users by their ID.
-        /// </summary>
-        private readonly ConcurrentDictionary<string, TestAppIdentityUser> _users = new();
+        IUserPasswordStore<TestAppIdentityUser>,
+        IUserEmailStore<TestAppIdentityUser>,
+        IUserLockoutStore<TestAppIdentityUser>,
+        IUserLoginStore<TestAppIdentityUser>,
+        IUserTwoFactorStore<TestAppIdentityUser>,
+        IUserPhoneNumberStore<TestAppIdentityUser>
 
-        /// <summary>
-        /// Creates a new user in the store.
-        /// </summary>
-        /// <param name="user">The user to create.</param>
-        /// <param name="cancellationToken">Cancellation token.</param>
-        /// <returns>An <see cref="IdentityResult"/> indicating success.</returns>
-        /// <exception cref="InvalidOperationException">Thrown if user ID is not set.</exception>
+    {
+        private readonly ConcurrentDictionary<string, TestAppIdentityUser> _users = new();
+        private readonly ConcurrentDictionary<string, string> _normalizedUserNames = new();
+        private readonly ConcurrentDictionary<string, string> _normalizedEmails = new();
+        private readonly ConcurrentDictionary<string, List<UserLoginInfo>> _logins = new();
+        private readonly HashSet<string> _deletedUserIds = new();
+
+
         public Task<IdentityResult> CreateAsync(TestAppIdentityUser user, CancellationToken cancellationToken)
         {
             if (string.IsNullOrWhiteSpace(user.Id))
-                throw new InvalidOperationException("User ID must be set before creation.");
+                throw new InvalidOperationException("Exception: User ID must be set before creation.");
+
+            if (_users.ContainsKey(user.Id) || _deletedUserIds.Contains(user.Id))
+                return Task.FromResult(Failed("Exception: User already exists or was previously deleted."));
 
             _users[user.Id] = user;
             return Task.FromResult(IdentityResult.Success);
         }
 
-        /// <summary>
-        /// Finds a user by their ID.
-        /// </summary>
-        /// <param name="userId">The user ID.</param>
-        /// <param name="cancellationToken">Cancellation token.</param>
-        /// <returns>The user if found; otherwise, null.</returns>
-        public Task<TestAppIdentityUser?> FindByIdAsync(string userId, CancellationToken cancellationToken)
-        {
-            _users.TryGetValue(userId, out var user);
-            return Task.FromResult(user);
-        }
 
-        /// <summary>
-        /// Deletes a user from the store.
-        /// </summary>
-        /// <param name="user">The user to delete.</param>
-        /// <param name="cancellationToken">Cancellation token.</param>
-        /// <returns>An <see cref="IdentityResult"/> indicating success.</returns>
         public Task<IdentityResult> DeleteAsync(TestAppIdentityUser user, CancellationToken cancellationToken)
         {
+            if (!_users.ContainsKey(user.Id))
+                return Task.FromResult(Failed("Exception: User not found in store."));
+
             _users.TryRemove(user.Id, out _);
+            _normalizedUserNames.TryRemove(user.Id, out _);
+            _normalizedEmails.TryRemove(user.Id, out _);
+            _logins.TryRemove(user.Id, out _);
+            _deletedUserIds.Add(user.Id);
             return Task.FromResult(IdentityResult.Success);
         }
 
-        /// <summary>
-        /// Updates a user in the store.
-        /// </summary>
-        /// <param name="user">The user to update.</param>
-        /// <param name="cancellationToken">Cancellation token.</param>
-        /// <returns>An <see cref="IdentityResult"/> indicating success.</returns>
+
         public Task<IdentityResult> UpdateAsync(TestAppIdentityUser user, CancellationToken cancellationToken)
         {
+            if (!_users.ContainsKey(user.Id))
+                return Task.FromResult(Failed("Exception: User not found in store."));
+
             _users[user.Id] = user;
             return Task.FromResult(IdentityResult.Success);
         }
 
-        /// <summary>
-        /// Finds a user by their normalized username.
-        /// </summary>
-        /// <param name="normalizedUserName">The normalized username.</param>
-        /// <param name="cancellationToken">Cancellation token.</param>
-        /// <returns>The user if found; otherwise, null.</returns>
-        public Task<TestAppIdentityUser?> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
+
+
+        public Task<TestAppIdentityUser?> FindByIdAsync(string userId, CancellationToken cancellationToken)
         {
-            var user = _users.Values.FirstOrDefault(u => u.UserName.ToUpperInvariant() == normalizedUserName);
-            return Task.FromResult(user);
+            if (_deletedUserIds.Contains(userId))
+                return Task.FromResult<TestAppIdentityUser?>(null);
+
+            return Task.FromResult(_users.TryGetValue(userId, out var user) ? user : null);
         }
 
-        /// <summary>
-        /// Gets the user ID for the specified user.
-        /// </summary>
-        /// <param name="user">The user.</param>
-        /// <param name="cancellationToken">Cancellation token.</param>
-        /// <returns>The user ID.</returns>
+        public Task<TestAppIdentityUser?> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
+        {
+            if (normalizedUserName.Equals("simulate-exception", StringComparison.OrdinalIgnoreCase))
+                throw new InvalidOperationException("Simulated failure for testing.");
+
+            return Task.FromResult(_users.Values.FirstOrDefault(u =>
+                _normalizedUserNames.TryGetValue(u.Id, out var name) && name == normalizedUserName));
+        }
+
         public Task<string> GetUserIdAsync(TestAppIdentityUser user, CancellationToken cancellationToken)
             => Task.FromResult(user.Id);
 
-        /// <summary>
-        /// Gets the username for the specified user.
-        /// </summary>
-        /// <param name="user">The user.</param>
-        /// <param name="cancellationToken">Cancellation token.</param>
-        /// <returns>The username.</returns>
+
         public Task<string> GetUserNameAsync(TestAppIdentityUser user, CancellationToken cancellationToken)
             => Task.FromResult(user.UserName);
 
-        /// <summary>
-        /// Sets the username for the specified user.
-        /// </summary>
-        /// <param name="user">The user.</param>
-        /// <param name="userName">The username to set.</param>
-        /// <param name="cancellationToken">Cancellation token.</param>
-        /// <returns>A completed task.</returns>
+ 
         public Task SetUserNameAsync(TestAppIdentityUser user, string userName, CancellationToken cancellationToken)
         {
             user.UserName = userName;
+            TryUpdate(user);
             return Task.CompletedTask;
         }
 
-        /// <summary>
-        /// Gets the normalized username for the specified user.
-        /// </summary>
-        /// <param name="user">The user.</param>
-        /// <param name="cancellationToken">Cancellation token.</param>
-        /// <returns>The normalized username.</returns>
         public Task<string> GetNormalizedUserNameAsync(TestAppIdentityUser user, CancellationToken cancellationToken)
-            => Task.FromResult(user.UserName.ToUpperInvariant());
+            => Task.FromResult(_normalizedUserNames.TryGetValue(user.Id, out var name) ? name : user.UserName?.ToUpperInvariant() ?? string.Empty);
 
-        /// <summary>
-        /// Sets the normalized username for the specified user.
-        /// </summary>
-        /// <param name="user">The user.</param>
-        /// <param name="normalizedName">The normalized username to set.</param>
-        /// <param name="cancellationToken">Cancellation token.</param>
-        /// <returns>A completed task.</returns>
+
         public Task SetNormalizedUserNameAsync(TestAppIdentityUser user, string normalizedName, CancellationToken cancellationToken)
-            => Task.CompletedTask;
+        {
+            _normalizedUserNames[user.Id] = normalizedName;
+            return Task.CompletedTask;
+        }
 
-        /// <summary>
-        /// Gets the access failed count for the specified user.
-        /// </summary>
-        /// <param name="user">The user.</param>
-        /// <param name="cancellationToken">Cancellation token.</param>
-        /// <returns>The access failed count.</returns>
+        public Task<string?> GetPasswordHashAsync(TestAppIdentityUser user, CancellationToken cancellationToken)
+            => Task.FromResult(user.PasswordHash);
+
+
+        public Task<bool> HasPasswordAsync(TestAppIdentityUser user, CancellationToken cancellationToken)
+            => Task.FromResult(!string.IsNullOrEmpty(user.PasswordHash));
+
+        public Task SetPasswordHashAsync(TestAppIdentityUser user, string? passwordHash, CancellationToken cancellationToken)
+        {
+            user.PasswordHash = passwordHash;
+            TryUpdate(user);
+            return Task.CompletedTask;
+        }
+
+
+        public Task<string?> GetEmailAsync(TestAppIdentityUser user, CancellationToken cancellationToken)
+            => Task.FromResult(user.Email);
+
+
+        public Task<bool> GetEmailConfirmedAsync(TestAppIdentityUser user, CancellationToken cancellationToken)
+            => Task.FromResult(user.EmailConfirmed);
+
+        public Task SetEmailAsync(TestAppIdentityUser user, string? email, CancellationToken cancellationToken)
+        {
+            user.Email = email;
+            TryUpdate(user);
+            return Task.CompletedTask;
+        }
+
+        public Task SetEmailConfirmedAsync(TestAppIdentityUser user, bool confirmed, CancellationToken cancellationToken)
+        {
+            user.EmailConfirmed = confirmed;
+            TryUpdate(user);
+            return Task.CompletedTask;
+        }
+
+        public Task<TestAppIdentityUser?> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken)
+            => Task.FromResult(_users.Values.FirstOrDefault(u =>
+                _normalizedEmails.TryGetValue(u.Id, out var email) && email == normalizedEmail));
+
+        public Task<string> GetNormalizedEmailAsync(TestAppIdentityUser user, CancellationToken cancellationToken)
+            => Task.FromResult(_normalizedEmails.TryGetValue(user.Id, out var email) ? email : user.Email?.ToUpperInvariant() ?? string.Empty);
+
+        public Task SetNormalizedEmailAsync(TestAppIdentityUser user, string normalizedEmail, CancellationToken cancellationToken)
+        {
+            _normalizedEmails[user.Id] = normalizedEmail;
+            return Task.CompletedTask;
+        }
+
         public Task<int> GetAccessFailedCountAsync(TestAppIdentityUser user, CancellationToken cancellationToken)
             => Task.FromResult(user.AccessFailedCount);
 
-        /// <summary>
-        /// Increments the access failed count for the specified user.
-        /// </summary>
-        /// <param name="user">The user.</param>
-        /// <param name="cancellationToken">Cancellation token.</param>
-        /// <returns>The new access failed count.</returns>
         public Task<int> IncrementAccessFailedCountAsync(TestAppIdentityUser user, CancellationToken cancellationToken)
         {
+            if (!TryEnsureExists(user))
+                throw new InvalidOperationException("Exception: User not found in store.");
+
             user.AccessFailedCount++;
             _users[user.Id] = user;
             return Task.FromResult(user.AccessFailedCount);
         }
 
-        /// <summary>
-        /// Resets the access failed count for the specified user.
-        /// </summary>
-        /// <param name="user">The user.</param>
-        /// <param name="cancellationToken">Cancellation token.</param>
-        /// <returns>A completed task.</returns>
         public Task ResetAccessFailedCountAsync(TestAppIdentityUser user, CancellationToken cancellationToken)
         {
+            if (!TryEnsureExists(user))
+                throw new InvalidOperationException("Exception: User not found in store.");
+
             user.AccessFailedCount = 0;
             _users[user.Id] = user;
             return Task.CompletedTask;
         }
 
-        /// <summary>
-        /// Gets a value indicating whether lockout is enabled for the specified user.
-        /// </summary>
-        /// <param name="user">The user.</param>
-        /// <param name="cancellationToken">Cancellation token.</param>
-        /// <returns>True if lockout is enabled; otherwise, false.</returns>
         public Task<bool> GetLockoutEnabledAsync(TestAppIdentityUser user, CancellationToken cancellationToken)
             => Task.FromResult(user.LockoutEnabled);
 
-        /// <summary>
-        /// Sets a value indicating whether lockout is enabled for the specified user.
-        /// </summary>
-        /// <param name="user">The user.</param>
-        /// <param name="enabled">True to enable lockout; otherwise, false.</param>
-        /// <param name="cancellationToken">Cancellation token.</param>
-        /// <returns>A completed task.</returns>
         public Task SetLockoutEnabledAsync(TestAppIdentityUser user, bool enabled, CancellationToken cancellationToken)
         {
             user.LockoutEnabled = enabled;
-            _users[user.Id] = user;
+            TryUpdate(user);
             return Task.CompletedTask;
         }
 
-        /// <summary>
-        /// Gets the lockout end date for the specified user.
-        /// </summary>
-        /// <param name="user">The user.</param>
-        /// <param name="cancellationToken">Cancellation token.</param>
-        /// <returns>The lockout end date, if set; otherwise, null.</returns>
         public Task<DateTimeOffset?> GetLockoutEndDateAsync(TestAppIdentityUser user, CancellationToken cancellationToken)
             => Task.FromResult(user.LockoutEnd);
 
-        /// <summary>
-        /// Sets the lockout end date for the specified user.
-        /// </summary>
-        /// <param name="user">The user.</param>
-        /// <param name="lockoutEnd">The lockout end date to set.</param>
-        /// <param name="cancellationToken">Cancellation token.</param>
-        /// <returns>A completed task.</returns>
         public Task SetLockoutEndDateAsync(TestAppIdentityUser user, DateTimeOffset? lockoutEnd, CancellationToken cancellationToken)
         {
             user.LockoutEnd = lockoutEnd;
-            _users[user.Id] = user;
+            TryUpdate(user);
             return Task.CompletedTask;
         }
 
-        /// <summary>
-        /// Disposes the store. No resources to release.
-        /// </summary>
+        public Task AddLoginAsync(TestAppIdentityUser user, UserLoginInfo login, CancellationToken cancellationToken)
+        {
+            if (!_logins.ContainsKey(user.Id))
+                _logins[user.Id] = new List<UserLoginInfo>();
+
+            _logins[user.Id].Add(login);
+            return Task.CompletedTask;
+        }
+
+        public Task<TestAppIdentityUser?> FindByLoginAsync(string loginProvider, string providerKey, CancellationToken cancellationToken)
+        {
+            var userId = _logins.FirstOrDefault(kvp =>
+                kvp.Value.Any(l => l.LoginProvider == loginProvider && l.ProviderKey == providerKey)).Key;
+
+            return Task.FromResult(userId != null && _users.TryGetValue(userId, out var user) ? user : null);
+        }
+
+        public Task<IList<UserLoginInfo>> GetLoginsAsync(TestAppIdentityUser user, CancellationToken cancellationToken)
+            => Task.FromResult<IList<UserLoginInfo>>(_logins.TryGetValue(user.Id, out var logins) ? logins : new List<UserLoginInfo>());
+
+        public Task<bool> GetTwoFactorEnabledAsync(TestAppIdentityUser user, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(user.TwoFactorEnabled);
+        }
+
+        public Task SetTwoFactorEnabledAsync(TestAppIdentityUser user, bool enabled, CancellationToken cancellationToken)
+        {
+            user.TwoFactorEnabled = enabled;
+            return Task.CompletedTask;
+        }
+
+        public Task RemoveLoginAsync(TestAppIdentityUser user, string loginProvider, string providerKey, CancellationToken cancellationToken)
+        {
+            if (_logins.TryGetValue(user.Id, out var logins))
+                logins.RemoveAll(l => l.LoginProvider == loginProvider && l.ProviderKey == providerKey);
+
+            return Task.CompletedTask;
+        }
+
+        public Task<string> GetPhoneNumberAsync(TestAppIdentityUser user, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(user.PhoneNumber);
+        }
+
+        public Task SetPhoneNumberAsync(TestAppIdentityUser user, string phoneNumber, CancellationToken cancellationToken)
+        {
+            user.PhoneNumber = phoneNumber;
+            return Task.CompletedTask;
+        }
+
+        public Task<bool> GetPhoneNumberConfirmedAsync(TestAppIdentityUser user, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(user.PhoneNumberConfirmed);
+        }
+
+        public Task SetPhoneNumberConfirmedAsync(TestAppIdentityUser user, bool confirmed, CancellationToken cancellationToken)
+        {
+            user.PhoneNumberConfirmed = confirmed;
+            return Task.CompletedTask;
+        }
+
+
+
         public void Dispose() { }
+
+        private bool TryEnsureExists(TestAppIdentityUser user)
+            => !string.IsNullOrWhiteSpace(user.Id) && _users.ContainsKey(user.Id);
+
+        private void TryUpdate(TestAppIdentityUser user)
+        {
+            if (!string.IsNullOrWhiteSpace(user.Id) && _users.ContainsKey(user.Id))
+            {
+                _users[user.Id] = user;
+            }
+        }
+
+        private IdentityResult Failed(string message)
+            => IdentityResult.Failed(new IdentityError { Description = message });
     }
 }

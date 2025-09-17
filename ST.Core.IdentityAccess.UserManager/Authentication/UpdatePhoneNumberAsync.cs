@@ -11,6 +11,8 @@ namespace ST.Core.IdentityAccess.UserManager.Authentication
     public abstract partial class AuthenticationUserService<TUser>
         where TUser : IdentityUser, new() 
     {
+        private readonly IUserValidator<TUser> _userValidator;
+
         /// <summary>
         /// Asynchronously updates the phone number for the specified user.
         /// Generates a change phone number token, applies the change, and logs any errors.
@@ -26,6 +28,18 @@ namespace ST.Core.IdentityAccess.UserManager.Authentication
         {
             ArgumentNullException.ThrowIfNull(user);
             ArgumentNullException.ThrowIfNull(newPhoneNumber);
+
+            user.PhoneNumber = newPhoneNumber;
+
+            // Trigger validation via UpdateAsync (even if you discard the result)
+            var validationResult = await _userManager.UpdateAsync(user);
+            if (!validationResult.Succeeded)
+            {
+                _logger.LogWarning("Phone number validation failed for user {UserId}: {Errors}", user.Id,
+                    string.Join(", ", validationResult.Errors.Select(e => e.Description)));
+
+                return validationResult;
+            }
 
             try
             {
