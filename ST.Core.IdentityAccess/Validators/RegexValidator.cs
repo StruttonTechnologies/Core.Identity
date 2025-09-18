@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ST.Core.Identity.Fakes.Factories
+namespace ST.Core.IdentityAccess.Validators
 {
-    internal class TestIdentityResultFactory
+    internal class RegexValidator
     {
     }
 }

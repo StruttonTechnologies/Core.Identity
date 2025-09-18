@@ -13,7 +13,6 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
-    <PackageReference Include="Moq" Version="4.20.72" />
     <PackageReference Include="xunit" Version="2.9.3" />
     <PackageReference Include="xunit.runner.visualstudio" Version="3.1.4">
       <PrivateAssets>all</PrivateAssets>
@@ -22,16 +21,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ST.Core.Identity.Application\ST.Core.Identity.Application.csproj" />
-    <ProjectReference Include="..\ST.Core.Identity.Fakes\ST.Core.Identity.Fakes.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Using Include="Xunit" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Authentication\Mocks\" />
+    <ProjectReference Include="..\ST.Core.Identity.Fakes\ST.Core.Identity.Fakes.csproj" />
   </ItemGroup>
 
 </Project>

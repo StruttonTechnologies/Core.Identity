@@ -13,19 +13,23 @@ namespace ST.Core.Identity.Fakes.Validators
     /// </summary>
     public class ReservedUserNameValidator : IUserValidator<TestAppIdentityUser>
     {
-        private static readonly HashSet<string> ReservedNames = new(StringComparer.OrdinalIgnoreCase)
-    {
-        "admin", "root", "system"
-    };
+        private readonly HashSet<string> _reservedNames;
+        private readonly string _description;
+
+        public ReservedUserNameValidator(IEnumerable<string> reservedNames, string description)
+        {
+            _reservedNames = new HashSet<string>(reservedNames, StringComparer.OrdinalIgnoreCase);
+            _description = description;
+        }
 
         public Task<IdentityResult> ValidateAsync(UserManager<TestAppIdentityUser> manager, TestAppIdentityUser user)
         {
-            if (ReservedNames.Contains(user.UserName ?? ""))
+            if (_reservedNames.Contains(user.UserName ?? ""))
             {
                 return Task.FromResult(IdentityResult.Failed(new IdentityError
                 {
                     Code = "ReservedUserName",
-                    Description = $"Username '{user.UserName}' is reserved and cannot be used."
+                    Description = _description
                 }));
             }
 
