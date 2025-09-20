@@ -1,11 +1,14 @@
-﻿namespace ST.Core.IdentityAccess.Contracts.UserManager
+﻿using Microsoft.AspNetCore.Identity;
+
+namespace ST.Core.IdentityAccess.Contracts.UserManager
 {
     /// <summary>
     /// Provides methods for looking up user information.
     /// </summary>
     /// <typeparam name="TUser">The type of the user entity.</typeparam>
-    public interface IUserLookupManager<TUser>
-        where TUser : class
+    public interface IUserLookupManager<TUser, TKey>
+         where TUser : IdentityUser<TKey>, new()
+         where TKey : IEquatable<TKey>
     {
         /// <summary>
         /// Finds a user by their unique identifier.

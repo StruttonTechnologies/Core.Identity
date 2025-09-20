@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace ST.Core.IdentityAccess.UserManager.Authentication
 {
-    public abstract partial class AuthenticationUserService<TUser> 
-        where TUser : IdentityUser, new()
+    public abstract partial class AuthenticationUserService<TUser, TKey>
+        where TUser : IdentityUser<TKey>, new()
+        where TKey : IEquatable<TKey>
     {
         /// <summary>
         /// Asynchronously verifies a two-factor authentication token for the specified user and provider.
@@ -33,7 +34,7 @@ namespace ST.Core.IdentityAccess.UserManager.Authentication
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed to verify two-factor token for user {UserId} with provider {Provider}", user?.Id, tokenProvider);
+                _logger.LogError(ex, "Failed to verify two-factor token for user {UserId} with provider {Provider}", user.Id, tokenProvider);
                 return false;
             }
         }

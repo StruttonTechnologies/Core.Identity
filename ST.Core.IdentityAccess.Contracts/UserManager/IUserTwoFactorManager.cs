@@ -1,11 +1,14 @@
-﻿namespace ST.Core.IdentityAccess.Contracts.UserManager
+﻿using Microsoft.AspNetCore.Identity;
+
+namespace ST.Core.IdentityAccess.Contracts.UserManager
 {
     /// <summary>
     /// Provides methods for managing and retrieving two-factor authentication settings for a user.
     /// </summary>
     /// <typeparam name="TUser">The type of the user, which must inherit from <see cref="IdentityUser"/>.</typeparam>
-    public interface IUserTwoFactorManager<TUser>
-        where TUser : class
+    public interface IUserTwoFactorManager<TUser, TKey>
+         where TUser : IdentityUser<TKey>, new()
+         where TKey : IEquatable<TKey>
     {
         /// <summary>
         /// Asynchronously determines whether two-factor authentication is enabled for the specified user.

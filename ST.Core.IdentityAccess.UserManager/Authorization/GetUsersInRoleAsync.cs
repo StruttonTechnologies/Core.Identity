@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ST.Core.IdentityAccess.UserManager.Authorization
 {
-    public abstract partial class UserAuthorizationManager<TUser> where TUser : IdentityUser, new()
+    public abstract partial class UserAuthorizationManager<TUser> where TUser : IdentityUser<Guid>, new()
     {
         /// <summary>
         /// Asynchronously retrieves the users in the specified role.

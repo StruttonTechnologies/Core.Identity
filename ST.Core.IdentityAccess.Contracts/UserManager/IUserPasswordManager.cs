@@ -2,8 +2,9 @@
 
 namespace ST.Core.IdentityAccess.Contracts.UserManager
 {
-    public interface IUserPasswordManager<in TUser> 
-        where TUser : class
+    public interface IUserPasswordManager<TUser, TKey>
+         where TUser : IdentityUser<TKey>, new()
+         where TKey : IEquatable<TKey>
     {
         /// <summary>
         /// Checks if the specified password is valid for the given user.

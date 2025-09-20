@@ -6,8 +6,9 @@ namespace ST.Core.IdentityAccess.Contracts.UserManager
     /// Provides lockout management operations for a user.
     /// </summary>
     /// <typeparam name="TUser">The type of the user, derived from <see cref="IdentityUser"/>.</typeparam>
-    public interface IUserLockoutManager<TUser>
-        where TUser : class
+    public interface IUserLockoutManager<TUser, TKey>
+         where TUser : IdentityUser<TKey>, new()
+         where TKey : IEquatable<TKey>
     {
         /// <summary>
         /// Increments the access failed count for the specified user.

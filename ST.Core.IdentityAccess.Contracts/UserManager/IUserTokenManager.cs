@@ -1,7 +1,10 @@
-﻿namespace ST.Core.IdentityAccess.Contracts.UserManager
+﻿using Microsoft.AspNetCore.Identity;
+
+namespace ST.Core.IdentityAccess.Contracts.UserManager
 {
-    public interface IUserTokenManager<TUser>
-        where TUser : class
+    public interface IUserTokenManager<TUser, TKey>
+         where TUser : IdentityUser<TKey>, new()
+         where TKey : IEquatable<TKey>
     {
         /// <summary>
         /// Generates a user token for a specific purpose.

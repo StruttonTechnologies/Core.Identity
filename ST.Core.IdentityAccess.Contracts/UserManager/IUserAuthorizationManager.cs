@@ -3,9 +3,9 @@ using System.Security.Claims;
 
 namespace ST.Core.IdentityAccess.Contracts.UserManager
 {
-    public interface IUserAuthorizationManager<TUser> 
-        where TUser : class
-
+    public interface IUserAuthorizationManager<TUser, TKey>
+         where TUser : IdentityUser<TKey>, new()
+         where TKey : IEquatable<TKey>
     {
         Task<IdentityResult> AddClaimAsync(TUser user, Claim claim, CancellationToken cancellationToken);
         Task<IdentityResult> AddClaimsAsync(TUser user, IEnumerable<Claim> claims, CancellationToken cancellationToken);

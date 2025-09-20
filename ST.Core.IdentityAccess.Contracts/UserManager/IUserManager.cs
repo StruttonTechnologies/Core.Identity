@@ -2,8 +2,9 @@
 
 namespace ST.Core.IdentityAccess.Contracts.UserManager
 {
-    public interface IUserManager<TUser>
-        where TUser : class
+    public interface IUserManager<TUser, TKey>
+         where TUser : IdentityUser<TKey>, new()
+         where TKey : IEquatable<TKey>
     {
         Task<IdentityResult> UpdateEmailAsync(TUser user, string newEmail, CancellationToken cancellationToken);
         Task<IdentityResult> UpdateUsernameAsync(TUser user, string newUsername, CancellationToken cancellationToken);

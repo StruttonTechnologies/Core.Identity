@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace ST.Core.IdentityAccess.UserManager.Authentication
 {
-    public abstract partial class AuthenticationUserService<TUser> 
-        where TUser : IdentityUser, new()
+    public abstract partial class AuthenticationUserService<TUser, TKey>
+        where TUser : IdentityUser<TKey>, new()
+        where TKey : IEquatable<TKey>
     {
         /// <summary>
         /// Asynchronously sets a value indicating whether lockout is enabled for the specified user.
@@ -31,7 +32,7 @@ namespace ST.Core.IdentityAccess.UserManager.Authentication
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed to set lockout enabled for user {UserId}", user?.Id);
+                _logger.LogError(ex, "Failed to set lockout enabled for user {UserId}", user.Id);
                 return IdentityResult.Failed(new IdentityError { Description = $"Exception: {ex.Message}" });
             }
         }

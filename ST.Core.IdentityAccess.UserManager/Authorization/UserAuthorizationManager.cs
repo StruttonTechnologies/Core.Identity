@@ -5,7 +5,7 @@ namespace ST.Core.IdentityAccess.UserManager.Authorization
 {
     public abstract partial class UserAuthorizationManager<TUser> :
         IUserAuthorizationManager<TUser>
-        where TUser : IdentityUser, new()
+        where TUser : IdentityUser<Guid>, new()
     {
         /// <summary>
         /// The user manager instance used for user operations.

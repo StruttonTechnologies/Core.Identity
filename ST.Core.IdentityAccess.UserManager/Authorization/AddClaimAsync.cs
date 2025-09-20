@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace ST.Core.IdentityAccess.UserManager.Authorization
 {
     public abstract partial class UserAuthorizationManager<TUser> 
-        where TUser : IdentityUser, new()
+        e 
     {
         /// <summary>
         /// Asynchronously adds a claim to the specified user.

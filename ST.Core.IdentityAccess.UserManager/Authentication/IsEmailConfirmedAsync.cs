@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace ST.Core.IdentityAccess.UserManager.Authentication
 {
-    public abstract partial class AuthenticationUserService<TUser> 
-        where TUser : IdentityUser, new()
+    public abstract partial class AuthenticationUserService<TUser, TKey>
+        where TUser : IdentityUser<TKey>, new()
+        where TKey : IEquatable<TKey>
     {
         /// <summary>
         /// Asynchronously checks if the specified user's email is confirmed.
@@ -25,15 +26,15 @@ namespace ST.Core.IdentityAccess.UserManager.Authentication
 
             try
             {
-                var existingUser = await _userManager.FindByIdAsync(user.Id);
+                var existingUser = await _userManager.FindByIdAsync(user.Id.ToString()!);
                 if (existingUser == null)
                     throw new InvalidOperationException($"User {user.Id} not found in store.");
 
-                return await _userManager.IsEmailConfirmedAsync(user);
+                return await _userManager.IsEmailConfirmedAsync(existingUser);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed to check email confirmation for user {UserId}", user?.Id);
+                _logger.LogError(ex, "Failed to check email confirmation for user {UserId}", user.Id);
                 return false;
             }
         }

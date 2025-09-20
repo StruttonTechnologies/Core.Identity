@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 
 namespace ST.Core.IdentityAccess.UserManager.Authentication
 {
-    public abstract partial class AuthenticationUserService<TUser>
-        where TUser : IdentityUser, new()
+    public abstract partial class AuthenticationUserService<TUser, TKey>
+        where TUser : IdentityUser<TKey>, new()
+        where TKey : IEquatable<TKey>
     {
         /// <summary>
         /// Asynchronously updates the specified user.
@@ -37,7 +38,7 @@ namespace ST.Core.IdentityAccess.UserManager.Authentication
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Exception occurred while updating user {UserId}", user?.Id);
+                _logger.LogError(ex, "Exception occurred while updating user {UserId}", user.Id);
                 throw;
             }
         }

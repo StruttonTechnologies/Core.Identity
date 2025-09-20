@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace ST.Core.IdentityAccess.UserManager.Authentication
 {
-    public abstract partial class AuthenticationUserService<TUser> 
-        where TUser : IdentityUser, new()
+    public abstract partial class AuthenticationUserService<TUser, TKey>
+        where TUser : IdentityUser<TKey>, new()
+        where TKey : IEquatable<TKey>
     {
         /// <summary>
         /// Asynchronously resets the password for the specified user using the provided token and new password.
@@ -36,7 +37,7 @@ namespace ST.Core.IdentityAccess.UserManager.Authentication
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed to reset password for user {UserId}", user?.Id);
+                _logger.LogError(ex, "Failed to reset password for user {UserId}", user.Id);
                 return IdentityResult.Failed(new IdentityError { Description = $"Exception: {ex.Message}" });
             }
         }

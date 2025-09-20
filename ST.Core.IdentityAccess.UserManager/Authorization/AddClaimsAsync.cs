@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace ST.Core.IdentityAccess.UserManager.Authorization
 {
     public abstract partial class UserAuthorizationManager<TUser> 
-        where TUser : IdentityUser, new()
+        where TUser : IdentityUser<Guid>, new()
     {
         /// <summary>
         /// Asynchronously adds multiple claims to the specified user.

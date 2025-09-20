@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace ST.Core.IdentityAccess.UserManager.Authentication
 {
-    public abstract partial class AuthenticationUserService<TUser> 
-        where TUser : IdentityUser, new()
+    public abstract partial class AuthenticationUserService<TUser, TKey>
+        where TUser : IdentityUser<TKey>, new()
+        where TKey : IEquatable<TKey>
     {
         /// <summary>
         /// Asynchronously generates a password reset token for the specified user.
@@ -21,11 +22,11 @@ namespace ST.Core.IdentityAccess.UserManager.Authentication
         /// </returns>
         public virtual async Task<string> GeneratePasswordResetTokenAsync(TUser user, CancellationToken cancellationToken = default)
         {
-            ArgumentNullException.ThrowIfNull(user);
-
             try
             {
-                var existingUser = await _userManager.FindByIdAsync(user.Id);
+                ArgumentNullException.ThrowIfNull(user);
+                var existingUser = await _userManager.FindByIdAsync(user.Id.ToString()!);
+
                 if (existingUser == null)
                     throw new InvalidOperationException($"User {user.Id} not found in store.");
 
@@ -33,7 +34,7 @@ namespace ST.Core.IdentityAccess.UserManager.Authentication
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed to generate password reset token for user {UserId}", user?.Id);
+                _logger.LogError(ex, "Failed to generate password reset token for user {UserId}", user.Id);
                 return null!;
             }
         }
