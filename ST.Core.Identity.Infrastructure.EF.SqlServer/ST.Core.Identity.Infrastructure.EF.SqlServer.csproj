@@ -12,8 +12,4 @@
     <PackageReference Include="ST.Core.Registration" Version="1.0.0-alpha" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\ST.Core.Identity.Infrastructure.EF\ST.Core.Identity.Infrastructure.EF.csproj" />
-  </ItemGroup>
-
 </Project>

@@ -1,25 +1,48 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using ST.Core.Identity.Data;
 using ST.Core.Registration.Attributes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using ST.Core.Validators;
+using ST.Core.Validators.Results;
+using ST.Core.Validators.Results.Interfaces;
 
 namespace ST.Core.Identity.Validators.Access
 {
+    /// <summary>
+    /// Validates that requested scopes are known and authorized.
+    /// </summary>
     [AutoRegister(ServiceLifetime.Singleton)]
-    public class ScopeValidator : IValidator<string[]>
+    public class ScopeValidator : IValidator<IEnumerable<string>>
     {
-        public ValidationResult Validate(string[] input)
+        /// <summary>
+        /// Validates that all requested scopes are known and allowed.
+        /// </summary>
+        /// <param name="input">The list of scopes to validate.</param>
+        /// <returns>
+        /// An <see cref="IValidationResult"/> indicating success if all scopes are valid,
+        /// or failure if any unknown scopes are found.
+        /// </returns>
+        public IValidationResult Validate(IEnumerable<string> input)
         {
-            if (input == null || input.Length == 0)
-                return ValidationResult.Failure("At least one scope is required.");
+            if (input is null)
+            {
+                return ValidationResultFactory.Failure(
+                    message: "Scopes are required.",
+                    code: "MissingScopes",
+                    field: nameof(input));
+            }
 
-            if (input.Any(string.IsNullOrWhiteSpace))
-                return ValidationResult.Failure("Scopes must not contain empty values.");
+            foreach (var scope in input)
+            {
+                if (!IdentitySeed.AllowedScopes.Contains(scope))
+                {
+                    return ValidationResultFactory.Failure(
+                        message: $"Scope '{scope}' is not recognized or authorized.",
+                        code: "InvalidScope",
+                        field: nameof(input));
+                }
+            }
 
-            return ValidationResult.Success();
+            return ValidationResultFactory.Success();
         }
     }
 }

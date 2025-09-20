@@ -15,16 +15,15 @@ namespace ST.Core.Identity.Fakes.Factories
         {
             return new TestAppIdentityUser
             {
-                Id = Guid.NewGuid().ToString(),
+                Id = Guid.NewGuid(),
                 UserName = "test.user",
                 EmailConfirmed = true,
                 SecurityStamp = Guid.NewGuid().ToString(),
                 ConcurrencyStamp = Guid.NewGuid().ToString(),
                 LockoutEnabled = false,
                 AccessFailedCount = 0,
-
+                
                 ProviderName = "Local",
-                PersonId = Guid.NewGuid(),
                 IsActive = true,
                 RowVersion = 1,
                 CreateDate = DateTime.UtcNow,
@@ -53,6 +52,8 @@ namespace ST.Core.Identity.Fakes.Factories
             user.Person = person;
             return user;
         }
+
+
 
         /// <summary>
         /// Creates a user marked as locked out with elevated failure count.

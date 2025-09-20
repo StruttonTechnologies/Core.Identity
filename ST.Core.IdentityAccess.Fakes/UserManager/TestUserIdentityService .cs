@@ -14,15 +14,15 @@ namespace ST.Core.Identity.Infrastructure.Tests.Authentication.Mocks
     /// Concrete subclass of UserIdentityService for testing purposes.
     /// Enables instantiation of the abstract base with mockable dependencies.
     /// </summary>
-    public class TestUserIdentityService : AuthenticationUserService<TestAppIdentityUser>
-    {
-        public TestUserIdentityService(
-            UserManager<TestAppIdentityUser> userManager,
-            ILogger<AuthenticationUserService<TestAppIdentityUser>> logger)
-            : base(userManager, logger)
-        {
-        }
+    //public class TestUserIdentityService : AuthenticationUserService<TestAppIdentityUser>
+    //{
+    //    public TestUserIdentityService(
+    //        UserManager<TestAppIdentityUser> userManager,
+    //        ILogger<AuthenticationUserService<TestAppIdentityUser>> logger)
+    //        : base(userManager, logger)
+    //    {
+    //    }
 
-        // No overrides—this class simply enables testing the real logic.
-    }
+    //    // No overrides—this class simply enables testing the real logic.
+    //}
 }

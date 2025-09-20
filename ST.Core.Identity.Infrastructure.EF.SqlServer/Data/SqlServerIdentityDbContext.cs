@@ -1,22 +1,18 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ST.Core.Identity.Domain.Authentication;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using ST.Core.Identity.Domain.Entities;
 
 namespace ST.Core.Identity.Infrastructure.EF.SqlServer
 {
-    namespace ST.Core.Identity.Infrastructure.EF.SqlServer
+    /// <summary>
+    /// SQL Server-specific identity DbContext.
+    /// </summary>
+    public class SqlServerIdentityDbContext<TUser, TPerson> :
+        IdentityDbContextBase<TUser, TPerson>
+        where TUser : IdentityUserBase<TPerson>
+        where TPerson : class
     {
-        //public class SqlServerIdentityDbContext<TUser, TPerson>
-        //    : IdentityDbContextBase<TUser, TPerson>
-        //    where TUser : IdentityUserBase<TPerson>
-        //    where TPerson : class
-        //{
-        //    public SqlServerIdentityDbContext(DbContextOptions<SqlServerIdentityDbContext<TUser, TPerson>> options)
-        //        : base(options) { }
-        //}
+        public SqlServerIdentityDbContext(
+            DbContextOptions<SqlServerIdentityDbContext<TUser, TPerson>> options)
+            : base(options) { }
     }
 }

@@ -15,9 +15,9 @@ namespace ST.Core.IdentityAccess.Fakes.UserManager
         /// <summary>
         /// Initializes a new instance of the <see cref="TestUserManager"/> class.
         /// </summary>
-        public TestUserManager()
+        public TestUserManager(IUserStore<TestAppIdentityUser> store)
             : base(
-                new InMemoryUserStore(),
+                store,
                 new FakeOptions(),
                 new PasswordHasher<TestAppIdentityUser>(),
                 new List<IUserValidator<TestAppIdentityUser>>(),
