@@ -16,6 +16,7 @@
   <ItemGroup>
     <ProjectReference Include="..\ST.Core.Identity.Application.Contracts\ST.Core.Identity.Application.Contracts.csproj" />
     <ProjectReference Include="..\ST.Core.IdentityAccess.Contracts\ST.Core.IdentityAccess.Contracts.csproj" />
+    <ProjectReference Include="..\ST.Core.Identity\ST.Core.Identity.csproj" />
   </ItemGroup>
 
 </Project>

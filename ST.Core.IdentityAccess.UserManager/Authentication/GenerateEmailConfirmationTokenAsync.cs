@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
+using ST.Core.Identity.Exceptions;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -27,8 +28,7 @@ namespace ST.Core.IdentityAccess.UserManager.Authentication
             try
             {
                 var existingUser = await _userManager.FindByIdAsync(user.Id.ToString()!);
-                if (existingUser == null)
-                    throw new InvalidOperationException($"User {user.Id} not found in store.");
+                UserNotFoundException.ThrowIfNull(existingUser, user.Id);
 
                 return await _userManager.GenerateEmailConfirmationTokenAsync(user);
             }
