@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 
 namespace ST.Core.IdentityAccess.UserManager.Authorization
 {
-    public abstract partial class UserAuthorizationManager<TUser> 
-        e 
+    public abstract partial class UserAuthorizationManager<TUser, TKey>
+         where TUser : IdentityUser<TKey>, new()
+         where TKey : IEquatable<TKey>
     {
         /// <summary>
         /// Asynchronously adds a claim to the specified user.
@@ -34,7 +35,7 @@ namespace ST.Core.IdentityAccess.UserManager.Authorization
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed to add claim for user {UserId}", user?.Id);
+                _logger.LogError(ex, "Failed to add claim for user {UserId}", user.Id);
                 return IdentityResult.Failed(new IdentityError { Description = $"Exception: {ex.Message}" });
             }
         }

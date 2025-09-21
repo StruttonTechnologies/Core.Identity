@@ -8,7 +8,9 @@ using System.Threading.Tasks;
 
 namespace ST.Core.IdentityAccess.UserManager.Authorization
 {
-    public abstract partial class UserAuthorizationManager<TUser> where TUser : IdentityUser<Guid>, new()
+    public abstract partial class UserAuthorizationManager<TUser, TKey>
+         where TUser : IdentityUser<TKey>, new()
+         where TKey : IEquatable<TKey>
     {
         /// <summary>
         /// Asynchronously retrieves the claims for the specified user.
@@ -31,7 +33,7 @@ namespace ST.Core.IdentityAccess.UserManager.Authorization
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed to get claims for user {UserId}", user?.Id);
+                _logger.LogError(ex, "Failed to get claims for user {UserId}", user.Id);
                 return new List<Claim>();
             }
         }

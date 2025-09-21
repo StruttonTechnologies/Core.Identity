@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace ST.Core.IdentityAccess.UserManager.Authorization
 {
-    public abstract partial class UserAuthorizationManager<TUser> where TUser : IdentityUser<Guid>, new()
+    public abstract partial class UserAuthorizationManager<TUser, TKey>
+         where TUser : IdentityUser<TKey>, new()
+         where TKey : IEquatable<TKey>
     {
         /// <summary>
         /// Asynchronously determines whether the specified user is in the given role.
@@ -32,7 +34,7 @@ namespace ST.Core.IdentityAccess.UserManager.Authorization
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed to check if user {UserId} is in role {Role}", user?.Id, role);
+                _logger.LogError(ex, "Failed to check if user {UserId} is in role {Role}", user.Id, role);
                 return false;
             }
         }

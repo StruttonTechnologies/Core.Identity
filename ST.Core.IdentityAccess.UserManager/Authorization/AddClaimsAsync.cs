@@ -1,15 +1,12 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
 using System.Security.Claims;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace ST.Core.IdentityAccess.UserManager.Authorization
 {
-    public abstract partial class UserAuthorizationManager<TUser> 
-        where TUser : IdentityUser<Guid>, new()
+    public abstract partial class UserAuthorizationManager<TUser, TKey>
+         where TUser : IdentityUser<TKey>, new()
+         where TKey : IEquatable<TKey>
     {
         /// <summary>
         /// Asynchronously adds multiple claims to the specified user.
@@ -35,7 +32,7 @@ namespace ST.Core.IdentityAccess.UserManager.Authorization
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed to add claims for user {UserId}", user?.Id);
+                _logger.LogError(ex, "Failed to add claims for user {UserId}", user.Id);
                 return IdentityResult.Failed(new IdentityError { Description = $"Exception: {ex.Message}" });
             }
         }

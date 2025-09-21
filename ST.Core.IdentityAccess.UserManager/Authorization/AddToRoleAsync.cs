@@ -1,13 +1,11 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace ST.Core.IdentityAccess.UserManager.Authorization
 {
-    public abstract partial class UserAuthorizationManager<TUser>
-        where TUser : IdentityUser<Guid>, new()
+    public abstract partial class UserAuthorizationManager<TUser, TKey>
+         where TUser : IdentityUser<TKey>, new()
+         where TKey : IEquatable<TKey>
     {
         /// <summary>
         /// Asynchronously adds the specified user to a role.
@@ -34,7 +32,7 @@ namespace ST.Core.IdentityAccess.UserManager.Authorization
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed to add user {UserId} to role {Role}", user?.Id, role);
+                _logger.LogError(ex, "Failed to add user {UserId} to role {Role}", user.Id, role);
                 return IdentityResult.Failed(new IdentityError { Description = $"Exception: {ex.Message}" });
             }
         }

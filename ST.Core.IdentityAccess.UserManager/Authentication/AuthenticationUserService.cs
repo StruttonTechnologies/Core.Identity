@@ -1,9 +1,12 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using ST.Core.IdentityAccess.Contracts.UserManager;
+using ST.Core.Identity.Domain.Interfaces.UserManager;
+using ST.Core.Registration.Attributes;
 
 namespace ST.Core.IdentityAccess.UserManager.Authentication
 {
+    [AutoRegister(ServiceLifetime.Singleton)]
     /// <summary>
     /// Provides base functionality for user services, including registration, lookup, and update operations.
     /// </summary>
