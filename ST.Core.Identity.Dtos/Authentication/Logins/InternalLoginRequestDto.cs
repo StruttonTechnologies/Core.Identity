@@ -7,7 +7,7 @@ namespace ST.Core.Identity.Dtos.Authentication.Logins
     /// </summary>
     [ExcludeFromCodeCoverage]
     public record InternalLoginRequestDto(
-        string UsernameOrEmail,
+        string UserName,
         string Password
     );
 }
