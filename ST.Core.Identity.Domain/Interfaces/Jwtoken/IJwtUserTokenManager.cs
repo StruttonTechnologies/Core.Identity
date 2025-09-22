@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Security.Claims;
 
-namespace ST.Core.IdentityAccess.Contracts.Jwtoken
+namespace ST.Core.Identity.Domain.Interfaces.Jwtoken
 {
     /// <summary>
     /// Defines operations for generating and validating JWT tokens.
     /// </summary>
-    public interface IJwtUserTokenManager
+    public interface IJwtUserTokenManager<TKey>
+    where TKey : IEquatable<TKey>
     {
         /// <summary>
         /// Generates a JWT access token for the specified user.
@@ -17,7 +18,7 @@ namespace ST.Core.IdentityAccess.Contracts.Jwtoken
         /// <param name="roles">A collection of roles assigned to the user.</param>
         /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains the generated access token as a string.</returns>
-        Task<string> GenerateAccessTokenAsync(string userId, string username, string email, IEnumerable<string> roles, CancellationToken cancellationToken);
+        Task<string> GenerateAccessTokenAsync(TKey userId, string username, string email, IEnumerable<string> roles, CancellationToken cancellationToken);
 
         /// <summary>
         /// Generates a JWT refresh token for the specified user.
@@ -26,7 +27,7 @@ namespace ST.Core.IdentityAccess.Contracts.Jwtoken
         /// <param name="username">The username of the user.</param>
         /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains the generated refresh token as a string.</returns>
-        Task<string> GenerateRefreshTokenAsync(string userId, string username, CancellationToken cancellationToken);
+        Task<string> GenerateRefreshTokenAsync(TKey userId, string username, CancellationToken cancellationToken);
 
         /// <summary>
         /// Validates the specified JWT token and returns the associated claims principal if valid.

@@ -1,107 +1,73 @@
-﻿using ST.Core.Identity.Data;
-using ST.Core.Identity.Dtos.Authentication;
-using ST.Core.Identity.Fakes.Data;
-using ST.Core.Identity.Models;
+﻿using Moq;
 using ST.Core.Identity.Validators.Composite;
+using ST.Core.Identity.Validators.Identity;
+using ST.Core.Validators;
+using ST.Core.Validators.Results;
 
 namespace ST.Core.Identity.Infrastructure.EF.Tests.Validators
 {
     public class AuthenticationContextValidatorTests
     {
-        private readonly AuthenticationContextValidator _validator = new();
+        private readonly AuthenticationContextValidator _validator;
+
+        public AuthenticationContextValidatorTests()
+        {
+            var providerValidator = new Mock<IValidator<string>>();
+            providerValidator.Setup(v => v.Validate(It.IsAny<string>()))
+                .Returns(ValidationResultFactory.Success());
+
+            var sessionValidator = new Mock<IValidator<string>>();
+            sessionValidator.Setup(v => v.Validate(It.IsAny<string>()))
+                .Returns(ValidationResultFactory.Success());
+
+            var statusValidator = new Mock<IValidator<IdentityStatus>>();
+            statusValidator.Setup(v => v.Validate(It.IsAny<IdentityStatus>()))
+                .Returns(ValidationResultFactory.Success());
+
+            _validator = new AuthenticationContextValidator(
+                providerValidator.Object,
+                sessionValidator.Object,
+                statusValidator.Object);
+        }
 
         public static IEnumerable<object[]> ValidContexts =>
             new[]
             {
                 new object[]
                 {
-                    new AuthenticationContext
-                    {
-                        SessionId = Guid.NewGuid().ToString(),
-                        TenantId = Guid.NewGuid().ToString(),
-                        Scopes = IdentitySeed.AllowedScopes.Take(2).ToArray()
-                    }
+                    new AuthContext("Local", Guid.NewGuid().ToString(), IdentityStatus.Active)
                 },
                 new object[]
                 {
-                    new AuthenticationContext
-                    {
-                        SessionId = Guid.NewGuid().ToString(),
-                        TenantId = Guid.NewGuid().ToString(),
-                        Scopes = new[] { IdentitySeed.AllowedScopes.First() }
-                    }
+                    new AuthContext("Google", Guid.NewGuid().ToString(), IdentityStatus.Pending)
                 }
             };
 
         [Theory]
         [MemberData(nameof(ValidContexts))]
-        public void Should_Return_Success_For_Valid_Contexts(AuthenticationContext context)
+        public void Should_Return_Success_For_Valid_Contexts(AuthContext context)
         {
             var result = _validator.Validate(context);
             Assert.True(result.IsSuccess);
         }
 
-        [Theory]
-        [MemberData(nameof(InvalidData.SessionIds), MemberType = typeof(InvalidData))]
-        public void Should_Fail_When_SessionId_Is_Invalid(string sessionId)
-        {
-            var context = new AuthenticationContext
-            {
-                SessionId = sessionId,
-                TenantId = Guid.NewGuid().ToString(),
-                Scopes = IdentitySeed.AllowedScopes.Take(1)
-            };
-
-            var result = _validator.Validate(context);
-            Assert.False(result.IsSuccess);
-            Assert.Equal("InvalidSessionId", result.Code);
-        }
-
-        [Theory]
-        [MemberData(nameof(InvalidData.TenantIds), MemberType = typeof(InvalidData))]
-        public void Should_Fail_When_TenantId_Is_Invalid(string tenantId)
-        {
-            var context = new AuthenticationContext
-            {
-                SessionId = Guid.NewGuid().ToString(),
-                TenantId = tenantId,
-                Scopes = IdentitySeed.AllowedScopes.Take(1)
-            };
-
-            var result = _validator.Validate(context);
-            Assert.False(result.IsSuccess);
-            Assert.Equal("InvalidTenantId", result.Code);
-        }
-
-        [Theory]
-        [MemberData(nameof(InvalidData.Scopes), MemberType = typeof(InvalidData))]
-        public void Should_Fail_When_Scopes_Are_Invalid(IEnumerable<string> scopes)
-        {
-            var context = new AuthenticationContext
-            {
-                SessionId = Guid.NewGuid().ToString(),
-                TenantId = Guid.NewGuid().ToString(),
-                Scopes = scopes
-            };
-
-            var result = _validator.Validate(context);
-            Assert.False(result.IsSuccess);
-            Assert.Equal("InvalidScope", result.Code);
-        }
-
         [Fact]
-        public void Should_Fail_When_Multiple_Fields_Are_Invalid()
+        public void Should_Fail_When_Provider_Is_Invalid()
         {
-            var context = new AuthenticationContext
-            {
-                SessionId = "",
-                TenantId = "not-a-guid",
-                Scopes = new[] { "invalid:scope" }
-            };
+            var providerValidator = new Mock<IValidator<string>>();
+            providerValidator.Setup(v => v.Validate(It.IsAny<string>()))
+                .Returns(ValidationResultFactory.Failure("Invalid provider", "InvalidProvider", "Provider"));
 
-            var result = _validator.Validate(context);
+            var validator = new AuthenticationContextValidator(
+                providerValidator.Object,
+                new Mock<IValidator<string>>().Object,
+                new Mock<IValidator<IdentityStatus>>().Object);
+
+            var context = new AuthContext("InvalidProvider", Guid.NewGuid().ToString(), IdentityStatus.Active);
+            var result = validator.Validate(context);
+
             Assert.False(result.IsSuccess);
-            // Depending on implementation, this may return first failure or aggregate
+            Assert.Equal("InvalidProvider", result.Code);
         }
     }
 }

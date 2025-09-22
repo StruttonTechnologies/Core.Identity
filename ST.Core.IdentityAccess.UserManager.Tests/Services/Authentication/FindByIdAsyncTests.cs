@@ -18,10 +18,10 @@ namespace ST.Core.IdentityAccess.UserManager.Tests.Services.Authentication
             var user = TestAppUserIdentityFactory.CreateDefault();
             await UserManager.CreateAsync(user);
 
-            var result = await Service.FindByIdAsync(user.Id);
+            var result = await Service.FindByIdAsync(user.Id.ToString());
 
             Assert.NotNull(result);
-            Assert.Equal(user.Id, result!.Id);
+            Assert.Equal(user.Id.ToString(), result.Id.ToString());
         }
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace ST.Core.IdentityAccess.UserManager.Tests.Services.Authentication
             await UserManager.CreateAsync(user);
             await UserManager.DeleteAsync(user); // Simulate failure
 
-            var result = await Service.FindByIdAsync(user.Id);
+            var result = await Service.FindByIdAsync(user.Id.ToString());
 
             Assert.Null(result);
         }

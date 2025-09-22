@@ -24,7 +24,7 @@ namespace ST.Core.IdentityAccess.UserManager.Tests.Services.Authentication
             var result = await Service.CreateNoPasswordAsync(user);
 
             Assert.True(result.Succeeded);
-            var createdUser = await UserManager.FindByIdAsync(user.Id);
+            var createdUser = await UserManager.FindByIdAsync(user.Id.ToString());
             Assert.NotNull(createdUser);
         }
 

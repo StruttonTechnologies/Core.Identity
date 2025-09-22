@@ -19,7 +19,6 @@ namespace ST.Core.Identity.Dtos.Authentication.Logins
         string AccessToken,
         string RefreshToken,
         DateTime ExpiresAt,
-        Guid UserId,
         string Username,
         string Provider,
         bool IsNewUser = false,

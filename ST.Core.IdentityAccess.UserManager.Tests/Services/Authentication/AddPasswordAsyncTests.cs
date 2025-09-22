@@ -2,7 +2,7 @@
 using System.Collections.Concurrent;
 using ST.Core.Identity.Fakes.Models;
 
-namespace ST.Core.IdentityAccess.Fakes.Stores
+namespace ST.Core.IdentityAccess.UserManager.Tests.Services.Authentication
 {
     public class InMemoryUserStore :
         IUserStore<TestAppIdentityUser>,
@@ -18,31 +18,31 @@ namespace ST.Core.IdentityAccess.Fakes.Stores
 
         public Task<IdentityResult> CreateAsync(TestAppIdentityUser user, CancellationToken cancellationToken)
         {
-            if (string.IsNullOrWhiteSpace(user.Id))
+            if (string.IsNullOrWhiteSpace(user.Id.ToString()))
                 throw new InvalidOperationException("Exception: User ID must be set before creation.");
 
-            _users[user.Id] = user;
+            _users[user.Id.ToString()] = user;
             return Task.FromResult(IdentityResult.Success);
         }
 
         public Task<IdentityResult> DeleteAsync(TestAppIdentityUser user, CancellationToken cancellationToken)
         {
-            if (!_users.ContainsKey(user.Id))
+            if (!_users.ContainsKey(user.Id.ToString()))
                 return Task.FromResult(Failed("Exception: User not found in store."));
 
-            _users.TryRemove(user.Id, out _);
-            _normalizedUserNames.TryRemove(user.Id, out _);
-            _normalizedEmails.TryRemove(user.Id, out _);
-            _logins.TryRemove(user.Id, out _);
+            _users.TryRemove(user.Id.ToString(), out _);
+            _normalizedUserNames.TryRemove(user.Id.ToString(), out _);
+            _normalizedEmails.TryRemove(user.Id.ToString(), out _);
+            _logins.TryRemove(user.Id.ToString(), out _);
             return Task.FromResult(IdentityResult.Success);
         }
 
         public Task<IdentityResult> UpdateAsync(TestAppIdentityUser user, CancellationToken cancellationToken)
         {
-            if (!_users.ContainsKey(user.Id))
+            if (!_users.ContainsKey(user.Id.ToString()))
                 return Task.FromResult(Failed("Exception: User not found in store."));
 
-            _users[user.Id] = user;
+            _users[user.Id.ToString()] = user;
             return Task.FromResult(IdentityResult.Success);
         }
 
@@ -51,10 +51,10 @@ namespace ST.Core.IdentityAccess.Fakes.Stores
 
         public Task<TestAppIdentityUser?> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
             => Task.FromResult(_users.Values.FirstOrDefault(u =>
-                _normalizedUserNames.TryGetValue(u.Id, out var name) && name == normalizedUserName));
+                _normalizedUserNames.TryGetValue(u.Id.ToString(), out var name) && name == normalizedUserName));
 
         public Task<string> GetUserIdAsync(TestAppIdentityUser user, CancellationToken cancellationToken)
-            => Task.FromResult(user.Id);
+            => Task.FromResult(user.Id.ToString());
 
         public Task<string> GetUserNameAsync(TestAppIdentityUser user, CancellationToken cancellationToken)
             => Task.FromResult(user.UserName);
@@ -67,11 +67,11 @@ namespace ST.Core.IdentityAccess.Fakes.Stores
         }
 
         public Task<string> GetNormalizedUserNameAsync(TestAppIdentityUser user, CancellationToken cancellationToken)
-            => Task.FromResult(_normalizedUserNames.TryGetValue(user.Id, out var name) ? name : user.UserName?.ToUpperInvariant() ?? string.Empty);
+            => Task.FromResult(_normalizedUserNames.TryGetValue(user.Id.ToString(), out var name) ? name : user.UserName?.ToUpperInvariant() ?? string.Empty);
 
         public Task SetNormalizedUserNameAsync(TestAppIdentityUser user, string normalizedName, CancellationToken cancellationToken)
         {
-            _normalizedUserNames[user.Id] = normalizedName;
+            _normalizedUserNames[user.Id.ToString()] = normalizedName;
             return Task.CompletedTask;
         }
 
@@ -110,14 +110,14 @@ namespace ST.Core.IdentityAccess.Fakes.Stores
 
         public Task<TestAppIdentityUser?> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken)
             => Task.FromResult(_users.Values.FirstOrDefault(u =>
-                _normalizedEmails.TryGetValue(u.Id, out var email) && email == normalizedEmail));
+                _normalizedEmails.TryGetValue(u.Id.ToString(), out var email) && email == normalizedEmail));
 
         public Task<string> GetNormalizedEmailAsync(TestAppIdentityUser user, CancellationToken cancellationToken)
-            => Task.FromResult(_normalizedEmails.TryGetValue(user.Id, out var email) ? email : user.Email?.ToUpperInvariant() ?? string.Empty);
+            => Task.FromResult(_normalizedEmails.TryGetValue(user.Id.ToString(), out var email) ? email : user.Email?.ToUpperInvariant() ?? string.Empty);
 
         public Task SetNormalizedEmailAsync(TestAppIdentityUser user, string normalizedEmail, CancellationToken cancellationToken)
         {
-            _normalizedEmails[user.Id] = normalizedEmail;
+            _normalizedEmails[user.Id.ToString()] = normalizedEmail;
             return Task.CompletedTask;
         }
 
@@ -130,7 +130,7 @@ namespace ST.Core.IdentityAccess.Fakes.Stores
                 throw new InvalidOperationException("Exception: User not found in store.");
 
             user.AccessFailedCount++;
-            _users[user.Id] = user;
+            _users[user.Id.ToString()] = user;
             return Task.FromResult(user.AccessFailedCount);
         }
 
@@ -140,7 +140,7 @@ namespace ST.Core.IdentityAccess.Fakes.Stores
                 throw new InvalidOperationException("Exception: User not found in store.");
 
             user.AccessFailedCount = 0;
-            _users[user.Id] = user;
+            _users[user.Id.ToString()] = user;
             return Task.CompletedTask;
         }
 
@@ -166,10 +166,10 @@ namespace ST.Core.IdentityAccess.Fakes.Stores
 
         public Task AddLoginAsync(TestAppIdentityUser user, UserLoginInfo login, CancellationToken cancellationToken)
         {
-            if (!_logins.ContainsKey(user.Id))
-                _logins[user.Id] = new List<UserLoginInfo>();
+            if (!_logins.ContainsKey(user.Id.ToString()))
+                _logins[user.Id.ToString()] = new List<UserLoginInfo>();
 
-            _logins[user.Id].Add(login);
+            _logins[user.Id.ToString()].Add(login);
             return Task.CompletedTask;
         }
 
@@ -182,11 +182,11 @@ namespace ST.Core.IdentityAccess.Fakes.Stores
         }
 
         public Task<IList<UserLoginInfo>> GetLoginsAsync(TestAppIdentityUser user, CancellationToken cancellationToken)
-            => Task.FromResult<IList<UserLoginInfo>>(_logins.TryGetValue(user.Id, out var logins) ? logins : new List<UserLoginInfo>());
+            => Task.FromResult<IList<UserLoginInfo>>(_logins.TryGetValue(user.Id.ToString(), out var logins) ? logins : new List<UserLoginInfo>());
 
         public Task RemoveLoginAsync(TestAppIdentityUser user, string loginProvider, string providerKey, CancellationToken cancellationToken)
         {
-            if (_logins.TryGetValue(user.Id, out var logins))
+            if (_logins.TryGetValue(user.Id.ToString(), out var logins))
                 logins.RemoveAll(l => l.LoginProvider == loginProvider && l.ProviderKey == providerKey);
 
             return Task.CompletedTask;
@@ -197,12 +197,12 @@ namespace ST.Core.IdentityAccess.Fakes.Stores
         // 🔧 Utility methods
 
         private bool TryEnsureExists(TestAppIdentityUser user)
-            => !string.IsNullOrWhiteSpace(user.Id) && _users.ContainsKey(user.Id);
+            => !string.IsNullOrWhiteSpace(user.Id.ToString()) && _users.ContainsKey(user.Id.ToString());
 
         private void TryUpdate(TestAppIdentityUser user)
         {
-            if (!string.IsNullOrWhiteSpace(user.Id) && _users.ContainsKey(user.Id))
-                _users[user.Id] = user;
+            if (!string.IsNullOrWhiteSpace(user.Id.ToString()) && _users.ContainsKey(user.Id.ToString()))
+                _users[user.Id.ToString()] = user;
         }
 
         private IdentityResult Failed(string message)

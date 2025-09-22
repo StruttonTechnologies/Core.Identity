@@ -26,7 +26,7 @@ namespace ST.Core.IdentityAccess.UserManager.Tests.Services.Authentication
             var result = await Service.DeleteAsync(user, CancellationToken.None);
 
             Assert.True(result);
-            var deletedUser = await UserManager.FindByIdAsync(user.Id);
+            var deletedUser = await UserManager.FindByIdAsync(user.Id.ToString());
             Assert.Null(deletedUser);
         }
 

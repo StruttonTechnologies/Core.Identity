@@ -11,6 +11,7 @@
     <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="9.0.9" />
     <PackageReference Include="ST.Core.Registration" Version="1.0.0-alpha" />
     <PackageReference Include="ST.Core.Validators" Version="1.0.1-beta" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.14.0" />
   </ItemGroup>
 
   <ItemGroup>

@@ -22,13 +22,13 @@ namespace ST.Core.IdentityAccess.UserManager.Tests.Services.Authentication
             var createResult = await UserManager.CreateAsync(user);
             Assert.True(createResult.Succeeded);
 
-            var storedUser = await UserManager.FindByIdAsync(user.Id);
+            var storedUser = await UserManager.FindByIdAsync(user.Id.ToString());
             Assert.NotNull(storedUser);
 
             var result = await Service.AccessFailedAsync(user);
             Assert.True(result.Succeeded);
 
-            var updatedUser = await UserManager.FindByIdAsync(user.Id);
+            var updatedUser = await UserManager.FindByIdAsync(user.Id.ToString());
             Assert.Equal(1, updatedUser!.AccessFailedCount); 
         }
 
@@ -67,7 +67,7 @@ namespace ST.Core.IdentityAccess.UserManager.Tests.Services.Authentication
             var user = TestAppUserIdentityFactory.Create("shawn");
 
             await store.CreateAsync(user, CancellationToken.None);
-            var retrieved = await store.FindByIdAsync(user.Id, CancellationToken.None);
+            var retrieved = await store.FindByIdAsync(user.Id.ToString(), CancellationToken.None);
 
             Assert.NotNull(retrieved);
             Assert.Equal(user.UserName, retrieved.UserName);

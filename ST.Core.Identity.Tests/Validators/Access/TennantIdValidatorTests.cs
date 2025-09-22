@@ -20,7 +20,7 @@ namespace ST.Core.Identity.Tests.Validators.Access
         {
             var result = _validator.Validate(Guid.Empty.ToString());
             Assert.False(result.IsSuccess);
-            Assert.Equal("MissingTenantId", result.Code);
+            Assert.Equal("InvalidTenantId", result.Code);
         }
     }
 }

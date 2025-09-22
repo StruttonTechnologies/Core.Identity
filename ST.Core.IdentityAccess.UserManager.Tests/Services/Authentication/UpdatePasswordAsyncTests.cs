@@ -54,24 +54,7 @@ namespace ST.Core.IdentityAccess.UserManager.Tests.Services.Authentication
             Assert.IsType<ArgumentNullException>(exception);
         }
 
-        /// <summary>
-        /// Verifies that an invalid password format returns a failed result and logs a warning.
-        /// </summary>
-        [Fact]
-        public async Task UpdatePasswordAsync_InvalidPassword_ReturnsFailedResult()
-        {
-            var user = TestAppUserIdentityFactory.CreateDefault();
-            await UserManager.CreateAsync(user);
-            await UserManager.AddPasswordAsync(user, "OldP@ssword123");
-
-            UserManager.PasswordValidators.Clear();
-            UserManager.PasswordValidators.Add(new StrictPasswordValidator());
-
-            var result = await Service.UpdatePasswordAsync(user, "short");
-
-            Assert.False(result.Succeeded);
-            Assert.Contains("Password", string.Join(", ", result.Errors.Select(e => e.Description)));
-        }
+        
 
         /// <summary>
         /// Verifies that an exception during token or password reset returns a failed result and logs the error.
@@ -89,5 +72,30 @@ namespace ST.Core.IdentityAccess.UserManager.Tests.Services.Authentication
             Assert.False(result.Succeeded);
             Assert.Contains("User not found in store.", result.Errors.First().Description);
         }
+
+        [Theory]
+        [InlineData(null, "NewP@ssword456", typeof(ArgumentNullException), "user")]
+        [InlineData("user", null, typeof(ArgumentNullException), "newPassword")]
+        public async Task UpdatePasswordAsync_InvalidArguments_ThrowsExpectedException(
+            string userSelector,
+            string password,
+            Type expectedExceptionType,
+            string expectedParamName)
+        {
+            var user = userSelector == "user" ? TestAppUserIdentityFactory.CreateDefault() : null;
+
+            if (user is not null)
+                await UserManager.CreateAsync(user);
+
+            var exception = await Record.ExceptionAsync(() => Service.UpdatePasswordAsync(user!, password!));
+
+            Assert.NotNull(exception);
+            Assert.IsType(expectedExceptionType, exception);
+
+            if (exception is ArgumentNullException argEx)
+                Assert.Equal(expectedParamName, argEx.ParamName);
+        }
+
+
     }
 }

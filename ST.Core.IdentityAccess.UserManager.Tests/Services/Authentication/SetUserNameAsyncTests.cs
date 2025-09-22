@@ -21,7 +21,7 @@ namespace ST.Core.IdentityAccess.UserManager.Tests.Services.Authentication
             var result = await Service.SetUserNameAsync(user, "newUserName");
 
             Assert.True(result.Succeeded);
-            var updatedUser = await UserManager.FindByIdAsync(user.Id);
+            var updatedUser = await UserManager.FindByIdAsync(user.Id.ToString());
             Assert.Equal("newUserName", updatedUser!.UserName);
         }
 

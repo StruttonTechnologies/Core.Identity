@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -16,7 +17,9 @@ namespace ST.Core.Identity.Application.Authentication.Abstractions.Orchistration
     /// Implementations should expose the user's unique identifier (<see cref="Id"/>), login name (<see cref="UserName"/>),
     /// and contact email (<see cref="Email"/>).
     /// </remarks>
-    public interface IIdentityUserContract
+    public interface IIdentityUserContract<TKey>
+        where TKey : IEquatable<TKey>
+
     {
         /// <summary>
         /// Gets the unique identifier for the user as a <see cref="Guid"/>.
@@ -24,7 +27,7 @@ namespace ST.Core.Identity.Application.Authentication.Abstractions.Orchistration
         /// This enables the application to use strongly-typed GUIDs for user identification, while the underlying identity system may use string representations.
         /// </para>
         /// </summary>
-        Guid Id { get; }
+        TKey Id { get; }
 
         /// <summary>
         /// Gets the username associated with the user.

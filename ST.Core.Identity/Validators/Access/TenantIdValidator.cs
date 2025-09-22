@@ -18,7 +18,7 @@ namespace ST.Core.Identity.Validators.Access
         /// <param name="input">The tenant ID to validate.</param>
         /// <returns>
         /// An <see cref="IValidationResult"/> indicating success if the ID is valid,
-        /// or failure if it is missing or empty.
+        /// or failure if it is missing, malformed, or represents Guid.Empty.
         /// </returns>
         public IValidationResult Validate(string input)
         {
@@ -27,7 +27,15 @@ namespace ST.Core.Identity.Validators.Access
                 return ValidationResultFactory.Failure(
                     message: "Tenant ID is required.",
                     code: "MissingTenantId",
-                    field: nameof(input));
+                    field: "TenantId");
+            }
+
+            if (!Guid.TryParse(input, out var parsed) || parsed == Guid.Empty)
+            {
+                return ValidationResultFactory.Failure(
+                    message: "Invalid Tenant ID format.",
+                    code: "InvalidTenantId",
+                    field: "TenantId");
             }
 
             return ValidationResultFactory.Success();

@@ -46,7 +46,6 @@ namespace ST.Core.Identity.Application.Tests.Authentication.Mapping
             Assert.Equal(accessToken, dto.AccessToken);
             Assert.Equal(refreshToken, dto.RefreshToken);
             Assert.Equal(expiresAt, dto.ExpiresAt);
-            Assert.Equal(userId, dto.UserId);
             Assert.Equal(username, dto.Username);
             Assert.Equal(provider, dto.Provider);
             Assert.True(dto.IsNewUser);
@@ -69,7 +68,6 @@ namespace ST.Core.Identity.Application.Tests.Authentication.Mapping
             Assert.Equal(accessToken, dto.AccessToken);
             Assert.Equal(refreshToken, dto.RefreshToken);
             Assert.Equal(expiresAt, dto.ExpiresAt);
-            Assert.Equal(Guid.Empty, dto.UserId);
             Assert.Equal(string.Empty, dto.Username);
             Assert.Equal("Unknown", dto.Provider);
             Assert.False(dto.IsNewUser);

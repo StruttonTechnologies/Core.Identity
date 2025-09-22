@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using ST.Core.Identity.Data;
 using ST.Core.Registration.Attributes;
 using ST.Core.Validators;
 using ST.Core.Validators.Results;
@@ -12,10 +13,6 @@ namespace ST.Core.Identity.Validators.Identity
     [AutoRegister(ServiceLifetime.Singleton)]
     public class IdentityProviderValidator : IValidator<string>
     {
-        public static readonly HashSet<string> _knownProviders = new(StringComparer.OrdinalIgnoreCase)
-        {
-            "Google", "Microsoft", "GitHub", "Okta", "Auth0"
-        };
 
         /// <summary>
         /// Validates that the input provider is supported.
@@ -35,7 +32,7 @@ namespace ST.Core.Identity.Validators.Identity
                     field: nameof(input));
             }
 
-            if (!_knownProviders.Contains(input))
+            if (!IdentitySeed.KnownIdentityProviders.Contains(input))
             {
                 return ValidationResultFactory.Failure(
                     message: $"Identity provider '{input}' is not supported.",

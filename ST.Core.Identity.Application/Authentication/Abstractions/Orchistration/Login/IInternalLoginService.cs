@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
 using ST.Core.Identity.Domain.Authentication.Interfaces.UserManager;
 using ST.Core.Identity.Dtos.Authentication.Logins;
+using ST.Core.Registration.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,12 +11,14 @@ using System.Threading.Tasks;
 
 namespace ST.Core.Identity.Application.Authentication.Abstractions.Orchistration.Login
 {
+
     /// <summary>
     /// Defines a service for handling internal user login authentication.
     /// </summary>
     /// <typeparam name="TUser">The user entity type.</typeparam>
-    public interface IInternalLoginService<TUser>
-        where TUser : class
+    public interface IInternalLoginService<TUser, TKey> 
+        where TUser : IdentityUser<TKey>, new()
+        where TKey : IEquatable<TKey>
     {
         /// <summary>
         /// Authenticates a user using the provided internal login request.

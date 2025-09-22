@@ -18,13 +18,10 @@
     <ProjectReference Include="..\ST.Core.Identity.Application.Contracts\ST.Core.Identity.Application.Contracts.csproj" />
     <ProjectReference Include="..\ST.Core.Identity.Domain\ST.Core.Identity.Domain.csproj" />
     <ProjectReference Include="..\ST.Core.Identity.Dtos\ST.Core.Identity.Dtos.csproj" />
-    <ProjectReference Include="..\ST.Core.IdentityAccess.Contracts\ST.Core.IdentityAccess.Contracts.csproj" />
     <ProjectReference Include="..\ST.Core.Identity\ST.Core.Identity.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Authentication\Handlers\Logins\Commands\" />
-    <Folder Include="Authentication\Handlers\Logins\Queries\" />
     <Folder Include="Authentication\Handlers\JwtTokens\Queries\" />
     <Folder Include="Authentication\Handlers\TwoFactor\Commands\" />
     <Folder Include="Authentication\Handlers\TwoFactor\Queries\" />

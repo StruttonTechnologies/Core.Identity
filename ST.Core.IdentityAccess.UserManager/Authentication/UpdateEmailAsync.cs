@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
+using ST.Core.Validators;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ namespace ST.Core.IdentityAccess.UserManager.Authentication
         where TUser : IdentityUser<TKey>, new()
         where TKey : IEquatable<TKey>
     {
+        
         /// <summary>
         /// Asynchronously updates the email address for the specified user.
         /// Generates a change email token, applies the change, and logs any errors.

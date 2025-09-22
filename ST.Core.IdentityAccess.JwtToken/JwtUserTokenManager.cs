@@ -9,6 +9,7 @@ using System.Text;
 
 namespace ST.Core.IdentityAccess.JwtToken
 {
+    [AutoRegister]
     public class JwtUserTokenManager : IJwtUserTokenManager
     {
         private readonly IRefreshTokenStore _refreshTokenStore;

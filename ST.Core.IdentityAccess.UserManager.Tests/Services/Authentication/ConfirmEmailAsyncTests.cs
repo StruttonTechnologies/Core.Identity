@@ -26,7 +26,7 @@ namespace ST.Core.IdentityAccess.UserManager.Tests.Services.Authentication
             var result = await Service.ConfirmEmailAsync(user, token);
 
             Assert.True(result.Succeeded);
-            var updatedUser = await UserManager.FindByIdAsync(user.Id);
+            var updatedUser = await UserManager.FindByIdAsync(user.Id.ToString());
             Assert.True(updatedUser!.EmailConfirmed);
         }
 
@@ -76,7 +76,7 @@ namespace ST.Core.IdentityAccess.UserManager.Tests.Services.Authentication
             var token = await UserManager.GenerateEmailConfirmationTokenAsync(user);
             await UserManager.DeleteAsync(user); // Simulate failure
 
-            user.Id = Guid.NewGuid().ToString();  // Change ID to simulate not found
+            user.Id = Guid.NewGuid();  
             var result = await Service.ConfirmEmailAsync(user, token);
 
             Assert.False(result.Succeeded);

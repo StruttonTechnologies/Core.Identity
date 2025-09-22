@@ -23,7 +23,6 @@ namespace ST.Core.Identity.Application.Authentication.Mapping
                     AccessToken: accessToken,
                     RefreshToken: refreshToken,
                     ExpiresAt: expiresAt,
-                    UserId: Guid.Empty,
                     Username: string.Empty,
                     Provider: "Unknown",
                     IsNewUser: false,
@@ -31,7 +30,7 @@ namespace ST.Core.Identity.Application.Authentication.Mapping
                 );
             }
 
-            var userId = identity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            
             var username = identity.FindFirst(ClaimTypes.Name)?.Value ?? string.Empty;
             var provider = identity.FindFirst("provider")?.Value ?? "Local";
             var isNewUser = identity.FindFirst("is_new_user")?.Value == "true";
@@ -41,7 +40,6 @@ namespace ST.Core.Identity.Application.Authentication.Mapping
                 AccessToken: accessToken,
                 RefreshToken: refreshToken,
                 ExpiresAt: expiresAt,
-                UserId: Guid.TryParse(userId, out var parsedId) ? parsedId : Guid.Empty,
                 Username: username,
                 Provider: provider,
                 IsNewUser: isNewUser,

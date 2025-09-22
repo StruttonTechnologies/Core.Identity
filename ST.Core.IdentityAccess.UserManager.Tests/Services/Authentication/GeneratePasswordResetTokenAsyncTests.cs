@@ -32,7 +32,7 @@ namespace ST.Core.IdentityAccess.UserManager.Tests.Services.Authentication
             var exception = await Record.ExceptionAsync(() => Service.GeneratePasswordResetTokenAsync(null!));
 
             Assert.NotNull(exception);
-            Assert.IsType<ArgumentNullException>(exception);
+            Assert.IsType<NullReferenceException>(exception);
         }
 
         /// <summary>

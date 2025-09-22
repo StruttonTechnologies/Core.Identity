@@ -21,7 +21,7 @@ namespace ST.Core.IdentityAccess.UserManager.Tests.Services.Authentication
             var result = await Service.SetLockoutEnabledAsync(user, true);
 
             Assert.True(result.Succeeded);
-            var updatedUser = await UserManager.FindByIdAsync(user.Id);
+            var updatedUser = await UserManager.FindByIdAsync(user.Id.ToString());
             Assert.True(updatedUser!.LockoutEnabled);
         }
 
@@ -38,7 +38,7 @@ namespace ST.Core.IdentityAccess.UserManager.Tests.Services.Authentication
             var result = await Service.SetLockoutEnabledAsync(user, false);
 
             Assert.True(result.Succeeded);
-            var updatedUser = await UserManager.FindByIdAsync(user.Id);
+            var updatedUser = await UserManager.FindByIdAsync(user.Id.ToString());
             Assert.False(updatedUser!.LockoutEnabled);
         }
 

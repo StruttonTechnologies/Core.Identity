@@ -27,7 +27,8 @@ namespace ST.Core.Identity.Fakes.Factories
                 IsActive = true,
                 RowVersion = 1,
                 CreateDate = DateTime.UtcNow,
-                ModifiedDate = null
+                ModifiedDate = null,
+                PersonId = Guid.NewGuid()
             };
         }
 

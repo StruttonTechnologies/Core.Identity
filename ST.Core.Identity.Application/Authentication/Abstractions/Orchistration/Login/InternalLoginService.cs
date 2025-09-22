@@ -1,6 +1,7 @@
-﻿using ST.Core.Identity.Dtos.Authentication.Logins;
-using ST.Core.IdentityAccess.Contracts.Jwtoken;
-using ST.Core.IdentityAccess.Contracts.UserManager;
+﻿using Microsoft.AspNetCore.Identity;
+using ST.Core.Identity.Domain.Interfaces.Jwtoken;
+using ST.Core.Identity.Domain.Interfaces.UserManager;
+using ST.Core.Identity.Dtos.Authentication.Logins;
 using System.Security;
 
 namespace ST.Core.Identity.Application.Authentication.Abstractions.Orchistration.Login
@@ -10,15 +11,18 @@ namespace ST.Core.Identity.Application.Authentication.Abstractions.Orchistration
     /// </summary>
     /// <typeparam name="TUser">The user entity type implementing <see cref="IIdentityUserContract"/>.</typeparam>
     /// 
-    public class InternalLoginService<TUser> : IInternalLoginService<TUser>
-        where TUser : class, IIdentityUserContract
+    public class InternalLoginService<TUser, TKey> : IInternalLoginService<TUser, TKey>
+        where TUser : IdentityUser<TKey>, IIdentityUserContract<TKey>, new()
+        where TKey : IEquatable<TKey>
+
+
     {
-        private readonly IUserLookupManager<TUser> _userLookup;
-        private readonly IUserPasswordManager<TUser> _passwordManager;
-        private readonly IUserLockoutManager<TUser> _lockoutManager;
-        private readonly IUserAuthorizationManager<TUser> _authorizationManager;
-        private readonly IJwtUserTokenManager _tokenManager;
-        private readonly IUserTwoFactorManager<TUser> _twoFactorManager;
+        private readonly IUserLookupManager<TUser, TKey> _userLookup;
+        private readonly IUserPasswordManager<TUser, TKey> _passwordManager;
+        private readonly IUserLockoutManager<TUser, TKey> _lockoutManager;
+        private readonly IUserAuthorizationManager<TUser, TKey> _authorizationManager;
+        private readonly IJwtUserTokenManager<TKey> _tokenManager;
+        private readonly IUserTwoFactorManager<TUser, TKey> _twoFactorManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InternalLoginService{TUser}"/> class.
@@ -30,12 +34,12 @@ namespace ST.Core.Identity.Application.Authentication.Abstractions.Orchistration
         /// <param name="tokenManager">The JWT user token manager.</param>
         /// <param name="twoFactorManager">The user two-factor manager.</param>
         public InternalLoginService(
-            IUserLookupManager<TUser> userLookup,
-            IUserPasswordManager<TUser> passwordManager,
-            IUserLockoutManager<TUser> lockoutManager,
-            IUserAuthorizationManager<TUser> authorizationManager,
-            IJwtUserTokenManager tokenManager,
-            IUserTwoFactorManager<TUser> twoFactorManager)
+            IUserLookupManager<TUser, TKey> userLookup,
+            IUserPasswordManager<TUser, TKey> passwordManager,
+            IUserLockoutManager<TUser, TKey> lockoutManager,
+            IUserAuthorizationManager<TUser, TKey> authorizationManager,
+            IJwtUserTokenManager<TKey> tokenManager,
+            IUserTwoFactorManager<TUser, TKey> twoFactorManager)
         {
             _userLookup = userLookup;
             _passwordManager = passwordManager;
@@ -74,16 +78,15 @@ namespace ST.Core.Identity.Application.Authentication.Abstractions.Orchistration
             var roles = await _authorizationManager.GetRolesAsync(user, cancellationToken);
 
             var accessToken = await _tokenManager.GenerateAccessTokenAsync(
-                user.Id.ToString(), user.UserName, user.Email, roles, cancellationToken);
+                user.Id, user.UserName, user.Email, roles, cancellationToken);
 
             var refreshToken = await _tokenManager.GenerateRefreshTokenAsync(
-                user.Id.ToString(), user.UserName, cancellationToken);
+                user.Id, user.UserName, cancellationToken);
 
             return new LoginResponseDto(
                 AccessToken: accessToken,
                 RefreshToken: refreshToken,
                 ExpiresAt: DateTime.UtcNow.AddHours(1),
-                UserId: user.Id,
                 Username: user.UserName,
                 Provider: "Internal",
                 IsNewUser: false,

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ST.Core.IdentityAccess.UserManager.Authorization
 {
-    public abstract partial class UserAuthorizationManage<TUser, TKey>
+    public abstract partial class UserAuthorizationManager<TUser, TKey>
          where TUser : IdentityUser<TKey>, new()
          where TKey : IEquatable<TKey>
     {

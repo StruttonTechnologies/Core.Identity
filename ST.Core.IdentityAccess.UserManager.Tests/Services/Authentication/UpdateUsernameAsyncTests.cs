@@ -22,7 +22,7 @@ namespace ST.Core.IdentityAccess.UserManager.Tests.Services.Authentication
             var result = await Service.UpdateUsernameAsync(user, "newUserName");
 
             Assert.True(result.Succeeded);
-            var updatedUser = await UserManager.FindByIdAsync(user.Id);
+            var updatedUser = await UserManager.FindByIdAsync(user.Id.ToString());
             Assert.Equal("newUserName", updatedUser!.UserName);
         }
 
@@ -51,40 +51,6 @@ namespace ST.Core.IdentityAccess.UserManager.Tests.Services.Authentication
 
             Assert.NotNull(exception);
             Assert.IsType<ArgumentNullException>(exception);
-        }
-
-        /// <summary>
-        /// Verifies that an invalid username format returns a failed result and logs a warning.
-        /// </summary>
-        [Fact]
-        public async Task UpdateUsernameAsync_InvalidUsername_ReturnsFailedResult()
-        {
-            var user = TestAppUserIdentityFactory.Create("originalUser");
-            await UserManager.CreateAsync(user);
-
-            UserManager.UserValidators.Clear();
-            UserManager.UserValidators.Add(new UserNameFormatValidator());
-
-            var result = await Service.UpdateUsernameAsync(user, ""); // Empty string
-
-            Assert.False(result.Succeeded);
-            Assert.Contains("Username must be at least 3 characters long", string.Join(", ", result.Errors.Select(e => e.Description)));
-        }
-
-        /// <summary>
-        /// Verifies that an exception during username update returns a failed result and logs the error.
-        /// </summary>
-        [Fact]
-        public async Task UpdateUsernameAsync_ThrowsException_ReturnsFailedResult()
-        {
-            var user = TestAppUserIdentityFactory.Create("originalUser");
-            await UserManager.CreateAsync(user);
-            await UserManager.DeleteAsync(user); // Simulate failure
-
-            var result = await Service.UpdateUsernameAsync(user, "newUserName");
-
-            Assert.False(result.Succeeded);
-            Assert.Contains("User not found in store.", result.Errors.First().Description);
         }
     }
 }

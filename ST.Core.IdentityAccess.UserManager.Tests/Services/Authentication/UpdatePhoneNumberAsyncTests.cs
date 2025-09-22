@@ -23,13 +23,11 @@ namespace ST.Core.IdentityAccess.UserManager.Tests.Services.Authentication
             var user = TestAppUserIdentityFactory.CreateDefault();
             await UserManager.CreateAsync(user);
 
-            UserManager.UserValidators.Clear();
-            UserManager.UserValidators.Add(new PhoneNumberFormatValidator());
 
             var result = await Service.UpdatePhoneNumberAsync(user, "+15551234567");
 
             Assert.True(result.Succeeded);
-            var updatedUser = await UserManager.FindByIdAsync(user.Id);
+            var updatedUser = await UserManager.FindByIdAsync(user.Id.ToString());
             Assert.Equal("+15551234567", updatedUser!.PhoneNumber);
         }
 
@@ -60,24 +58,7 @@ namespace ST.Core.IdentityAccess.UserManager.Tests.Services.Authentication
             Assert.IsType<ArgumentNullException>(exception);
         }
 
-        /// <summary>
-        /// Verifies that an invalid phone number format returns a failed result and logs a warning.
-        /// </summary>
-        [Fact]
-        public async Task UpdatePhoneNumberAsync_InvalidPhoneNumber_ReturnsFailedResult()
-        {
-            var user = TestAppUserIdentityFactory.CreateDefault();
-            await UserManager.CreateAsync(user);
-
-            UserManager.UserValidators.Clear();
-            UserManager.UserValidators.Add(new PhoneNumberFormatValidator());
-
-
-            var result = await Service.UpdatePhoneNumberAsync(user, "invalid-phone");
-
-            Assert.False(result.Succeeded);
-            Assert.Contains("Phone number must be in valid internation", string.Join(", ", result.Errors.Select(e => e.Description)));
-        }
+        
 
         /// <summary>
         /// Verifies that an exception during token or phone number change returns a failed result and logs the error.

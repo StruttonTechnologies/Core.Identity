@@ -22,7 +22,7 @@ namespace ST.Core.IdentityAccess.UserManager.Tests.Services.Authentication
             var result = await Service.SetLockoutEndDateAsync(user, lockoutEnd);
 
             Assert.True(result.Succeeded);
-            var updatedUser = await UserManager.FindByIdAsync(user.Id);
+            var updatedUser = await UserManager.FindByIdAsync(user.Id.ToString());
             Assert.Equal(lockoutEnd.UtcDateTime, updatedUser!.LockoutEnd?.UtcDateTime);
         }
 
@@ -39,7 +39,7 @@ namespace ST.Core.IdentityAccess.UserManager.Tests.Services.Authentication
             var result = await Service.SetLockoutEndDateAsync(user, null);
 
             Assert.True(result.Succeeded);
-            var updatedUser = await UserManager.FindByIdAsync(user.Id);
+            var updatedUser = await UserManager.FindByIdAsync(user.Id.ToString());
             Assert.Null(updatedUser!.LockoutEnd);
         }
 

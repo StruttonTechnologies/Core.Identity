@@ -22,7 +22,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ST.Core.Identity.Application\ST.Core.Identity.Application.csproj" />
-    <ProjectReference Include="..\ST.Core.IdentityAccess.Contracts\ST.Core.IdentityAccess.Contracts.csproj" />
   </ItemGroup>
 
 </Project>

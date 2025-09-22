@@ -1,6 +1,7 @@
 ﻿using ST.Core.Identity.Fakes.Factories;
 using ST.Core.Identity.Fakes.Validators;
 using ST.Core.IdentityAccess.Fakes.UserManager;
+using ST.Core.Validators.Format;
 
 namespace ST.Core.IdentityAccess.UserManager.Tests.Services.Authentication
 {
@@ -22,54 +23,33 @@ namespace ST.Core.IdentityAccess.UserManager.Tests.Services.Authentication
             var result = await Service.UpdateEmailAsync(user, "updated@example.com");
 
             Assert.True(result.Succeeded);
-            var updatedUser = await UserManager.FindByIdAsync(user.Id);
+            var updatedUser = await UserManager.FindByIdAsync(user.Id.ToString());
             Assert.Equal("updated@example.com", updatedUser!.Email);
         }
 
-        /// <summary>
-        /// Verifies that passing a null user throws <see cref="ArgumentNullException"/>.
-        /// </summary>
-        [Fact]
-        public async Task UpdateEmailAsync_NullUser_ThrowsArgumentNullException()
+        [Theory]
+        [InlineData(null, "updated@example.com", typeof(ArgumentNullException), "user")]
+        [InlineData("user", null, typeof(ArgumentNullException), "newEmail")]
+        public async Task UpdateEmailAsync_InvalidArguments_ThrowsExpectedException(
+             string userSelector,
+             string email,
+             Type expectedExceptionType,
+             string expectedParamName)
         {
-            var exception = await Record.ExceptionAsync(() => Service.UpdateEmailAsync(null!, "updated@example.com"));
+            var user = userSelector == "user" ? TestAppUserIdentityFactory.CreateDefault() : null;
+
+            if (user is not null)
+                await UserManager.CreateAsync(user);
+
+            var exception = await Record.ExceptionAsync(() => Service.UpdateEmailAsync(user!, email!));
 
             Assert.NotNull(exception);
-            Assert.IsType<ArgumentNullException>(exception);
+            Assert.IsType(expectedExceptionType, exception);
+
+            if (exception is ArgumentNullException argEx)
+                Assert.Equal(expectedParamName, argEx.ParamName);
         }
 
-        /// <summary>
-        /// Verifies that passing a null email throws <see cref="ArgumentNullException"/>.
-        /// </summary>
-        [Fact]
-        public async Task UpdateEmailAsync_NullEmail_ThrowsArgumentNullException()
-        {
-            var user = TestAppUserIdentityFactory.CreateDefault();
-            await UserManager.CreateAsync(user);
-
-            var exception = await Record.ExceptionAsync(() => Service.UpdateEmailAsync(user, null!));
-
-            Assert.NotNull(exception);
-            Assert.IsType<ArgumentNullException>(exception);
-        }
-
-        /// <summary>
-        /// Verifies that an invalid email format returns a failed result and logs a warning.
-        /// </summary>
-        [Fact]
-        public async Task UpdateEmailAsync_InvalidEmail_ReturnsFailedResult()
-        {
-            var user = TestAppUserIdentityFactory.CreateDefault();
-            await UserManager.CreateAsync(user);
-
-            UserManager.UserValidators.Clear();
-            UserManager.UserValidators.Add(new EmailFormatValidator());
-
-            var result = await Service.UpdateEmailAsync(user, "invalid-email");
-
-            Assert.False(result.Succeeded);
-            Assert.Contains("invalid.", string.Join(", ", result.Errors.Select(e => e.Description)));
-        }
 
         /// <summary>
         /// Verifies that an exception during token or email change returns a failed result and logs the error.

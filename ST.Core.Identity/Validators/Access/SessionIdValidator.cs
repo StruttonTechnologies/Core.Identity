@@ -24,10 +24,12 @@ namespace ST.Core.Identity.Validators.Access
         {
             if (string.IsNullOrWhiteSpace(input))
             {
-                return ValidationResultFactory.Failure(
-                    message: "Session ID is required.",
-                    code: "MissingSessionId",
-                    field: nameof(input));
+                return ValidationResultFactory.Failure("Session ID is required.", "Required", "SessionId");
+            }
+
+            if (!Guid.TryParse(input, out var parsed) || parsed == Guid.Empty)
+            {
+                return ValidationResultFactory.Failure("Invalid Session ID format.", "InvalidSessionId", "SessionId");
             }
 
             return ValidationResultFactory.Success();

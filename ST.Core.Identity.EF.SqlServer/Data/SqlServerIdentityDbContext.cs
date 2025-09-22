@@ -1,19 +1,20 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ST.Core.Identity.Domain.Entities;
+using ST.Core.Identity.Domain.Entities.User;
 using ST.Core.Identity.EF;
 
-namespace ST.Core.Identity.Infrastructure.EF.SqlServer
+namespace ST.Core.Identity.EF.SqlServer.Data
 {
     /// <summary>
     /// SQL Server-specific identity DbContext.
     /// </summary>
-    public class SqlServerIdentityDbContext<TUser, TPerson> :
-        IdentityDbContextBase<TUser, TPerson>
-        where TUser : IdentityUserBase<TPerson>
-        where TPerson : class
+    public class SqlServerIdentityDbContext<TKey, TUser, TPerson> :
+    IdentityDbContextBase<TKey, TUser, TPerson>
+    where TKey : IEquatable<TKey>
+    where TUser : IdentityUserBase<TKey, TPerson>
+    where TPerson : class
     {
         public SqlServerIdentityDbContext(
-            DbContextOptions<SqlServerIdentityDbContext<TUser, TPerson>> options)
+            DbContextOptions<SqlServerIdentityDbContext<TKey, TUser, TPerson>> options)
             : base(options) { }
     }
 }

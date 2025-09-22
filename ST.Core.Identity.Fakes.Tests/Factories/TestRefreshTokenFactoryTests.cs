@@ -16,7 +16,7 @@ namespace ST.Core.Identity.Fakes.Tests.Factories
             Assert.False(string.IsNullOrWhiteSpace(token.UserId));
             Assert.Equal("test.user", token.Username);
             Assert.False(token.IsRevoked);
-            Assert.True(token.ExpiresAt == default); // Not set by factory
+            Assert.True(token.ExpiresAt > DateTime.UtcNow);
         }
 
         [Theory]

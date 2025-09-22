@@ -1,13 +1,23 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Runtime.InteropServices;
 
-namespace ST.Core.Identity.Domain.Entities
+namespace ST.Core.Identity.Domain.Entities.User
 {
+
+
+
     /// <summary>
     /// Base identity user with provider metadata and person linkage.
     /// </summary>
-    public class IdentityUserBase<TPerson> : IdentityUser<Guid>
+    /// 
+
+
+
+    public class IdentityUserBase<TKey, TPerson> : IdentityUser<TKey>
+        where TKey : IEquatable<TKey>
         where TPerson : class
     {
         /// <summary>
@@ -18,7 +28,7 @@ namespace ST.Core.Identity.Domain.Entities
         /// <summary>
         /// Foreign key to the associated person entity.
         /// </summary>
-        public Guid PersonId { get; set; }
+        public TKey PersonId { get; set; } = default!;
 
         /// <summary>
         /// Navigation property to the person entity.

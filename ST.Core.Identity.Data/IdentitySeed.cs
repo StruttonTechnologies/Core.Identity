@@ -13,7 +13,7 @@ namespace ST.Core.Identity.Data
         /// </summary>
         public static readonly HashSet<string> KnownIdentityProviders = new(StringComparer.OrdinalIgnoreCase)
         {
-            "Google", "Microsoft", "GitHub", "Okta", "Auth0"
+            "Google", "Microsoft", "GitHub", "Okta", "Auth0", "Local"
         };
 
         /// <summary>
