@@ -29,7 +29,6 @@
     <Folder Include="Authentication\Handlers\User\Queries\" />
     <Folder Include="Authentication\Handlers\Lockout\Commands\" />
     <Folder Include="Authentication\Handlers\Lockout\Queries\" />
-    <Folder Include="Authentication\Services\Logins\" />
     <Folder Include="Authorization\Claims\Commands\" />
     <Folder Include="Authorization\Claims\Queries\" />
     <Folder Include="Authorization\Roles\Commands\" />

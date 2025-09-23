@@ -44,30 +44,7 @@ namespace ST.Core.Identity.Application.Authentication.Handlers.Logins
         /// <returns>A <see cref="LoginResponseDto"/> representing the result of the login attempt.</returns>
         public async Task<LoginResponseDto> Handle(InternalLoginCommand command, CancellationToken cancellationToken)
         {
-            ArgumentNullException.ThrowIfNull(command);
-
-            // Step 1: Locate the user
-            var user = await _loginService.FindUserRecord(command.Request.UserName, cancellationToken);
-
-            // Step 2: Check if user is locked out
-            await _loginService.EnsureUserNotLockedOut(user, cancellationToken);
-
-            // Step 3: Validate password
-            await _loginService.EnsureValidPassword(user, command.Request.Password, cancellationToken);
-
-            // Step 4: Retrieve roles
-            var roles = await _loginService.GetUserRolesAsync(user, cancellationToken);
-
-            // Step 5: Generate access token
-            var accessToken = await _loginService.GenerateAccessTokenAsync(user, roles, cancellationToken);
-
-            // Step 6: Generate refresh token
-            var refreshToken = await _loginService.GenerateRefreshTokenAsync(user, cancellationToken);
-
-            // Step 7: Build and return response
-            var response = await _loginService.BuildLoginResponseAsync(user, accessToken, refreshToken, cancellationToken);
-
-            return response;
+            return await _loginService.LoginAsync(command.Request, cancellationToken);
         }
     }
 }
