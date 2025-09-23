@@ -4,7 +4,6 @@ using ST.Core.Identity.Fakes.Models;
 
 namespace ST.Core.IdentityAccess.Fakes.Stores
 {
-
     public class InMemoryUserStore :
         IUserStore<TestAppIdentityUser>,
         IUserPasswordStore<TestAppIdentityUser>,
@@ -12,7 +11,8 @@ namespace ST.Core.IdentityAccess.Fakes.Stores
         IUserLockoutStore<TestAppIdentityUser>,
         IUserLoginStore<TestAppIdentityUser>,
         IUserTwoFactorStore<TestAppIdentityUser>,
-        IUserPhoneNumberStore<TestAppIdentityUser>
+        IUserPhoneNumberStore<TestAppIdentityUser>,
+        IUserRoleStore<TestAppIdentityUser>
 
     {
         private readonly ConcurrentDictionary<string, TestAppIdentityUser> _users = new();
@@ -20,6 +20,7 @@ namespace ST.Core.IdentityAccess.Fakes.Stores
         private readonly ConcurrentDictionary<string, string> _normalizedEmails = new();
         private readonly ConcurrentDictionary<string, List<UserLoginInfo>> _logins = new();
         private readonly HashSet<string> _deletedUserIds = new();
+        private readonly ConcurrentDictionary<string, List<string>> _userRoles = new();
 
 
         public Task<IdentityResult> CreateAsync(TestAppIdentityUser user, CancellationToken cancellationToken)
@@ -52,7 +53,6 @@ namespace ST.Core.IdentityAccess.Fakes.Stores
             return Task.FromResult(IdentityResult.Success);
         }
 
-
         public Task<IdentityResult> UpdateAsync(TestAppIdentityUser user, CancellationToken cancellationToken)
         {
             string userId = user.Id.ToString();
@@ -63,8 +63,6 @@ namespace ST.Core.IdentityAccess.Fakes.Stores
             _users[userId] = user;
             return Task.FromResult(IdentityResult.Success);
         }
-
-
 
         public Task<TestAppIdentityUser?> FindByIdAsync(string userId, CancellationToken cancellationToken)
         {
@@ -261,8 +259,6 @@ namespace ST.Core.IdentityAccess.Fakes.Stores
             return Task.CompletedTask;
         }
 
-
-
         public void Dispose() { }
 
         private bool TryEnsureExists(TestAppIdentityUser user)
@@ -278,5 +274,48 @@ namespace ST.Core.IdentityAccess.Fakes.Stores
 
         private IdentityResult Failed(string message)
             => IdentityResult.Failed(new IdentityError { Description = message });
+
+        public Task AddToRoleAsync(TestAppIdentityUser user, string roleName, CancellationToken cancellationToken)
+        {
+            var key = user.Id.ToString();
+            if (!_userRoles.ContainsKey(key))
+                _userRoles[key] = new List<string>();
+
+            _userRoles[key].Add(roleName);
+            return Task.CompletedTask;
+        }
+
+        public Task RemoveFromRoleAsync(TestAppIdentityUser user, string roleName, CancellationToken cancellationToken)
+        {
+            var key = user.Id.ToString();
+            _userRoles[key]?.Remove(roleName);
+            return Task.CompletedTask;
+        }
+
+        public Task<IList<string>> GetRolesAsync(TestAppIdentityUser user, CancellationToken cancellationToken)
+        {
+            var key = user.Id.ToString();
+            var roles = _userRoles.TryGetValue(key, out var list) ? list : new List<string>();
+            return Task.FromResult((IList<string>)roles);
+        }
+
+        public Task<bool> IsInRoleAsync(TestAppIdentityUser user, string roleName, CancellationToken cancellationToken)
+        {
+            var key = user.Id.ToString();
+            var isInRole = _userRoles.TryGetValue(key, out var list) && list.Contains(roleName);
+            return Task.FromResult(isInRole);
+        }
+
+        public Task<IList<TestAppIdentityUser>> GetUsersInRoleAsync(string roleName, CancellationToken cancellationToken)
+        {
+            var usersInRole = _userRoles
+                .Where(kvp => kvp.Value.Contains(roleName))
+                .Select(kvp => _users.Values.FirstOrDefault(u => u.Id.ToString() == kvp.Key))
+                .Where(u => u != null)
+                .ToList();
+
+            return Task.FromResult((IList<TestAppIdentityUser>)usersInRole);
+        }
+
     }
 }

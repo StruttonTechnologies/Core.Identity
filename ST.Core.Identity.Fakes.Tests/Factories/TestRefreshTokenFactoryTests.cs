@@ -13,17 +13,18 @@ namespace ST.Core.Identity.Fakes.Tests.Factories
             var token = TestRefreshTokenFactory.Create();
 
             Assert.NotNull(token);
-            Assert.False(string.IsNullOrWhiteSpace(token.UserId));
+            Assert.False(Guid.Empty.Equals(token.UserId));
             Assert.Equal("test.user", token.Username);
             Assert.False(token.IsRevoked);
             Assert.True(token.ExpiresAt > DateTime.UtcNow);
         }
 
         [Theory]
-        [InlineData("user1", "alice")]
-        [InlineData("user2", "bob")]
-        public void Create_WithParameters_SetsUserIdAndUsername(string userId, string username)
+        [InlineData("11111111-1111-1111-1111-111111111111", "alice")]
+        [InlineData("22222222-2222-2222-2222-222222222222", "bob")]
+        public void Create_WithParameters_SetsUserIdAndUsername(string userIdString, string username)
         {
+            var userId = Guid.Parse(userIdString);
             var token = TestRefreshTokenFactory.Create(userId, username);
 
             Assert.Equal(userId, token.UserId);
@@ -41,9 +42,10 @@ namespace ST.Core.Identity.Fakes.Tests.Factories
         }
 
         [Theory]
-        [InlineData("user3", "charlie")]
-        public void Expired_WithParameters_SetsUserIdUsernameAndPastExpiry(string userId, string username)
+        [InlineData("11111111-1111-1111-1111-111111111111", "charlie")]
+        public void Expired_WithParameters_SetsUserIdUsernameAndPastExpiry(string userIdString, string username)
         {
+            var userId = Guid.Parse(userIdString);
             var token = TestRefreshTokenFactory.Expired(userId, username);
 
             Assert.Equal(userId, token.UserId);
@@ -61,9 +63,10 @@ namespace ST.Core.Identity.Fakes.Tests.Factories
         }
 
         [Theory]
-        [InlineData("user4", "dave")]
-        public void Revoked_WithParameters_SetsUserIdUsernameAndIsRevoked(string userId, string username)
+        [InlineData("11111111-1111-1111-1111-111111111111", "dave")]
+        public void Revoked_WithParameters_SetsUserIdUsernameAndIsRevoked(string userIdString, string username)
         {
+            var userId = Guid.Parse(userIdString);
             var token = TestRefreshTokenFactory.Revoked(userId, username);
 
             Assert.Equal(userId, token.UserId);

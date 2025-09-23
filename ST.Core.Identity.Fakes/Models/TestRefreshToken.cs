@@ -7,7 +7,7 @@ namespace ST.Core.Identity.Fakes.Models
     /// Represents a test-safe version of RefreshToken for identity testing.
     /// </summary>
     [ExcludeFromCodeCoverage]
-    public class TestRefreshToken : RefreshToken
+    public class TestRefreshToken : RefreshToken<Guid>
     {
         public TestRefreshToken()
         {
@@ -15,7 +15,7 @@ namespace ST.Core.Identity.Fakes.Models
             CreatedAt = DateTime.UtcNow;
             ExpiresAt = DateTime.UtcNow.AddDays(7);
             IsRevoked = false;
-            UserId = Guid.NewGuid().ToString();
+            UserId = Guid.NewGuid();
             Username = "test.user";
         }
     }

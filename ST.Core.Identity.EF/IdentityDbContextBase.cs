@@ -14,9 +14,10 @@ namespace ST.Core.Identity.EF
         IdentityDbContext<TUser, IdentityRole<TKey>,TKey>
          where TUser : IdentityUserBase<TKey, TPerson>
          where TKey : IEquatable<TKey>
-         where TPerson : class
+         where TPerson : PersonBase<TPerson>
     {
-        public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
+        public DbSet<RefreshToken<TKey>> RefreshTokens => Set<RefreshToken<TKey>>();
+        public DbSet<TPerson> Persons => Set<TPerson>();
 
         protected IdentityDbContextBase(DbContextOptions options) : base(options) { }
 
@@ -24,8 +25,9 @@ namespace ST.Core.Identity.EF
         {
             base.OnModelCreating(builder);
 
-            RefreshTokenConfiguration.Configure(builder.Entity<RefreshToken>());
+            RefreshTokenConfiguration.Configure(builder.Entity<RefreshToken<TKey>>());
             IdentityUserConfiguration.Configure<TKey,TUser, TPerson>(builder.Entity<TUser>());
+            PersonConfiguration.Configure<TPerson>(builder.Entity<TPerson>());
         }
     }
 }

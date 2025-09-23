@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using ST.Core.Identity.Domain.Entities;
 using ST.Core.Identity.Domain.Entities.User;
 using ST.Core.Identity.EF;
 
@@ -11,7 +12,7 @@ namespace ST.Core.Identity.EF.SqlServer.Data
     IdentityDbContextBase<TKey, TUser, TPerson>
     where TKey : IEquatable<TKey>
     where TUser : IdentityUserBase<TKey, TPerson>
-    where TPerson : class
+    where TPerson : PersonBase<TPerson>
     {
         public SqlServerIdentityDbContext(
             DbContextOptions<SqlServerIdentityDbContext<TKey, TUser, TPerson>> options)
