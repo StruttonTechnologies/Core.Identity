@@ -24,14 +24,11 @@
   <ItemGroup>
     <ProjectReference Include="..\ST.Core.Identity.Application\ST.Core.Identity.Application.csproj" />
     <ProjectReference Include="..\ST.Core.Identity.Fakes\ST.Core.Identity.Fakes.csproj" />
+    <ProjectReference Include="..\ST.Core.IdentityAccess.Fakes\ST.Core.IdentityAccess.Fakes.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Using Include="Xunit" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Authentication\Mocks\" />
   </ItemGroup>
 
 </Project>

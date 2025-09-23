@@ -8,7 +8,7 @@ using System.Linq;
 using System.Security.Claims;
 using Xunit;
 
-namespace ST.Core.Identity.Application.Tests.Authentication.Services
+namespace ST.Core.Identity.Application.Tests.Services
 {
     /// <summary>
     /// Unit tests for <see cref="TokenService"/>.

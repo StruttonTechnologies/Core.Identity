@@ -10,7 +10,7 @@ using ST.Core.Identity.Application.Authentication.Models;
 using ST.Core.Identity.Dtos.Authentication.Logins;
 using Xunit;
 
-namespace ST.Core.Identity.Application.Tests.Authentication.Mapping
+namespace ST.Core.Identity.Application.Tests.Mapping
 {
     public class ClaimsPrincipalExtensionsTests
     {
