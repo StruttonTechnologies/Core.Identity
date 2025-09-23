@@ -42,5 +42,30 @@ namespace ST.Core.Identity.Domain.Interfaces.Jwtoken
         /// <param name="token">The JWT token to inspect.</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains the expiration date and time if available; otherwise, <c>null</c>.</returns>
         Task<DateTime?> GetExpirationAsync(string token);
+
+        /// <summary>
+        /// Revokes all refresh tokens associated with the specified user.
+        /// </summary>
+        /// <param name="userId">The unique identifier of the user whose refresh tokens should be revoked.</param>
+        /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
+        Task RevokeRefreshTokensAsync(TKey userId, CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Revokes the specified refresh token.
+        /// </summary>
+        /// <param name="token">The refresh token to revoke.</param>
+        /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
+        Task RevokeRefreshTokenAsync(string token, CancellationToken cancellationToken);
+
+
+        /// <summary>
+        /// Revokes all access tokens associated with the specified user.
+        /// </summary>
+        /// <param name="userId">The unique identifier of the user whose access tokens should be revoked.</param>
+        /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
+        Task RevokeAccessTokensAsync(TKey userId, CancellationToken cancellationToken);
     }
 }

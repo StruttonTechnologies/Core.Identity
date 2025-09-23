@@ -10,6 +10,7 @@ namespace ST.Core.Identity.Domain.Entities
 {
     [ExcludeFromCodeCoverage]
     public class PersonBase<TPerson>
+        where TPerson : PersonBase<TPerson>
     {
         public Guid Id { get; set; } = Guid.NewGuid();
 

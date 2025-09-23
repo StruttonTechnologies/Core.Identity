@@ -9,7 +9,8 @@ namespace ST.Core.Identity.Domain.Entities
     /// <summary>
     /// Represents a refresh token used for renewing authentication sessions.
     /// </summary>
-    public class RefreshToken
+    public class RefreshToken<TKey>
+        where TKey : IEquatable<TKey>
     {
         /// <summary>
         /// Gets or sets the refresh token string.
@@ -19,7 +20,7 @@ namespace ST.Core.Identity.Domain.Entities
         /// <summary>
         /// Gets or sets the identifier of the user associated with this token.
         /// </summary>
-        public string UserId { get; set; } = default!;
+        public TKey UserId { get; set; } = default!;
 
         /// <summary>
         /// Gets or sets the username of the user associated with this token.
@@ -35,6 +36,11 @@ namespace ST.Core.Identity.Domain.Entities
         /// Gets or sets the date and time when the token expires.
         /// </summary>
         public DateTime ExpiresAt { get; set; }
+
+        /// <summary>
+        /// Gets or sets the date and time when the token was revoked, if applicable.
+        /// </summary>
+        public DateTime? RevokedAt { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the token has been revoked.
