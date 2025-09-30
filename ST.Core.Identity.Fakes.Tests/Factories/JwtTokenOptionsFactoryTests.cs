@@ -1,5 +1,5 @@
 using ST.Core.Identity.Fakes.Factories;
-using ST.Core.Identity.Application.Authentication.Models;
+using ST.Core.Identity.Application.Models;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Xunit;

@@ -22,17 +22,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Authentication\Handlers\JwtTokens\Queries\" />
-    <Folder Include="Authentication\Handlers\TwoFactor\Commands\" />
-    <Folder Include="Authentication\Handlers\TwoFactor\Queries\" />
-    <Folder Include="Authentication\Handlers\User\Commands\" />
-    <Folder Include="Authentication\Handlers\User\Queries\" />
-    <Folder Include="Authentication\Handlers\Lockout\Commands\" />
-    <Folder Include="Authentication\Handlers\Lockout\Queries\" />
-    <Folder Include="Authorization\Claims\Commands\" />
-    <Folder Include="Authorization\Claims\Queries\" />
-    <Folder Include="Authorization\Roles\Commands\" />
-    <Folder Include="Authorization\Roles\Queries\" />
+    <Folder Include="Handlers\JwtTokens\Queries\" />
+    <Folder Include="Handlers\TwoFactor\Commands\" />
+    <Folder Include="Handlers\TwoFactor\Queries\" />
+    <Folder Include="Handlers\User\Commands\" />
+    <Folder Include="Handlers\User\Queries\" />
+    <Folder Include="Handlers\Lockout\Commands\" />
+    <Folder Include="Handlers\Lockout\Queries\" />
+    <Folder Include="Services\Login\" />
   </ItemGroup>
 
 </Project>

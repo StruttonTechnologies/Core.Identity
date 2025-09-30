@@ -13,7 +13,13 @@ namespace ST.Core.Identity.Data
         /// </summary>
         public static readonly HashSet<string> KnownIdentityProviders = new(StringComparer.OrdinalIgnoreCase)
         {
-            "Google", "Microsoft", "GitHub", "Okta", "Auth0", "Local"
+            "Google", 
+            "Microsoft", 
+            "GitHub", 
+            "Okta", 
+            "Auth0", 
+            "Local"
+            // More can be added as needed
         };
 
         /// <summary>
@@ -21,7 +27,12 @@ namespace ST.Core.Identity.Data
         /// </summary>
         public static readonly HashSet<string> AllowedRoles = new(StringComparer.OrdinalIgnoreCase)
         {
-            "User", "Admin", "Manager", "Support", "Contributor"
+            "User", 
+            "Admin", 
+            "Manager", 
+            "Support", 
+            "Contributor"
+            // More can be added as needed
         };
 
         /// <summary>
@@ -34,6 +45,7 @@ namespace ST.Core.Identity.Data
             "admin:tenant",
             "read:settings",
             "manage:roles"
+            // More can be added as needed
         };
 
         /// <summary>
@@ -41,7 +53,30 @@ namespace ST.Core.Identity.Data
         /// </summary>
         public static readonly HashSet<string> ReservedUsernames = new(StringComparer.OrdinalIgnoreCase)
         {
-            "admin", "root", "system", "support", "me"
+            "admin", 
+            "root", 
+            "system", 
+            "support", 
+            "me"
+            // More can be added as needed
+        };
+
+        
+        /// <summary>
+        /// Commonly blacklisted passwords and terms that are not allowed for security reasons.
+        /// </summary>
+        public static readonly HashSet<string> Blacklist = new(StringComparer.OrdinalIgnoreCase)
+        {
+            "password",
+            "123456",
+            "qwerty",
+            "letmein",
+            "welcome",
+            "admin",
+            "iloveyou",
+            "monkey",
+            "abc123"
+            // More can be added as needed
         };
     }
 }

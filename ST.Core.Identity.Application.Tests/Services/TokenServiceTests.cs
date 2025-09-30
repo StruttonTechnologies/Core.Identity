@@ -1,5 +1,5 @@
 using Microsoft.Extensions.Logging;
-using ST.Core.Identity.Application.Authentication.Services.JwtTokens;
+using ST.Core.Identity.Application.Services.JwtTokens;
 using ST.Core.Identity.Fakes.Builders;
 using ST.Core.Identity.Fakes.Factories;
 using System;

@@ -8,7 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="Moq" Version="4.20.72" />
-    <PackageReference Include="ST.Core.Fakes" Version="1.1.0-beta" />
+    <PackageReference Include="ST.Core.Fakes" Version="1.2.0-beta" />
     <PackageReference Include="ST.Core.Registration" Version="1.0.0-alpha" />
   </ItemGroup>
 

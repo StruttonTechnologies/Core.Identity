@@ -1,6 +1,6 @@
 ﻿using System.Text;
 using Microsoft.IdentityModel.Tokens;
-using ST.Core.Identity.Application.Authentication.Models;
+using ST.Core.Identity.Application.Models;
 
 namespace ST.Core.Identity.Fakes.Factories
 {

@@ -1,7 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
 using Moq;
-using ST.Core.Identity.Application.Authentication.Services.Authentication;
+using ST.Core.Identity.Application.Services.Authentication;
 using ST.Core.Identity.Domain.Interfaces.Jwtoken;
+using ST.Core.Identity.Exceptions;
 using ST.Core.Identity.Fakes.Factories;
 using ST.Core.Identity.Fakes.Models;
 using ST.Core.Identity.Fakes.Testable;
@@ -65,7 +66,7 @@ namespace ST.Core.Identity.Application.Tests.Services
         {
             var service = new TestableInternalLoginService(_userManager, new TestTokenManager(), _logger);
 
-            await Assert.ThrowsAsync<Exception>(() =>
+            await Assert.ThrowsAsync<UserNotFoundException>(() =>
                 service.ExposeFindUserRecordAsync("unknown.user", CancellationToken.None));
         }
 

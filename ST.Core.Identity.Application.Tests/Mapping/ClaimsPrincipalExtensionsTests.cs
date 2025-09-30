@@ -1,14 +1,9 @@
-using System;
-using System.Collections.Generic;
+using Microsoft.IdentityModel.Tokens;
+using ST.Core.Identity.Application.Mapping;
+using ST.Core.Identity.Application.Models;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using Microsoft.IdentityModel.Tokens;
-using ST.Core.Identity.Application.Authentication.Mapping;
-using ST.Core.Identity.Application.Authentication.Models;
-using ST.Core.Identity.Dtos.Authentication.Logins;
-using Xunit;
 
 namespace ST.Core.Identity.Application.Tests.Mapping
 {

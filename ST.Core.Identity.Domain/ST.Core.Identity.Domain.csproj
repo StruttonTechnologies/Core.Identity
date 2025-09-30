@@ -9,6 +9,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="9.0.9" />
     <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="9.0.9" />
+    <PackageReference Include="ST.Core.Domain" Version="1.2.0-beta" />
   </ItemGroup>
 
 </Project>

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
-using ST.Core.Identity.Application.Authentication.Services.Authentication;
+using ST.Core.Identity.Application.Services.Authentication;
 using ST.Core.Identity.Domain.Interfaces.Jwtoken;
 using ST.Core.Identity.Dtos.Authentication.Logins;
 using ST.Core.Identity.Fakes.Models;

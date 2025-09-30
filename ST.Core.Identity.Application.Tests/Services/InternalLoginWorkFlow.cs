@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
-using ST.Core.Identity.Application.Authentication.Services.Authentication;
+using ST.Core.Identity.Application.Services.Authentication;
 using ST.Core.Identity.Dtos.Authentication.Logins;
 using ST.Core.Identity.Fakes.Factories;
 using ST.Core.Identity.Fakes.Models;
@@ -50,7 +50,7 @@ namespace ST.Core.Identity.Application.Tests.Services
 
             var request = new InternalLoginRequestDto(scenario.User.UserName, "Secure123!");
 
-            var response = await _service.LoginAsync(request, CancellationToken.None);
+            var response = await _service.InternalLoginWorkFlow(request, CancellationToken.None);
 
             Assert.Equal(scenario.AccessToken, response.AccessToken);
             Assert.Equal(scenario.RefreshToken, response.RefreshToken);

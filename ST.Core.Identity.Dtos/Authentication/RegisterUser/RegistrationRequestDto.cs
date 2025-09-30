@@ -13,6 +13,8 @@ namespace ST.Core.Identity.Dtos.Authentication.RegisterUser
         string UserName,
         string Email,
         string Password,
+        string FirstName,
+        string LastName,
         IList<string>? Roles = null
     );
 }

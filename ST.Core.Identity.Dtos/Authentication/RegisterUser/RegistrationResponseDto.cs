@@ -10,7 +10,6 @@ namespace ST.Core.Identity.Dtos.Authentication.RegisterUser
     /// Represents the outcome of a successful user registration.
     /// </summary>
     public record RegistrationResponseDto(
-        Guid UserId,
         string UserName,
         string Email,
         bool IsNewUser
