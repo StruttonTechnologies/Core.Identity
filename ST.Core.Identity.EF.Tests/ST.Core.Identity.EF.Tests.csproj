@@ -26,7 +26,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ST.Core.Identity.EF.SqlServer\ST.Core.Identity.EF.SqlServer.csproj" />
     <ProjectReference Include="..\ST.Core.Identity.Fakes\ST.Core.Identity.Fakes.csproj" />
   </ItemGroup>
 

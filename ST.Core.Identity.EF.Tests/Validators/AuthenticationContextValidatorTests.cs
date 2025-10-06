@@ -3,6 +3,7 @@ using ST.Core.Identity.Validators.Composite;
 using ST.Core.Identity.Validators.Identity;
 using ST.Core.Validators;
 using ST.Core.Validators.Results;
+using ST.Core.Validators.Results.Models;
 
 namespace ST.Core.Identity.Infrastructure.EF.Tests.Validators
 {
@@ -48,7 +49,7 @@ namespace ST.Core.Identity.Infrastructure.EF.Tests.Validators
         public void Should_Return_Success_For_Valid_Contexts(AuthContext context)
         {
             var result = _validator.Validate(context);
-            Assert.True(result.IsSuccess);
+            Assert.True(result.IsValid);
         }
 
         [Fact]
@@ -66,7 +67,7 @@ namespace ST.Core.Identity.Infrastructure.EF.Tests.Validators
             var context = new AuthContext("InvalidProvider", Guid.NewGuid().ToString(), IdentityStatus.Active);
             var result = validator.Validate(context);
 
-            Assert.False(result.IsSuccess);
+            Assert.False(result.IsValid);
             Assert.Equal("InvalidProvider", result.Code);
         }
     }

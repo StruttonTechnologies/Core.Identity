@@ -2,6 +2,9 @@
 using Microsoft.Extensions.Logging;
 using ST.Core.Identity.Domain.Entities;
 using ST.Core.Infrastructure.Repositories;
+using ST.Core.Infrastructure.Repositories.CrudRepository;
+using ST.Core.Validators.Results;
+using ST.Core.Validators.Results.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -12,10 +15,14 @@ namespace ST.Core.Identity.EF.SqlServer.Repositories
     /// <summary>
     /// Repository for Person entities with custom query methods.
     /// </summary>
-    public class PersonRepository<TPerson> : CrudRepository<TPerson>
-        where TPerson : PersonBase<TPerson>, new()
+    public class PersonRepository<TPerson,TKey> : CrudRepository<TPerson,TKey>
+        where TPerson : PersonBase<TPerson, TKey>, new()
+        where TKey : IEquatable<TKey>
     {
-        public PersonRepository(DbContext context, ILogger<CrudRepository<TPerson>> logger)
+        protected DbSet<TPerson> DbSet => Context.Set<TPerson>();
+
+
+        public PersonRepository(DbContext context, ILogger<CrudRepository<TPerson, TKey>> logger)
             : base(context, logger)
         {
         }
@@ -41,5 +48,20 @@ namespace ST.Core.Identity.EF.SqlServer.Repositories
                     p.ContactEmail == contactEmail,
                     cancellationToken);
         }
+        public async Task<ValidationResult> EnsureEmailIsUniqueAsync(string email)
+        {
+            var exists = await EmailExistsAsync(email);
+            return (ValidationResult)(exists
+                ? ValidationResultFactory.Failure("Email already exists.")
+                : ValidationResultFactory.Success());
+        }
+
+        public async Task<TPerson?> GetByEmailAsync(string email) =>
+            await DbSet.FirstOrDefaultAsync(p => p.ContactEmail == email);
+
+        public async Task<bool> EmailExistsAsync(string email) =>
+            await DbSet.AnyAsync(p => p.ContactEmail == email);
+
+
     }
 }

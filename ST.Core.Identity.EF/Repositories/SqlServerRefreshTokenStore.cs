@@ -14,47 +14,27 @@ namespace ST.Core.Identity.EF.SqlServer.Repositories
     public class SqlServerRefreshTokenStore<TKey, TUser, TPerson> : IRefreshTokenStore<TKey>
         where TKey : IEquatable<TKey>
         where TUser : IdentityUserBase<TKey, TPerson>
-        where TPerson : PersonBase<TPerson>
+        where TPerson : PersonBase<TPerson, TKey>   // ✅ fixed constraint
     {
         private readonly SqlServerIdentityDbContext<TKey, TUser, TPerson> _context;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SqlServerRefreshTokenStore{TKey, TUser, TPerson}"/> class.
-        /// </summary>
-        /// <param name="context">The SQL Server identity database context.</param>
         public SqlServerRefreshTokenStore(SqlServerIdentityDbContext<TKey, TUser, TPerson> context)
         {
             _context = context;
         }
 
-        /// <summary>
-        /// Saves a refresh token to the database.
-        /// </summary>
-        /// <param name="token">The refresh token to persist.</param>
-        /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
         public async Task SaveAsync(RefreshToken<TKey> token, CancellationToken cancellationToken = default)
         {
             _context.RefreshTokens.Add(token);
             await _context.SaveChangesAsync(cancellationToken);
         }
 
-        /// <summary>
-        /// Retrieves a refresh token by its token string, if it exists and is not revoked.
-        /// </summary>
-        /// <param name="token">The token string to search for.</param>
-        /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-        /// <returns>The matching refresh token, or null if not found or revoked.</returns>
         public async Task<RefreshToken<TKey>?> GetAsync(string token, CancellationToken cancellationToken = default)
         {
             return await _context.RefreshTokens
                 .FirstOrDefaultAsync(t => t.Token == token && !t.IsRevoked, cancellationToken);
         }
 
-        /// <summary>
-        /// Revokes a specific refresh token by its token string.
-        /// </summary>
-        /// <param name="token">The token string to revoke.</param>
-        /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
         public async Task RevokeAsync(string token, CancellationToken cancellationToken = default)
         {
             var existing = await _context.RefreshTokens
@@ -67,11 +47,6 @@ namespace ST.Core.Identity.EF.SqlServer.Repositories
             await _context.SaveChangesAsync(cancellationToken);
         }
 
-        /// <summary>
-        /// Revokes all active refresh tokens associated with the specified user.
-        /// </summary>
-        /// <param name="userId">The unique identifier of the user.</param>
-        /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
         public async Task RevokeAllAsync(TKey userId, CancellationToken cancellationToken = default)
         {
             var tokens = await _context.RefreshTokens

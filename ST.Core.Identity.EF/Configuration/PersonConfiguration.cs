@@ -1,23 +1,16 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ST.Core.Identity.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ST.Core.Identity.EF.Configuration
 {
     public static class PersonConfiguration
     {
-        public static void Configure<TPerson>(EntityTypeBuilder<TPerson> entity)
-            where TPerson : PersonBase<TPerson>
+        public static void Configure<TPerson, TKey>(EntityTypeBuilder<TPerson> entity)
+            where TPerson : PersonBase<TPerson, TKey>
+            where TKey : IEquatable<TKey>
         {
             entity.ToTable("Persons");
-
-            entity.Property(p => p.FirstName).HasMaxLength(256);
-            entity.Property(p => p.LastName).HasMaxLength(256);
-            entity.Property(p => p.ContactEmail).HasMaxLength(256);
 
             entity
                 .HasOne(p => p.CreatedBy)

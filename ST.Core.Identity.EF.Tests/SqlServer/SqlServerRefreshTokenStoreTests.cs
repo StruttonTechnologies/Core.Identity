@@ -16,20 +16,20 @@ namespace ST.Core.Identity.EF.SqlServer.Tests.Repositories
     {
 
 
-        private class TestUser : IdentityUserBase<Guid, TestAppPerson> { }
+        private class StubUser : IdentityUserBase<Guid, TestPerson> { }
 
-        private SqlServerIdentityDbContext<Guid, TestUser, TestAppPerson> CreateContext()
+        private SqlServerIdentityDbContext<Guid, StubUser, TestPerson> CreateContext()
         {
-            var options = new DbContextOptionsBuilder<SqlServerIdentityDbContext<Guid, TestUser, TestAppPerson>>()
+            var options = new DbContextOptionsBuilder<SqlServerIdentityDbContext<Guid, StubUser, TestPerson>>()
                 .UseInMemoryDatabase(Guid.NewGuid().ToString())
                 .Options;
 
-            return new SqlServerIdentityDbContext<Guid, TestUser, TestAppPerson>(options);
+            return new SqlServerIdentityDbContext<Guid, StubUser, TestPerson>(options);
         }
 
-        private SqlServerRefreshTokenStore<Guid, TestUser, TestAppPerson> CreateStore(SqlServerIdentityDbContext<Guid, TestUser, TestAppPerson> context)
+        private SqlServerRefreshTokenStore<Guid, StubUser, TestPerson> CreateStore(SqlServerIdentityDbContext<Guid, StubUser, TestPerson> context)
         {
-            return new SqlServerRefreshTokenStore<Guid, TestUser, TestAppPerson>(context);
+            return new SqlServerRefreshTokenStore<Guid, StubUser, TestPerson>(context);
         }
 
         [Fact]
@@ -42,7 +42,7 @@ namespace ST.Core.Identity.EF.SqlServer.Tests.Repositories
             {
                 Token = "abc123",
                 UserId = Guid.NewGuid(),
-                Username = "testuser",
+                Username = "StubUser",
                 CreatedAt = DateTime.UtcNow,
                 ExpiresAt = DateTime.UtcNow.AddDays(7),
                 IsRevoked = false
@@ -52,7 +52,7 @@ namespace ST.Core.Identity.EF.SqlServer.Tests.Repositories
 
             var saved = await context.RefreshTokens.FirstOrDefaultAsync(t => t.Token == "abc123");
             Assert.NotNull(saved);
-            Assert.Equal("testuser", saved.Username);
+            Assert.Equal("StubUser", saved.Username);
         }
 
         [Fact]
