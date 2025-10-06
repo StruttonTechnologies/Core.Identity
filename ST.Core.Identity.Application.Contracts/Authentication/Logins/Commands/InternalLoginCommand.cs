@@ -1,5 +1,5 @@
 using MediatR;
-using ST.Core.Identity.Dtos.Authentication.Logins;
+using ST.Core.Identity.Dtos.Authentication;
 
 namespace ST.Core.Identity.Application.Contracts.Authentication.Logins.Commands
 {

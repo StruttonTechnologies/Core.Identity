@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using ST.Core.Identity.Dtos.Authentication.Logins;
+using ST.Core.Identity.Dtos.Authentication;
 using System;
 using System.Collections.Generic;
 using System.Linq;
