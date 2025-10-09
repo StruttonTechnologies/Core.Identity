@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using ST.Core.Identity.Fakes.Models;
+using ST.Core.Identity.Stub.Entities;
 
 namespace ST.Core.IdentityAccess.Fakes.UserManager.Providers
 {
@@ -7,7 +8,7 @@ namespace ST.Core.IdentityAccess.Fakes.UserManager.Providers
     /// A stub token provider for password reset.
     /// Always returns a fixed token and validates only against that token.
     /// </summary>
-    public class StubPasswordResetTokenProvider : IUserTwoFactorTokenProvider<TestAppIdentityUser>
+    public class StubPasswordResetTokenProvider : IUserTwoFactorTokenProvider<StubUser>
     {
         /// <summary>
         /// The fixed token value to return and validate against.
@@ -17,19 +18,19 @@ namespace ST.Core.IdentityAccess.Fakes.UserManager.Providers
         /// <summary>
         /// Returns the fixed token value.
         /// </summary>
-        public Task<string> GenerateAsync(string purpose, UserManager<TestAppIdentityUser> manager, TestAppIdentityUser user)
+        public Task<string> GenerateAsync(string purpose, UserManager<StubUser> manager, StubUser user)
             => Task.FromResult(FixedToken);
 
         /// <summary>
         /// Validates the token by comparing it to the fixed value.
         /// </summary>
-        public Task<bool> ValidateAsync(string purpose, string token, UserManager<TestAppIdentityUser> manager, TestAppIdentityUser user)
+        public Task<bool> ValidateAsync(string purpose, string token, UserManager<StubUser> manager, StubUser user)
             => Task.FromResult(token == FixedToken);
 
         /// <summary>
         /// Indicates that token generation is supported.
         /// </summary>
-        public Task<bool> CanGenerateTwoFactorTokenAsync(UserManager<TestAppIdentityUser> manager, TestAppIdentityUser user)
+        public Task<bool> CanGenerateTwoFactorTokenAsync(UserManager<StubUser> manager, StubUser user)
             => Task.FromResult(true);
     }
 }

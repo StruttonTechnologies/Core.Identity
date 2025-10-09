@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using ST.Core.Identity.Fakes.Models;
+using ST.Core.Identity.Stub.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace ST.Core.Identity.Fakes.Validators
     /// <summary>
     /// Validates that the username is not part of a reserved list (e.g., 'admin', 'root').
     /// </summary>
-    public class ReservedUserNameValidator : IUserValidator<TestAppIdentityUser>
+    public class ReservedUserNameValidator : IUserValidator<StubUser>
     {
         private readonly HashSet<string> _reservedNames;
         private readonly string _description;
@@ -22,7 +23,7 @@ namespace ST.Core.Identity.Fakes.Validators
             _description = description;
         }
 
-        public Task<IdentityResult> ValidateAsync(UserManager<TestAppIdentityUser> manager, TestAppIdentityUser user)
+        public Task<IdentityResult> ValidateAsync(UserManager<StubUser> manager, StubUser user)
         {
             if (_reservedNames.Contains(user.UserName ?? ""))
             {

@@ -1,6 +1,7 @@
 ﻿using ST.Core.Identity.Domain.Interfaces.Jwtoken;
 using ST.Core.Identity.Fakes.Factories;
 using ST.Core.Identity.Fakes.Models;
+using ST.Core.Identity.Stub.Entities;
 
 namespace ST.Core.Identity.Fakes.Scenarios
 {
@@ -10,8 +11,8 @@ namespace ST.Core.Identity.Fakes.Scenarios
     /// </summary>
     public class LoginScenario
     {
-        public TestAppIdentityUser User { get; private set; } = default!;
-        public IList<string> Roles { get; private set; } = new List<string>();
+        public StubUser User { get; private set; } = default!;
+        public IList<string> Roles { get; private set; } = [];
         public string AccessToken { get; private set; } = string.Empty;
         public string RefreshToken { get; private set; } = string.Empty;
 
@@ -36,7 +37,7 @@ namespace ST.Core.Identity.Fakes.Scenarios
         /// <summary>
         /// Starts a scenario with a fully constructed user.
         /// </summary>
-        public static LoginScenario WithUser(TestAppIdentityUser user)
+        public static LoginScenario WithUser(StubUser user)
         {
             return new LoginScenario { User = user };
         }
@@ -66,16 +67,19 @@ namespace ST.Core.Identity.Fakes.Scenarios
         {
             if (_tokenManager != null)
             {
+                var userName = User.UserName ?? "defaultUser";
+                var email = User.Email ?? $"{userName}@example.com";
+
                 AccessToken = _tokenManager.GenerateAccessTokenAsync(
                     User.Id,
-                    User.UserName,
-                    User.Email ?? $"{User.UserName}@example.com",
+                    userName,
+                    email,
                     Roles,
                     CancellationToken.None).Result;
 
                 RefreshToken = _tokenManager.GenerateRefreshTokenAsync(
                     User.Id,
-                    User.UserName,
+                    userName,
                     CancellationToken.None).Result;
             }
 

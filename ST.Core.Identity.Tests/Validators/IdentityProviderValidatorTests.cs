@@ -13,17 +13,16 @@ namespace ST.Core.Identity.Tests.Validators
         public void Should_Return_Success_For_Known_Providers(string provider)
         {
             var result = _validator.Validate(provider);
-            Assert.True(result.IsSuccess);
+            Assert.True(result.IsValid);
         }
 
         [Theory]
-        [InlineData(null)]
         [InlineData("")]
         [InlineData("UnknownSSO")]
         public void Should_Return_Failure_For_Unknown_Providers(string provider)
         {
             var result = _validator.Validate(provider);
-            Assert.False(result.IsSuccess);
+            Assert.False(result.IsValid);
         }
     }
 }

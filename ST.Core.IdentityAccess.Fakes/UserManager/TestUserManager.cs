@@ -2,30 +2,31 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using ST.Core.Identity.Fakes.Models;
+using ST.Core.Identity.Stub.Entities;
 using ST.Core.IdentityAccess.Fakes.Stores;
 
 namespace ST.Core.IdentityAccess.Fakes.UserManager
 {
     /// <summary>
-    /// Test implementation of <see cref="UserManager{TUser}"/> for <see cref="TestAppIdentityUser"/>.
+    /// Test implementation of <see cref="UserManager{TUser}"/> for <see cref="StubUser"/>.
     /// Uses in-memory store and dummy token provider for testing purposes.
     /// </summary>
-    public class TestUserManager : UserManager<TestAppIdentityUser>
+    public class TestUserManager : UserManager<StubUser>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="TestUserManager"/> class.
         /// </summary>
-        public TestUserManager(IUserStore<TestAppIdentityUser> store)
+        public TestUserManager(IUserStore<StubUser> store)
             : base(
                 store,
                 new FakeOptions(),
-                new PasswordHasher<TestAppIdentityUser>(),
-                new List<IUserValidator<TestAppIdentityUser>>(),
-                new List<IPasswordValidator<TestAppIdentityUser>>(),
+                new PasswordHasher<StubUser>(),
+                new List<IUserValidator<StubUser>>(),
+                new List<IPasswordValidator<StubUser>>(),
                 new UpperInvariantLookupNormalizer(),
                 new IdentityErrorDescriber(),
                 new DummyServiceProvider(), 
-                new LoggerFactory().CreateLogger<UserManager<TestAppIdentityUser>>())
+                new LoggerFactory().CreateLogger<UserManager<StubUser>>())
         {
             RegisterTokenProvider(TokenOptions.DefaultProvider, new DummyTokenProvider());
         }
@@ -36,7 +37,7 @@ namespace ST.Core.IdentityAccess.Fakes.UserManager
         private class FakeOptions : IOptions<IdentityOptions>
         {
             /// <inheritdoc/>
-            public IdentityOptions Value => new IdentityOptions();
+            public IdentityOptions Value => new();
         }
 
         /// <summary>
@@ -51,7 +52,7 @@ namespace ST.Core.IdentityAccess.Fakes.UserManager
             /// <returns>The service object, or null if not found.</returns>
             public object? GetService(Type serviceType)
             {
-                if (serviceType == typeof(IUserTwoFactorTokenProvider<TestAppIdentityUser>))
+                if (serviceType == typeof(IUserTwoFactorTokenProvider<StubUser>))
                     return new DummyTokenProvider();
 
                 return null;
@@ -62,18 +63,18 @@ namespace ST.Core.IdentityAccess.Fakes.UserManager
         /// Dummy token provider for two-factor authentication.
         /// Always returns a valid token for testing.
         /// </summary>
-        private class DummyTokenProvider : IUserTwoFactorTokenProvider<TestAppIdentityUser>
+        private class DummyTokenProvider : IUserTwoFactorTokenProvider<StubUser>
         {
             /// <inheritdoc/>
-            public Task<string> GenerateAsync(string purpose, UserManager<TestAppIdentityUser> manager, TestAppIdentityUser user)
+            public Task<string> GenerateAsync(string purpose, UserManager<StubUser> manager, StubUser user)
                 => Task.FromResult("valid-token");
 
             /// <inheritdoc/>
-            public Task<bool> ValidateAsync(string purpose, string token, UserManager<TestAppIdentityUser> manager, TestAppIdentityUser user)
+            public Task<bool> ValidateAsync(string purpose, string token, UserManager<StubUser> manager, StubUser user)
                 => Task.FromResult(token == "valid-token");
 
             /// <inheritdoc/>
-            public Task<bool> CanGenerateTwoFactorTokenAsync(UserManager<TestAppIdentityUser> manager, TestAppIdentityUser user)
+            public Task<bool> CanGenerateTwoFactorTokenAsync(UserManager<StubUser> manager, StubUser user)
                 => Task.FromResult(true);
         }
     }

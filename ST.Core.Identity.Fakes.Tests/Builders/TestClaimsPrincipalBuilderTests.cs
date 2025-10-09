@@ -17,7 +17,7 @@ namespace ST.Core.Identity.Fakes.Tests.Builders
             Assert.Equal("TestAuthType", identity.AuthenticationType);
 
             Assert.True(identity.HasClaim(c => c.Type == ClaimTypes.NameIdentifier));
-            Assert.True(identity.HasClaim(c => c.Type == ClaimTypes.Name && c.Value == "testuser"));
+            Assert.True(identity.HasClaim(c => c.Type == ClaimTypes.Name && c.Value == "StubUser"));
             Assert.True(identity.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == "Admin"));
         }
 

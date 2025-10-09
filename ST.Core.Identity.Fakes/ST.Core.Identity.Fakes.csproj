@@ -14,6 +14,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ST.Core.Identity.Application\ST.Core.Identity.Application.csproj" />
+    <ProjectReference Include="..\ST.Core.Identity.Stub\ST.Core.Identity.Stub.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Repositories\" />
   </ItemGroup>
 
 </Project>

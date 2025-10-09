@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ST.Core.Identity.Fakes\ST.Core.Identity.Fakes.csproj" />
+    <ProjectReference Include="..\ST.Core.Identity.Test.Data\ST.Core.Identity.Test.Data.csproj" />
     <ProjectReference Include="..\ST.Core.Identity\ST.Core.Identity.csproj" />
   </ItemGroup>
 

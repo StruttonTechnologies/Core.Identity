@@ -1,29 +1,30 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.Collections.Concurrent;
 using ST.Core.Identity.Fakes.Models;
+using ST.Core.Identity.Stub.Entities;
 
 namespace ST.Core.IdentityAccess.Fakes.Stores
 {
     public class InMemoryUserStore :
-        IUserStore<TestAppIdentityUser>,
-        IUserPasswordStore<TestAppIdentityUser>,
-        IUserEmailStore<TestAppIdentityUser>,
-        IUserLockoutStore<TestAppIdentityUser>,
-        IUserLoginStore<TestAppIdentityUser>,
-        IUserTwoFactorStore<TestAppIdentityUser>,
-        IUserPhoneNumberStore<TestAppIdentityUser>,
-        IUserRoleStore<TestAppIdentityUser>
+        IUserStore<StubUser>,
+        IUserPasswordStore<StubUser>,
+        IUserEmailStore<StubUser>,
+        IUserLockoutStore<StubUser>,
+        IUserLoginStore<StubUser>,
+        IUserTwoFactorStore<StubUser>,
+        IUserPhoneNumberStore<StubUser>,
+        IUserRoleStore<StubUser>
 
     {
-        private readonly ConcurrentDictionary<string, TestAppIdentityUser> _users = new();
+        private readonly ConcurrentDictionary<string, StubUser> _users = new();
         private readonly ConcurrentDictionary<string, string> _normalizedUserNames = new();
         private readonly ConcurrentDictionary<string, string> _normalizedEmails = new();
         private readonly ConcurrentDictionary<string, List<UserLoginInfo>> _logins = new();
-        private readonly HashSet<string> _deletedUserIds = new();
+        private readonly HashSet<string> _deletedUserIds = [];
         private readonly ConcurrentDictionary<string, List<string>> _userRoles = new();
 
 
-        public Task<IdentityResult> CreateAsync(TestAppIdentityUser user, CancellationToken cancellationToken)
+        public Task<IdentityResult> CreateAsync(StubUser user, CancellationToken cancellationToken)
         {
             string userId = user.Id.ToString();
 
@@ -38,7 +39,7 @@ namespace ST.Core.IdentityAccess.Fakes.Stores
         }
 
 
-        public Task<IdentityResult> DeleteAsync(TestAppIdentityUser user, CancellationToken cancellationToken)
+        public Task<IdentityResult> DeleteAsync(StubUser user, CancellationToken cancellationToken)
         {
             string userId = user.Id.ToString();
 
@@ -53,7 +54,7 @@ namespace ST.Core.IdentityAccess.Fakes.Stores
             return Task.FromResult(IdentityResult.Success);
         }
 
-        public Task<IdentityResult> UpdateAsync(TestAppIdentityUser user, CancellationToken cancellationToken)
+        public Task<IdentityResult> UpdateAsync(StubUser user, CancellationToken cancellationToken)
         {
             string userId = user.Id.ToString();
 
@@ -64,15 +65,15 @@ namespace ST.Core.IdentityAccess.Fakes.Stores
             return Task.FromResult(IdentityResult.Success);
         }
 
-        public Task<TestAppIdentityUser?> FindByIdAsync(string userId, CancellationToken cancellationToken)
+        public Task<StubUser?> FindByIdAsync(string userId, CancellationToken cancellationToken)
         {
             if (_deletedUserIds.Contains(userId))
-                return Task.FromResult<TestAppIdentityUser?>(null);
+                return Task.FromResult<StubUser?>(null);
 
             return Task.FromResult(_users.TryGetValue(userId, out var user) ? user : null);
         }
 
-        public Task<TestAppIdentityUser?> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
+        public Task<StubUser?> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
         {
             if (normalizedUserName.Equals("simulate-exception", StringComparison.OrdinalIgnoreCase))
                 throw new InvalidOperationException("Simulated failure for testing.");
@@ -81,39 +82,39 @@ namespace ST.Core.IdentityAccess.Fakes.Stores
                 _normalizedUserNames.TryGetValue(u.Id.ToString(), out var name) && name == normalizedUserName));
         }
 
-        public Task<string> GetUserIdAsync(TestAppIdentityUser user, CancellationToken cancellationToken)
+        public Task<string> GetUserIdAsync(StubUser user, CancellationToken cancellationToken)
             => Task.FromResult(user.Id.ToString());
 
 
-        public Task<string> GetUserNameAsync(TestAppIdentityUser user, CancellationToken cancellationToken)
+        public Task<string?> GetUserNameAsync(StubUser user, CancellationToken cancellationToken)
             => Task.FromResult(user.UserName);
 
  
-        public Task SetUserNameAsync(TestAppIdentityUser user, string userName, CancellationToken cancellationToken)
+        public Task SetUserNameAsync(StubUser user, string? userName, CancellationToken cancellationToken)
         {
             user.UserName = userName;
             TryUpdate(user);
             return Task.CompletedTask;
         }
 
-        public Task<string> GetNormalizedUserNameAsync(TestAppIdentityUser user, CancellationToken cancellationToken)
-            => Task.FromResult(_normalizedUserNames.TryGetValue(user.Id.ToString(), out var name) ? name : user.UserName?.ToUpperInvariant() ?? string.Empty);
+        public Task<string?> GetNormalizedUserNameAsync(StubUser user, CancellationToken cancellationToken)
+            => Task.FromResult(_normalizedUserNames.TryGetValue(user.Id.ToString(), out var name) ? name : user.UserName?.ToUpperInvariant());
 
 
-        public Task SetNormalizedUserNameAsync(TestAppIdentityUser user, string normalizedName, CancellationToken cancellationToken)
+        public Task SetNormalizedUserNameAsync(StubUser user, string? normalizedName, CancellationToken cancellationToken)
         {
-            _normalizedUserNames[user.Id.ToString()] = normalizedName;
+            _normalizedUserNames[user.Id.ToString()] = normalizedName ?? string.Empty;
             return Task.CompletedTask;
         }
 
-        public Task<string?> GetPasswordHashAsync(TestAppIdentityUser user, CancellationToken cancellationToken)
+        public Task<string?> GetPasswordHashAsync(StubUser user, CancellationToken cancellationToken)
             => Task.FromResult(user.PasswordHash);
 
 
-        public Task<bool> HasPasswordAsync(TestAppIdentityUser user, CancellationToken cancellationToken)
+        public Task<bool> HasPasswordAsync(StubUser user, CancellationToken cancellationToken)
             => Task.FromResult(!string.IsNullOrEmpty(user.PasswordHash));
 
-        public Task SetPasswordHashAsync(TestAppIdentityUser user, string? passwordHash, CancellationToken cancellationToken)
+        public Task SetPasswordHashAsync(StubUser user, string? passwordHash, CancellationToken cancellationToken)
         {
             user.PasswordHash = passwordHash;
             TryUpdate(user);
@@ -121,44 +122,44 @@ namespace ST.Core.IdentityAccess.Fakes.Stores
         }
 
 
-        public Task<string?> GetEmailAsync(TestAppIdentityUser user, CancellationToken cancellationToken)
+        public Task<string?> GetEmailAsync(StubUser user, CancellationToken cancellationToken)
             => Task.FromResult(user.Email);
 
 
-        public Task<bool> GetEmailConfirmedAsync(TestAppIdentityUser user, CancellationToken cancellationToken)
+        public Task<bool> GetEmailConfirmedAsync(StubUser user, CancellationToken cancellationToken)
             => Task.FromResult(user.EmailConfirmed);
 
-        public Task SetEmailAsync(TestAppIdentityUser user, string? email, CancellationToken cancellationToken)
+        public Task SetEmailAsync(StubUser user, string? email, CancellationToken cancellationToken)
         {
             user.Email = email;
             TryUpdate(user);
             return Task.CompletedTask;
         }
 
-        public Task SetEmailConfirmedAsync(TestAppIdentityUser user, bool confirmed, CancellationToken cancellationToken)
+        public Task SetEmailConfirmedAsync(StubUser user, bool confirmed, CancellationToken cancellationToken)
         {
             user.EmailConfirmed = confirmed;
             TryUpdate(user);
             return Task.CompletedTask;
         }
 
-        public Task<TestAppIdentityUser?> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken)
+        public Task<StubUser?> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken)
             => Task.FromResult(_users.Values.FirstOrDefault(u =>
                 _normalizedEmails.TryGetValue(u.Id.ToString(), out var email) && email == normalizedEmail));
 
-        public Task<string> GetNormalizedEmailAsync(TestAppIdentityUser user, CancellationToken cancellationToken)
-            => Task.FromResult(_normalizedEmails.TryGetValue(user.Id.ToString(), out var email) ? email : user.Email?.ToUpperInvariant() ?? string.Empty);
+        public Task<string?> GetNormalizedEmailAsync(StubUser user, CancellationToken cancellationToken)
+            => Task.FromResult(_normalizedEmails.TryGetValue(user.Id.ToString(), out var email) ? email : user.Email?.ToUpperInvariant());
 
-        public Task SetNormalizedEmailAsync(TestAppIdentityUser user, string normalizedEmail, CancellationToken cancellationToken)
+        public Task SetNormalizedEmailAsync(StubUser user, string? normalizedEmail, CancellationToken cancellationToken)
         {
-            _normalizedEmails[user.Id.ToString()] = normalizedEmail;
+            _normalizedEmails[user.Id.ToString()] = normalizedEmail ?? string.Empty;
             return Task.CompletedTask;
         }
 
-        public Task<int> GetAccessFailedCountAsync(TestAppIdentityUser user, CancellationToken cancellationToken)
+        public Task<int> GetAccessFailedCountAsync(StubUser user, CancellationToken cancellationToken)
             => Task.FromResult(user.AccessFailedCount);
 
-        public Task<int> IncrementAccessFailedCountAsync(TestAppIdentityUser user, CancellationToken cancellationToken)
+        public Task<int> IncrementAccessFailedCountAsync(StubUser user, CancellationToken cancellationToken)
         {
             if (!TryEnsureExists(user))
                 throw new InvalidOperationException("Exception: User not found in store.");
@@ -168,7 +169,7 @@ namespace ST.Core.IdentityAccess.Fakes.Stores
             return Task.FromResult(user.AccessFailedCount);
         }
 
-        public Task ResetAccessFailedCountAsync(TestAppIdentityUser user, CancellationToken cancellationToken)
+        public Task ResetAccessFailedCountAsync(StubUser user, CancellationToken cancellationToken)
         {
             if (!TryEnsureExists(user))
                 throw new InvalidOperationException("Exception: User not found in store.");
@@ -178,27 +179,27 @@ namespace ST.Core.IdentityAccess.Fakes.Stores
             return Task.CompletedTask;
         }
 
-        public Task<bool> GetLockoutEnabledAsync(TestAppIdentityUser user, CancellationToken cancellationToken)
+        public Task<bool> GetLockoutEnabledAsync(StubUser user, CancellationToken cancellationToken)
             => Task.FromResult(user.LockoutEnabled);
 
-        public Task SetLockoutEnabledAsync(TestAppIdentityUser user, bool enabled, CancellationToken cancellationToken)
+        public Task SetLockoutEnabledAsync(StubUser user, bool enabled, CancellationToken cancellationToken)
         {
             user.LockoutEnabled = enabled;
             TryUpdate(user);
             return Task.CompletedTask;
         }
 
-        public Task<DateTimeOffset?> GetLockoutEndDateAsync(TestAppIdentityUser user, CancellationToken cancellationToken)
+        public Task<DateTimeOffset?> GetLockoutEndDateAsync(StubUser user, CancellationToken cancellationToken)
             => Task.FromResult(user.LockoutEnd);
 
-        public Task SetLockoutEndDateAsync(TestAppIdentityUser user, DateTimeOffset? lockoutEnd, CancellationToken cancellationToken)
+        public Task SetLockoutEndDateAsync(StubUser user, DateTimeOffset? lockoutEnd, CancellationToken cancellationToken)
         {
             user.LockoutEnd = lockoutEnd;
             TryUpdate(user);
             return Task.CompletedTask;
         }
 
-        public Task AddLoginAsync(TestAppIdentityUser user, UserLoginInfo login, CancellationToken cancellationToken)
+        public Task AddLoginAsync(StubUser user, UserLoginInfo login, CancellationToken cancellationToken)
         {
             if (!_logins.ContainsKey(user.Id.ToString()))
                 _logins[user.Id.ToString()] = new List<UserLoginInfo>();
@@ -207,7 +208,7 @@ namespace ST.Core.IdentityAccess.Fakes.Stores
             return Task.CompletedTask;
         }
 
-        public Task<TestAppIdentityUser?> FindByLoginAsync(string loginProvider, string providerKey, CancellationToken cancellationToken)
+        public Task<StubUser?> FindByLoginAsync(string loginProvider, string providerKey, CancellationToken cancellationToken)
         {
             var userId = _logins.FirstOrDefault(kvp =>
                 kvp.Value.Any(l => l.LoginProvider == loginProvider && l.ProviderKey == providerKey)).Key;
@@ -215,21 +216,21 @@ namespace ST.Core.IdentityAccess.Fakes.Stores
             return Task.FromResult(userId != null && _users.TryGetValue(userId, out var user) ? user : null);
         }
 
-        public Task<IList<UserLoginInfo>> GetLoginsAsync(TestAppIdentityUser user, CancellationToken cancellationToken)
+        public Task<IList<UserLoginInfo>> GetLoginsAsync(StubUser user, CancellationToken cancellationToken)
             => Task.FromResult<IList<UserLoginInfo>>(_logins.TryGetValue(user.Id.ToString(), out var logins) ? logins : new List<UserLoginInfo>());
 
-        public Task<bool> GetTwoFactorEnabledAsync(TestAppIdentityUser user, CancellationToken cancellationToken)
+        public Task<bool> GetTwoFactorEnabledAsync(StubUser user, CancellationToken cancellationToken)
         {
             return Task.FromResult(user.TwoFactorEnabled);
         }
 
-        public Task SetTwoFactorEnabledAsync(TestAppIdentityUser user, bool enabled, CancellationToken cancellationToken)
+        public Task SetTwoFactorEnabledAsync(StubUser user, bool enabled, CancellationToken cancellationToken)
         {
             user.TwoFactorEnabled = enabled;
             return Task.CompletedTask;
         }
 
-        public Task RemoveLoginAsync(TestAppIdentityUser user, string loginProvider, string providerKey, CancellationToken cancellationToken)
+        public Task RemoveLoginAsync(StubUser user, string loginProvider, string providerKey, CancellationToken cancellationToken)
         {
             if (_logins.TryGetValue(user.Id.ToString(), out var logins))
                 logins.RemoveAll(l => l.LoginProvider == loginProvider && l.ProviderKey == providerKey);
@@ -237,23 +238,23 @@ namespace ST.Core.IdentityAccess.Fakes.Stores
             return Task.CompletedTask;
         }
 
-        public Task<string> GetPhoneNumberAsync(TestAppIdentityUser user, CancellationToken cancellationToken)
+        public Task<string?> GetPhoneNumberAsync(StubUser user, CancellationToken cancellationToken)
         {
             return Task.FromResult(user.PhoneNumber);
         }
 
-        public Task SetPhoneNumberAsync(TestAppIdentityUser user, string phoneNumber, CancellationToken cancellationToken)
+        public Task SetPhoneNumberAsync(StubUser user, string? phoneNumber, CancellationToken cancellationToken)
         {
             user.PhoneNumber = phoneNumber;
             return Task.CompletedTask;
         }
 
-        public Task<bool> GetPhoneNumberConfirmedAsync(TestAppIdentityUser user, CancellationToken cancellationToken)
+        public Task<bool> GetPhoneNumberConfirmedAsync(StubUser user, CancellationToken cancellationToken)
         {
             return Task.FromResult(user.PhoneNumberConfirmed);
         }
 
-        public Task SetPhoneNumberConfirmedAsync(TestAppIdentityUser user, bool confirmed, CancellationToken cancellationToken)
+        public Task SetPhoneNumberConfirmedAsync(StubUser user, bool confirmed, CancellationToken cancellationToken)
         {
             user.PhoneNumberConfirmed = confirmed;
             return Task.CompletedTask;
@@ -261,10 +262,10 @@ namespace ST.Core.IdentityAccess.Fakes.Stores
 
         public void Dispose() { }
 
-        private bool TryEnsureExists(TestAppIdentityUser user)
+        private bool TryEnsureExists(StubUser user)
             => !string.IsNullOrWhiteSpace(user.Id.ToString()) && _users.ContainsKey(user.Id.ToString());
 
-        private void TryUpdate(TestAppIdentityUser user)
+        private void TryUpdate(StubUser user)
         {
             if (!string.IsNullOrWhiteSpace(user.Id.ToString()) && _users.ContainsKey(user.Id.ToString()))
             {
@@ -272,10 +273,12 @@ namespace ST.Core.IdentityAccess.Fakes.Stores
             }
         }
 
-        private IdentityResult Failed(string message)
-            => IdentityResult.Failed(new IdentityError { Description = message });
+        private static IdentityResult Failed(string message)
+        {
+            return IdentityResult.Failed(new IdentityError { Description = message });
+        }
 
-        public Task AddToRoleAsync(TestAppIdentityUser user, string roleName, CancellationToken cancellationToken)
+        public Task AddToRoleAsync(StubUser user, string roleName, CancellationToken cancellationToken)
         {
             var key = user.Id.ToString();
             if (!_userRoles.ContainsKey(key))
@@ -285,28 +288,28 @@ namespace ST.Core.IdentityAccess.Fakes.Stores
             return Task.CompletedTask;
         }
 
-        public Task RemoveFromRoleAsync(TestAppIdentityUser user, string roleName, CancellationToken cancellationToken)
+        public Task RemoveFromRoleAsync(StubUser user, string roleName, CancellationToken cancellationToken)
         {
             var key = user.Id.ToString();
             _userRoles[key]?.Remove(roleName);
             return Task.CompletedTask;
         }
 
-        public Task<IList<string>> GetRolesAsync(TestAppIdentityUser user, CancellationToken cancellationToken)
+        public Task<IList<string>> GetRolesAsync(StubUser user, CancellationToken cancellationToken)
         {
             var key = user.Id.ToString();
             var roles = _userRoles.TryGetValue(key, out var list) ? list : new List<string>();
             return Task.FromResult((IList<string>)roles);
         }
 
-        public Task<bool> IsInRoleAsync(TestAppIdentityUser user, string roleName, CancellationToken cancellationToken)
+        public Task<bool> IsInRoleAsync(StubUser user, string roleName, CancellationToken cancellationToken)
         {
             var key = user.Id.ToString();
             var isInRole = _userRoles.TryGetValue(key, out var list) && list.Contains(roleName);
             return Task.FromResult(isInRole);
         }
 
-        public Task<IList<TestAppIdentityUser>> GetUsersInRoleAsync(string roleName, CancellationToken cancellationToken)
+        public Task<IList<StubUser>> GetUsersInRoleAsync(string roleName, CancellationToken cancellationToken)
         {
             var usersInRole = _userRoles
                 .Where(kvp => kvp.Value.Contains(roleName))
@@ -314,7 +317,7 @@ namespace ST.Core.IdentityAccess.Fakes.Stores
                 .Where(u => u != null)
                 .ToList();
 
-            return Task.FromResult((IList<TestAppIdentityUser>)usersInRole);
+            return Task.FromResult((IList<StubUser>)usersInRole);
         }
 
     }

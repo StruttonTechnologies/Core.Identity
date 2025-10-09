@@ -1,41 +1,31 @@
-﻿using ST.Core.Identity.Validators.Access;
-using Xunit;
+﻿using ST.Core.Validators;
+using ST.Core.Validators.Results;
+using ST.Core.Validators.Results.Interfaces;
 
-namespace ST.Core.Identity.Tests.Validators.Access
+public class ScopeValidator : IValidator<IEnumerable<string>>
 {
-    public class ScopeValidatorTests
+    private readonly HashSet<string> _allowedScopes;
+
+    public ScopeValidator(IEnumerable<string> allowedScopes)
     {
-        private readonly ScopeValidator _validator = new();
+        _allowedScopes = new HashSet<string>(allowedScopes, StringComparer.OrdinalIgnoreCase);
+    }
 
-        public static IEnumerable<object[]> ValidScopes =>
-            new List<object[]>
-            {
-                new object[] { new[] { "read:user", "write:profile" } },
-                new object[] { new[] { "admin:tenant" } }
-            };
-
-        public static IEnumerable<object[]> InvalidScopes =>
-            new List<object[]>
-            {
-                new object[] { null },
-                new object[] { new[] { "unknown:scope" } },
-                new object[] { new[] { "read:user", "invalid:scope" } }
-            };
-
-        [Theory]
-        [MemberData(nameof(ValidScopes))]
-        public void Should_Return_Success_For_Valid_Scopes(IEnumerable<string> scopes)
+    public IValidationResult Validate(IEnumerable<string> input)
+    {
+        if (input is null)
         {
-            var result = _validator.Validate(scopes);
-            Assert.True(result.IsSuccess);
+            return ValidationResultFactory.Failure("Scopes are required.", "MissingScopes", nameof(input));
         }
 
-        [Theory]
-        [MemberData(nameof(InvalidScopes))]
-        public void Should_Return_Failure_For_Invalid_Or_Missing_Scopes(IEnumerable<string> scopes)
+        foreach (var scope in input)
         {
-            var result = _validator.Validate(scopes);
-            Assert.False(result.IsSuccess);
+            if (!_allowedScopes.Contains(scope))
+            {
+                return ValidationResultFactory.Failure($"Scope '{scope}' is not recognized or authorized.", "InvalidScope", nameof(input));
+            }
         }
+
+        return ValidationResultFactory.Success();
     }
 }

@@ -10,7 +10,7 @@ namespace ST.Core.Identity.Tests.Validators
         public void Should_Return_Success_For_Active_Status()
         {
             var result = _validator.Validate(IdentityStatus.Active);
-            Assert.True(result.IsSuccess);
+            Assert.True(result.IsValid);
         }
 
         [Theory]
@@ -20,7 +20,7 @@ namespace ST.Core.Identity.Tests.Validators
         public void Should_Return_Failure_For_Inactive_Status(IdentityStatus status)
         {
             var result = _validator.Validate(status);
-            Assert.False(result.IsSuccess);
+            Assert.False(result.IsValid);
             Assert.Equal("InvalidIdentityStatus", result.Code);
         }
     }

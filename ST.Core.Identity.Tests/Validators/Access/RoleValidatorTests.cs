@@ -1,30 +1,28 @@
-﻿using ST.Core.Identity.Validators.Access;
-using Xunit;
+﻿using ST.Core.Validators;
+using ST.Core.Validators.Results;
+using ST.Core.Validators.Results.Interfaces;
 
-namespace ST.Core.Identity.Tests.Validators.Access
+public class RoleValidator : IValidator<string>
 {
-    public class RoleValidatorTests
+    private readonly HashSet<string> _allowedRoles;
+
+    public RoleValidator(IEnumerable<string> allowedRoles)
     {
-        private readonly RoleValidator _validator = new();
+        _allowedRoles = new HashSet<string>(allowedRoles, StringComparer.OrdinalIgnoreCase);
+    }
 
-        [Theory]
-        [InlineData("Admin")]
-        [InlineData("user")]
-        [InlineData("SUPPORT")]
-        public void Should_Return_Success_For_Allowed_Roles(string role)
+    public IValidationResult Validate(string input)
+    {
+        if (string.IsNullOrWhiteSpace(input))
         {
-            var result = _validator.Validate(role);
-            Assert.True(result.IsSuccess);
+            return ValidationResultFactory.Failure("Role is required.", "Required", nameof(input));
         }
 
-        [Theory]
-        [InlineData(null)]
-        [InlineData("")]
-        [InlineData("UnknownRole")]
-        public void Should_Return_Failure_For_Invalid_Or_Missing_Roles(string role)
+        if (!_allowedRoles.Contains(input))
         {
-            var result = _validator.Validate(role);
-            Assert.False(result.IsSuccess);
+            return ValidationResultFactory.Failure($"Role '{input}' is not recognized or authorized.", "InvalidRole", nameof(input));
         }
+
+        return ValidationResultFactory.Success();
     }
 }

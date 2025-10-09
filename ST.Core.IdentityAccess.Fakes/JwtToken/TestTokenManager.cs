@@ -40,7 +40,7 @@ namespace ST.Core.IdentityAccess.Fakes.JwtToken
 
             var identity = new ClaimsIdentity(new[]
             {
-                new Claim(ClaimTypes.Name, "TestUser"),
+                new Claim(ClaimTypes.Name, "StubUser"),
                 new Claim(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString()),
                 new Claim(ClaimTypes.Role, "TestRole")
             }, "Fake");

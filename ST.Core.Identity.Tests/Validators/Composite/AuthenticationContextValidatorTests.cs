@@ -1,4 +1,4 @@
-﻿using ST.Core.Identity.Data;
+﻿using ST.Core.Identity.Test.Data;
 using ST.Core.Identity.Extensions;
 using ST.Core.Identity.Models;
 using ST.Core.Identity.Validators.Access;
@@ -30,7 +30,7 @@ namespace ST.Core.Identity.Tests.Validators.Composite
                         ProviderName = "Local",
                         SessionId = Guid.NewGuid().ToString(),
                         TenantId = Guid.NewGuid().ToString(),
-                        Scopes = IdentitySeed.AllowedScopes.Take(2).ToArray(),
+                        Scopes = KnownScopes.First(2).ToArray(),
                         Status = IdentityStatus.Active
                     }
                 },
@@ -41,7 +41,7 @@ namespace ST.Core.Identity.Tests.Validators.Composite
                         ProviderName = "Google",
                         SessionId = Guid.NewGuid().ToString(),
                         TenantId = Guid.NewGuid().ToString(),
-                        Scopes = new[] { IdentitySeed.AllowedScopes.First() },
+                        Scopes = KnownScopes.First().ToArray(),
                         Status = IdentityStatus.Active
                     }
                 }
@@ -52,7 +52,7 @@ namespace ST.Core.Identity.Tests.Validators.Composite
         public void Should_Return_Success_For_Valid_Contexts(AuthenticationContext context)
         {
             var result = _validator.Validate(context.ToAuthContext());
-            Assert.True(result.IsSuccess);
+            Assert.True(result.IsValid);
         }
     }
 }

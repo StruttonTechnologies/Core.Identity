@@ -1,9 +1,10 @@
 ﻿using ST.Core.Identity.Fakes.Models;
+using ST.Core.Identity.Stub.Entities;
 
 namespace ST.Core.Identity.Fakes.Factories
 {
     /// <summary>
-    /// Factory for creating test-safe <see cref="TestAppIdentityUser"/> instances.
+    /// Factory for creating test-safe <see cref="StubUser"/> instances.
     /// Provides default configurations and targeted overrides for identity-related tests.
     /// </summary>
     public static class TestAppUserIdentityFactory
@@ -11,9 +12,9 @@ namespace ST.Core.Identity.Fakes.Factories
         /// <summary>
         /// Creates a default user with safe, realistic values.
         /// </summary>
-        public static TestAppIdentityUser CreateDefault()
+        public static StubUser CreateDefault()
         {
-            return new TestAppIdentityUser
+            return new StubUser
             {
                 Id = Guid.NewGuid(),
                 UserName = "test.user",
@@ -23,19 +24,13 @@ namespace ST.Core.Identity.Fakes.Factories
                 LockoutEnabled = false,
                 AccessFailedCount = 0,
                 
-                ProviderName = "Local",
-                IsActive = true,
-                RowVersion = 1,
-                CreateDate = DateTime.UtcNow,
-                ModifiedDate = null,
-                PersonId = Guid.NewGuid()
             };
         }
 
         /// <summary>
         /// Creates a user with a specified username and derived email.
         /// </summary>
-        public static TestAppIdentityUser Create(string userName)
+        public static StubUser Create(string userName)
         {
             var user = CreateDefault();
             user.UserName = userName;
@@ -43,23 +38,11 @@ namespace ST.Core.Identity.Fakes.Factories
             return user;
         }
 
-        /// <summary>
-        /// Creates a user and attaches the specified <see cref="TestAppPerson"/>.
-        /// </summary>
-        public static TestAppIdentityUser CreateWithPerson(TestAppPerson person)
-        {
-            var user = CreateDefault();
-            user.PersonId = person.Id;
-            user.Person = person;
-            return user;
-        }
-
-
 
         /// <summary>
         /// Creates a user marked as locked out with elevated failure count.
         /// </summary>
-        public static TestAppIdentityUser LockedOut()
+        public static StubUser LockedOut()
         {
             var user = CreateDefault();
             user.LockoutEnabled = true;
@@ -71,7 +54,7 @@ namespace ST.Core.Identity.Fakes.Factories
         /// <summary>
         /// Creates a user with a specified email address.
         /// </summary>
-        public static TestAppIdentityUser CreateWithEmail(string email)
+        public static StubUser CreateWithEmail(string email)
         {
             var user = CreateDefault();
             user.Email = email;
@@ -82,30 +65,10 @@ namespace ST.Core.Identity.Fakes.Factories
         /// <summary>
         /// Creates a user with a specified username.
         /// </summary>
-        public static TestAppIdentityUser CreateWithUserName(string userName)
+        public static StubUser CreateWithUserName(string userName)
         {
             var user = CreateDefault();
             user.UserName = userName;
-            return user;
-        }
-
-        /// <summary>
-        /// Creates a user with a specified external provider name.
-        /// </summary>
-        public static TestAppIdentityUser CreateWithProvider(string providerName)
-        {
-            var user = CreateDefault();
-            user.ProviderName = providerName;
-            return user;
-        }
-
-        /// <summary>
-        /// Creates a user marked as inactive.
-        /// </summary>
-        public static TestAppIdentityUser CreateInactive()
-        {
-            var user = CreateDefault();
-            user.IsActive = false;
             return user;
         }
     }

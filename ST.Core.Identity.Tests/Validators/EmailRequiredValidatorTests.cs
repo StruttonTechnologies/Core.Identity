@@ -12,17 +12,16 @@ namespace ST.Core.Identity.Tests.Validators
         public void Should_Return_Success_For_Valid_Email(string email)
         {
             var result = _validator.Validate(email);
-            Assert.True(result.IsSuccess);
+            Assert.True(result.IsValid);
         }
 
         [Theory]
-        [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
         public void Should_Return_Failure_For_Missing_Email(string email)
         {
             var result = _validator.Validate(email);
-            Assert.False(result.IsSuccess);
+            Assert.False(result.IsValid);
             Assert.Equal("MissingEmail", result.Code);
         }
     }

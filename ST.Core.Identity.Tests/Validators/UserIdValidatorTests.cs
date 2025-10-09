@@ -10,14 +10,14 @@ namespace ST.Core.Identity.Tests.Validators
         public void Should_Return_Success_For_Valid_Guid()
         {
             var result = _validator.Validate(Guid.NewGuid());
-            Assert.True(result.IsSuccess);
+            Assert.True(result.IsValid);
         }
 
         [Fact]
         public void Should_Return_Failure_For_Empty_Guid()
         {
             var result = _validator.Validate(Guid.Empty);
-            Assert.False(result.IsSuccess);
+            Assert.False(result.IsValid);
             Assert.Equal("MissingUserId", result.Code);
         }
     }

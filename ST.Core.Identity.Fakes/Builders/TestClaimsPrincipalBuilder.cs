@@ -20,7 +20,7 @@ namespace ST.Core.Identity.Fakes.Builders
             var claims = new List<Claim>
             {
                 new(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString()),
-                new(ClaimTypes.Name, "testuser"),
+                new(ClaimTypes.Name, "StubUser"),
                 new(ClaimTypes.Role, "Admin")
             };
 
