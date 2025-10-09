@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="ST.Core.API.Controllers" Version="1.0.0-beta" />
+    <PackageReference Include="ST.Core.API.MediatR" Version="1.0.2-beta" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ST.Core.Identity.Dispatcher.Contracts\ST.Core.Identity.Dispatcher.Contracts.csproj" />
     <ProjectReference Include="..\ST.Core.Identity.DI\ST.Core.Identity.DI.csproj" />
     <ProjectReference Include="..\ST.Core.Identity.Dtos\ST.Core.Identity.Dtos.csproj" />
   </ItemGroup>

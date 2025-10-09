@@ -1,24 +1,20 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using ST.Core.Identity.Domain.Entities;
-using ST.Core.Identity.Domain.Entities.User;
-using ST.Core.Identity.EF.SqlServer.Data;
+using ST.Core.Identity.EF;
 
-namespace ST.Core.Identity.EF.SqlServer.Repositories
+namespace ST.Core.Identity.EF.Repositories
 {
     /// <summary>
     /// Provides SQL Server-backed operations for storing, retrieving, and revoking refresh tokens.
     /// </summary>
     /// <typeparam name="TKey">The type of the user's unique identifier.</typeparam>
-    /// <typeparam name="TUser">The type of the user entity.</typeparam>
-    /// <typeparam name="TPerson">The type of the person entity.</typeparam>
-    public class SqlServerRefreshTokenStore<TKey, TUser, TPerson> : IRefreshTokenStore<TKey>
+    public class SqlServerRefreshTokenStore<TKey> : IRefreshTokenStore<TKey>
         where TKey : IEquatable<TKey>
-        where TUser : IdentityUserBase<TKey, TPerson>
-        where TPerson : PersonBase<TPerson, TKey>   // ✅ fixed constraint
     {
-        private readonly SqlServerIdentityDbContext<TKey, TUser, TPerson> _context;
+        private readonly CoreIdentityDbContext<TKey, IdentityUser<TKey>, IdentityRole<TKey>> _context;
 
-        public SqlServerRefreshTokenStore(SqlServerIdentityDbContext<TKey, TUser, TPerson> context)
+        public SqlServerRefreshTokenStore(CoreIdentityDbContext<TKey, IdentityUser<TKey>, IdentityRole<TKey>> context)
         {
             _context = context;
         }

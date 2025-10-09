@@ -1,0 +1,16 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ST.Core.Identity.API.Contracts.ExternalLogins
+{
+    public interface ILinkExternalLoginRequest
+    {
+        string UserId { get; }
+        string Provider { get; }
+        string ProviderKey { get; }
+        string Token { get; }
+    }
+}

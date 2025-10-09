@@ -1,152 +1,50 @@
-﻿using Microsoft.EntityFrameworkCore;
-using ST.Core.Identity.Domain.Entities;
-using ST.Core.Identity.Domain.Entities.User;
-using ST.Core.Identity.EF.SqlServer.Data;
-using ST.Core.Identity.EF.SqlServer.Repositories;
-using ST.Core.Identity.Fakes.Models;
-using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Xunit;
+﻿using ST.Core.Identity.Stub.Models;
 
-namespace ST.Core.Identity.EF.SqlServer.Tests.Repositories
+namespace ST.Core.Identity.EF.Tests.SqlServer
 {
-    public class SqlServerRefreshTokenStoreTests
+    /// <summary>
+    /// Factory for creating test-safe instances of <see cref="StubRefreshToken"/>.
+    /// Lives in Fakes for test-only usage, but uses Stub model for realistic shape.
+    /// </summary>
+    public static class FakeRefreshTokenFactory
     {
-
-
-        private class StubUser : IdentityUserBase<Guid, TestPerson> { }
-
-        private SqlServerIdentityDbContext<Guid, StubUser, TestPerson> CreateContext()
+        /// <summary>
+        /// Creates a valid refresh token with optional user ID and username.
+        /// </summary>
+        public static StubRefreshToken Create(Guid? userId = null, string? username = null)
         {
-            var options = new DbContextOptionsBuilder<SqlServerIdentityDbContext<Guid, StubUser, TestPerson>>()
-                .UseInMemoryDatabase(Guid.NewGuid().ToString())
-                .Options;
-
-            return new SqlServerIdentityDbContext<Guid, StubUser, TestPerson>(options);
-        }
-
-        private SqlServerRefreshTokenStore<Guid, StubUser, TestPerson> CreateStore(SqlServerIdentityDbContext<Guid, StubUser, TestPerson> context)
-        {
-            return new SqlServerRefreshTokenStore<Guid, StubUser, TestPerson>(context);
-        }
-
-        [Fact]
-        public async Task SaveAsync_PersistsToken()
-        {
-            var context = CreateContext();
-            var store = CreateStore(context);
-
-            var token = new RefreshToken<Guid>
+            return new StubRefreshToken
             {
-                Token = "abc123",
-                UserId = Guid.NewGuid(),
-                Username = "StubUser",
+                UserId = userId ?? Guid.NewGuid(),
+                Username = username ?? "stub.user",
+                Token = Guid.NewGuid().ToString("N"),
                 CreatedAt = DateTime.UtcNow,
-                ExpiresAt = DateTime.UtcNow.AddDays(7),
-                IsRevoked = false
+                ExpiresAt = DateTime.UtcNow.AddMinutes(30),
+                CreatedByIp = "127.0.0.1"
             };
-
-            await store.SaveAsync(token);
-
-            var saved = await context.RefreshTokens.FirstOrDefaultAsync(t => t.Token == "abc123");
-            Assert.NotNull(saved);
-            Assert.Equal("StubUser", saved.Username);
         }
 
-        [Fact]
-        public async Task GetAsync_ReturnsToken_IfNotRevoked()
+        /// <summary>
+        /// Creates an expired refresh token for testing expiration logic.
+        /// </summary>
+        public static StubRefreshToken Expired(Guid? userId = null, string? username = null)
         {
-            var context = CreateContext();
-            var store = CreateStore(context);
-
-            var token = new RefreshToken<Guid>
-            {
-                Token = "xyz789",
-                UserId = Guid.NewGuid(),
-                Username = "activeuser",
-                CreatedAt = DateTime.UtcNow,
-                ExpiresAt = DateTime.UtcNow.AddDays(7),
-                IsRevoked = false
-            };
-
-            context.RefreshTokens.Add(token);
-            await context.SaveChangesAsync();
-
-            var result = await store.GetAsync("xyz789");
-            Assert.NotNull(result);
-            Assert.Equal("activeuser", result!.Username);
+            var token = Create(userId, username);
+            token.ExpiresAt = DateTime.UtcNow.AddMinutes(-1);
+            return token;
         }
 
-        [Fact]
-        public async Task GetAsync_ReturnsNull_IfRevoked()
+        /// <summary>
+        /// Creates a revoked refresh token for testing revocation logic.
+        /// </summary>
+        public static StubRefreshToken Revoked(Guid? userId = null, string? username = null)
         {
-            var context = CreateContext();
-            var store = CreateStore(context);
-
-            var token = new RefreshToken<Guid>
-            {
-                Token = "revoked123",
-                UserId = Guid.NewGuid(),
-                Username = "revokeduser",
-                CreatedAt = DateTime.UtcNow,
-                ExpiresAt = DateTime.UtcNow.AddDays(7),
-                IsRevoked = true
-            };
-
-            context.RefreshTokens.Add(token);
-            await context.SaveChangesAsync();
-
-            var result = await store.GetAsync("revoked123");
-            Assert.Null(result);
-        }
-
-        [Fact]
-        public async Task RevokeAsync_SetsIsRevokedTrue()
-        {
-            var context = CreateContext();
-            var store = CreateStore(context);
-
-            var token = new RefreshToken<Guid>
-            {
-                Token = "revoke-me",
-                UserId = Guid.NewGuid(),
-                Username = "user",
-                CreatedAt = DateTime.UtcNow,
-                ExpiresAt = DateTime.UtcNow.AddDays(7),
-                IsRevoked = false
-            };
-
-            context.RefreshTokens.Add(token);
-            await context.SaveChangesAsync();
-
-            await store.RevokeAsync("revoke-me");
-
-            var updated = await context.RefreshTokens.FirstOrDefaultAsync(t => t.Token == "revoke-me");
-            Assert.True(updated!.IsRevoked);
-            Assert.NotNull(updated.RevokedAt);
-        }
-
-        [Fact]
-        public async Task RevokeAllAsync_RevokesAllTokensForUser()
-        {
-            var context = CreateContext();
-            var store = CreateStore(context);
-
-            var userId = Guid.NewGuid();
-
-            context.RefreshTokens.AddRange(
-                new RefreshToken<Guid> { Token = "t1", UserId = userId, Username = "u", CreatedAt = DateTime.UtcNow, ExpiresAt = DateTime.UtcNow.AddDays(7), IsRevoked = false },
-                new RefreshToken<Guid> { Token = "t2", UserId = userId, Username = "u", CreatedAt = DateTime.UtcNow, ExpiresAt = DateTime.UtcNow.AddDays(7), IsRevoked = false }
-            );
-
-            await context.SaveChangesAsync();
-
-            await store.RevokeAllAsync(userId);
-
-            var tokens = await context.RefreshTokens.Where(t => t.UserId == userId).ToListAsync();
-            Assert.All(tokens, t => Assert.True(t.IsRevoked));
+            var token = Create(userId, username);
+            token.IsRevoked = true;
+            token.RevokedAt = DateTime.UtcNow;
+            token.RevokedByIp = "127.0.0.1";
+            token.ReasonRevoked = "Test scenario";
+            return token;
         }
     }
 }

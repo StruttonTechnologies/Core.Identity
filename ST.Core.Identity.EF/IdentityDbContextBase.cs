@@ -2,33 +2,33 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using ST.Core.Identity.Domain.Entities;
+using ST.Core.Identity.Domain.Entities.Base;
 using ST.Core.Identity.Domain.Entities.User;
 using ST.Core.Identity.EF.Configuration;
-using ST.Core.Identity.Infrastructure.EF.Configuration;
 
 namespace ST.Core.Identity.EF
 {
-    /// <summary>
-    /// Base identity DbContext with shared configuration for all providers.
-    /// </summary>
-    public abstract class IdentityDbContextBase<TKey, TUser, TPerson> :
-        IdentityDbContext<TUser, IdentityRole<TKey>, TKey>
-        where TUser : IdentityUserBase<TKey, TPerson>
-        where TKey : IEquatable<TKey>
-        where TPerson : PersonBase<TPerson, TKey>
-    {
-        public DbSet<RefreshToken<TKey>> RefreshTokens => Set<RefreshToken<TKey>>();
-        public DbSet<TPerson> Persons => Set<TPerson>();
 
-        protected IdentityDbContextBase(DbContextOptions options) : base(options) { }
+    /// <summary>
+    /// Generic IdentityDbContext base with shared configuration and entities.
+    /// </summary>
+    /// <typeparam name="TKey">The type of the primary key (e.g., Guid, int).</typeparam>
+    /// <typeparam name="TUser">The user entity type.</typeparam>
+    /// <typeparam name="TRole">The role entity type.</typeparam>
+    public class CoreIdentityDbContext<TKey, TUser, TRole> : IdentityDbContext<TUser, TRole, TKey>
+        where TKey : IEquatable<TKey>
+        where TUser : IdentityUser<TKey>
+        where TRole : IdentityRole<TKey>
+    {
+        public CoreIdentityDbContext(DbContextOptions options) : base(options) { }
+
+        public DbSet<RefreshToken<TKey>> RefreshTokens => Set<RefreshToken<TKey>>();
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
 
             RefreshTokenConfiguration.Configure(builder.Entity<RefreshToken<TKey>>());
-            IdentityUserConfiguration.Configure<TKey, TUser, TPerson>(builder.Entity<TUser>());
-            PersonConfiguration.Configure<TPerson, TKey>(builder.Entity<TPerson>());
         }
     }
 }

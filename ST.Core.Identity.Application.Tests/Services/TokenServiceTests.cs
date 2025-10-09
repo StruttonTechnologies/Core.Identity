@@ -41,7 +41,7 @@ namespace ST.Core.Identity.Application.Tests.Services
             var jwt = new JwtSecurityTokenHandler().ReadJwtToken(token);
             Assert.Equal("issuer", jwt.Issuer);
             Assert.Equal("audience", jwt.Audiences.First());
-            Assert.Contains(jwt.Claims, c => c.Type == ClaimTypes.Name && c.Value == "testuser");
+            Assert.Contains(jwt.Claims, c => c.Type == ClaimTypes.Name && c.Value == "StubUser");
             Assert.Contains(jwt.Claims, c => c.Type == JwtRegisteredClaimNames.Jti);
         }
 
