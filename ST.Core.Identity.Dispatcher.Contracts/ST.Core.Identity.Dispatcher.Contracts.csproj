@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Admin\" />
+    <Folder Include="ExternalLogins\" />
+    <Folder Include="PersonLinking\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ST.Core.Identity.Dtos\ST.Core.Identity.Dtos.csproj" />
+  </ItemGroup>
+
+</Project>

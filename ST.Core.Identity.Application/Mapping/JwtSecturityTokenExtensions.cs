@@ -1,4 +1,4 @@
-﻿using ST.Core.Identity.Dtos.Authentication.Tokens;
+﻿using ST.Core.Identity.Dtos.Authentication;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;

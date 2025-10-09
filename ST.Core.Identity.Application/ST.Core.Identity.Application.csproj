@@ -7,6 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+	  <FrameworkReference Include="Microsoft.AspNetCore.App" />
+	<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.9" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.9" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.9" />
     <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="9.0.9" />
@@ -15,21 +17,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ST.Core.Identity.Application.Contracts\ST.Core.Identity.Application.Contracts.csproj" />
     <ProjectReference Include="..\ST.Core.Identity.Domain\ST.Core.Identity.Domain.csproj" />
     <ProjectReference Include="..\ST.Core.Identity.Dtos\ST.Core.Identity.Dtos.csproj" />
     <ProjectReference Include="..\ST.Core.Identity\ST.Core.Identity.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Handlers\JwtTokens\Queries\" />
-    <Folder Include="Handlers\TwoFactor\Commands\" />
-    <Folder Include="Handlers\TwoFactor\Queries\" />
-    <Folder Include="Handlers\User\Commands\" />
-    <Folder Include="Handlers\User\Queries\" />
-    <Folder Include="Handlers\Lockout\Commands\" />
-    <Folder Include="Handlers\Lockout\Queries\" />
-    <Folder Include="Services\Login\" />
   </ItemGroup>
 
 </Project>
