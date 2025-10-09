@@ -35,11 +35,11 @@ namespace ST.Core.Identity.Validators.Composite
         /// Returns the first failure encountered, or success if all validations pass.
         /// </summary>
         public IValidationResult Validate(AuthContext input) =>
-            _providerNameValidator.Validate(input.Provider) is var providerResult && !providerResult.IsSuccess
+            _providerNameValidator.Validate(input.Provider) is var providerResult && !providerResult.IsValid
                 ? providerResult
-                : _sessionIdValidator.Validate(input.SessionId) is var sessionResult && !sessionResult.IsSuccess
+                : _sessionIdValidator.Validate(input.SessionId) is var sessionResult && !sessionResult.IsValid
                     ? sessionResult
-                    : _identityStatusValidator.Validate(input.Status) is var statusResult && !statusResult.IsSuccess
+                    : _identityStatusValidator.Validate(input.Status) is var statusResult && !statusResult.IsValid
                         ? statusResult
                         : ValidationResultFactory.Success();
     }

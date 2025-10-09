@@ -77,7 +77,7 @@ namespace ST.Core.Identity
         /// <param name="errors">The list to which error messages are added.</param>
         private void CheckBlacklist(string password, List<string> errors)
         {
-            if (!string.IsNullOrEmpty(password) && IdentitySeed.Blacklist.Contains(password))
+            if (!string.IsNullOrEmpty(password) && KnownPasswordBlacklist.All.Contains(password, StringComparer.OrdinalIgnoreCase))
             {
                 errors.Add("Password is too common or easily guessed. Choose another.");
             }

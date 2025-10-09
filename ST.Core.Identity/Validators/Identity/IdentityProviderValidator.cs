@@ -32,7 +32,7 @@ namespace ST.Core.Identity.Validators.Identity
                     field: nameof(input));
             }
 
-            if (!IdentitySeed.KnownIdentityProviders.Contains(input))
+            if (!KnownIdentityProviders.All.Contains(input))
             {
                 return ValidationResultFactory.Failure(
                     message: $"Identity provider '{input}' is not supported.",

@@ -30,7 +30,7 @@ namespace ST.Core.Identity.Validators.Identity
             if (string.IsNullOrWhiteSpace(userName))
                 errors.Add("Username cannot be empty.");
 
-            if (IdentitySeed.ReservedUsernames.Contains(userName))
+            if (KnownReservedUsernames.All.Contains(userName))
                 errors.Add("This username is reserved and cannot be used.");
 
             if (!string.IsNullOrWhiteSpace(userName))

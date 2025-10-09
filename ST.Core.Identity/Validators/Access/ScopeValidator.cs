@@ -33,7 +33,8 @@ namespace ST.Core.Identity.Validators.Access
 
             foreach (var scope in input)
             {
-                if (!IdentitySeed.AllowedScopes.Contains(scope))
+                // Case-insensitive comparison against KnownScopes.All
+                if (!KnownScopes.All.Any(known => string.Equals(known, scope, StringComparison.OrdinalIgnoreCase)))
                 {
                     return ValidationResultFactory.Failure(
                         message: $"Scope '{scope}' is not recognized or authorized.",

@@ -31,7 +31,7 @@ namespace ST.Core.Identity.Validators.Access
                     field: nameof(input));
             }
 
-            if (!IdentitySeed.AllowedRoles.Contains(input))
+            if (!KnownRoles.All.Contains(input))
             {
                 return ValidationResultFactory.Failure(
                     message: $"Role '{input}' is not recognized or authorized.",

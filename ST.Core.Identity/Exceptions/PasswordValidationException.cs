@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using ST.Core.Identity.Data;
+using ST.Core.Identity.Validators;
 
 namespace ST.Core.Identity.Exceptions
 {
@@ -71,9 +72,11 @@ namespace ST.Core.Identity.Exceptions
             if (string.IsNullOrWhiteSpace(password))
                 return;
 
-            if (IdentitySeed.Blacklist.Contains(password))
+            if (KnownPasswordBlacklist.All.Contains(password, StringComparer.OrdinalIgnoreCase))
             {
-                throw new PasswordValidationException("Password is too common or easily guessed. Choose another.");
+                throw new PasswordValidationException(
+                    "Password is too common or easily guessed. Choose another."
+                );
             }
         }
     }
