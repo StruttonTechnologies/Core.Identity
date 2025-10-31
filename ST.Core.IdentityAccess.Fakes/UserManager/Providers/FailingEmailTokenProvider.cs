@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using ST.Core.Identity.Fakes.Models;
 using ST.Core.Identity.Stub.Entities;
 
 namespace ST.Core.IdentityAccess.Fakes.UserManager.Providers

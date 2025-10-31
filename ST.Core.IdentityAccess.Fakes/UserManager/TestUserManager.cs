@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using ST.Core.Identity.Fakes.Models;
 using ST.Core.Identity.Stub.Entities;
 using ST.Core.IdentityAccess.Fakes.Stores;
 
