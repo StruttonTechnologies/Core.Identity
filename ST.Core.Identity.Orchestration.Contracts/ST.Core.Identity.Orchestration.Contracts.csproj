@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Shared NuGet metadata -->
+  <Import Project="$(SolutionDir)..\ST.Assets\Nuget\ST.Branding.props" />
+  <Import Project="..\NuGet.Common.props" />
+  <Import Project="..\Project.Common.props" />
+
+  <PropertyGroup>
+    <!-- Project-specific NuGet metadata -->
+    <PackageId>ST.Core.Identity.Orchestration.Contracts</PackageId>
+    <VersionPrefix>1.0.0</VersionPrefix>
+    <VersionSuffix>alpha</VersionSuffix>
+    <Description>Contracts for the ST.Core.Identity orchestration layer.</Description>
+    <Title>Identity Orchestration Contracts</Title>
+    <PackageTags>core,identity,orchestration,contracts,MediatR,strutton,StruttonTechnologies</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ST.Core.Identity.Dtos\ST.Core.Identity.Dtos.csproj" />
+  </ItemGroup>
+
+</Project>
