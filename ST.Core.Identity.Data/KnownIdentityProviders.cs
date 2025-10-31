@@ -17,6 +17,7 @@ namespace ST.Core.Identity.Data
         public const string GitHub = "GitHub";
         public const string Okta = "Okta";
         public const string Auth0 = "Auth0";
+        public const string Local = "Local"; 
 
         public static readonly string[] All =
         {
@@ -24,7 +25,8 @@ namespace ST.Core.Identity.Data
             Microsoft,
             GitHub,
             Okta,
-            Auth0
+            Auth0,
+            Local
         };
         public static string[] First(int count = 1) =>
         All.Take(Math.Max(count, 1)).ToArray();
