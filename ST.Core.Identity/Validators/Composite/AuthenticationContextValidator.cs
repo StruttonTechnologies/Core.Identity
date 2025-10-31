@@ -1,8 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using ST.Core.Identity.Validators.Identity;
 using ST.Core.Registration.Attributes;
-using ST.Core.Validators.Results;
-using ST.Core.Validators.Results.Interfaces;
+using ST.Core.Validators.Results.Models;
 
 namespace ST.Core.Identity.Validators.Composite
 {
@@ -34,14 +33,24 @@ namespace ST.Core.Identity.Validators.Composite
         /// Validates the given authentication context.
         /// Returns the first failure encountered, or success if all validations pass.
         /// </summary>
-        public IValidationResult Validate(AuthContext input) =>
-            _providerNameValidator.Validate(input.Provider) is var providerResult && !providerResult.IsValid
-                ? providerResult
-                : _sessionIdValidator.Validate(input.SessionId) is var sessionResult && !sessionResult.IsValid
-                    ? sessionResult
-                    : _identityStatusValidator.Validate(input.Status) is var statusResult && !statusResult.IsValid
-                        ? statusResult
-                        : ValidationResultFactory.Success();
+        public ValidationResult Validate(AuthContext input)
+        {
+            var providerResult = _providerNameValidator.Validate(input.Provider);
+            if (!providerResult.IsValid)
+                return providerResult;
+
+            var sessionResult = _sessionIdValidator.Validate(input.SessionId);
+            if (!sessionResult.IsValid)
+                return sessionResult;
+
+            var statusResult = _identityStatusValidator.Validate(input.Status);
+            if (!statusResult.IsValid)
+                return statusResult;
+
+            return ValidationResult.Success();
+        }
+
+
     }
 
     /// <summary>

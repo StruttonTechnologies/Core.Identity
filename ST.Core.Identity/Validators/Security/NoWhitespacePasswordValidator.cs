@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using ST.Core.Registration.Attributes;
-using ST.Core.Validators.Results;
+using ST.Core.Validators.Results.Models;
 using ST.Core.Validators.Results.Interfaces;
 
 namespace ST.Core.Identity.Validators.Security
@@ -19,11 +19,11 @@ namespace ST.Core.Identity.Validators.Security
         /// An <see cref="IValidationResult"/> indicating success if no whitespace is present,
         /// or failure if any whitespace is detected.
         /// </returns>
-        public IValidationResult Validate(string input)
+        public ValidationResult Validate(string input)
         {
             if (string.IsNullOrWhiteSpace(input))
             {
-                return ValidationResultFactory.Failure(
+                return ValidationResult.Failure(
                     message: "Password is required.",
                     code: "Required",
                     field: nameof(input));
@@ -33,14 +33,14 @@ namespace ST.Core.Identity.Validators.Security
             {
                 if (char.IsWhiteSpace(c))
                 {
-                    return ValidationResultFactory.Failure(
+                    return ValidationResult.Failure(
                         message: "Password must not contain whitespace.",
                         code: "WhitespaceDetected",
                         field: nameof(input));
                 }
             }
 
-            return ValidationResultFactory.Success();
+            return ValidationResult.Success();
         }
     }
 }

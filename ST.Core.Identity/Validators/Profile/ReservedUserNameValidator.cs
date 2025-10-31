@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using ST.Core.Registration.Attributes;
 using ST.Core.Validators;
-using ST.Core.Validators.Results;
+using ST.Core.Validators.Results.Models;
 using ST.Core.Validators.Results.Interfaces;
 
 namespace ST.Core.Identity.Validators.Profile
@@ -31,11 +31,11 @@ namespace ST.Core.Identity.Validators.Profile
         /// An <see cref="IValidationResult"/> indicating success if the username is allowed,
         /// or failure if it is reserved.
         /// </returns>
-        public IValidationResult Validate(string input)
+        public ValidationResult Validate(string input)
         {
             if (string.IsNullOrWhiteSpace(input))
             {
-                return ValidationResultFactory.Failure(
+                return ValidationResult.Failure(
                     message: "Username is required.",
                     code: "Required",
                     field: nameof(input));
@@ -43,13 +43,13 @@ namespace ST.Core.Identity.Validators.Profile
 
             if (_reservedUsernames.Contains(input))
             {
-                return ValidationResultFactory.Failure(
+                return ValidationResult.Failure(
                     message: "This username is reserved and cannot be used.",
                     code: "ReservedUsername",
                     field: nameof(input));
             }
 
-            return ValidationResultFactory.Success();
+            return ValidationResult.Success();
         }
     }
 

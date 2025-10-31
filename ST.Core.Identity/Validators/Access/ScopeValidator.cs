@@ -1,9 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using ST.Core.Identity.Data;
 using ST.Core.Registration.Attributes;
-using ST.Core.Validators;
-using ST.Core.Validators.Results;
 using ST.Core.Validators.Results.Interfaces;
+using ST.Core.Validators.Results.Models;
 
 namespace ST.Core.Identity.Validators.Access
 {
@@ -13,6 +12,16 @@ namespace ST.Core.Identity.Validators.Access
     [AutoRegister(ServiceLifetime.Singleton)]
     public class ScopeValidator : IValidator<IEnumerable<string>>
     {
+        private readonly HashSet<string> _knownScopes;
+
+        public ScopeValidator()
+        {
+            // Normalize known scopes to lowercase for consistent comparison
+            _knownScopes = KnownScopes.All
+                .Select(s => s.ToLowerInvariant())
+                .ToHashSet();
+        }
+
         /// <summary>
         /// Validates that all requested scopes are known and allowed.
         /// </summary>
@@ -21,11 +30,11 @@ namespace ST.Core.Identity.Validators.Access
         /// An <see cref="IValidationResult"/> indicating success if all scopes are valid,
         /// or failure if any unknown scopes are found.
         /// </returns>
-        public IValidationResult Validate(IEnumerable<string> input)
+        public ValidationResult Validate(IEnumerable<string> input)
         {
-            if (input is null)
+            if (input is null || !input.Any())
             {
-                return ValidationResultFactory.Failure(
+                return ValidationResult.Failure(
                     message: "Scopes are required.",
                     code: "MissingScopes",
                     field: nameof(input));
@@ -33,17 +42,16 @@ namespace ST.Core.Identity.Validators.Access
 
             foreach (var scope in input)
             {
-                // Case-insensitive comparison against KnownScopes.All
-                if (!KnownScopes.All.Any(known => string.Equals(known, scope, StringComparison.OrdinalIgnoreCase)))
+                if (!_knownScopes.Contains(scope.ToLowerInvariant()))
                 {
-                    return ValidationResultFactory.Failure(
+                    return ValidationResult.Failure(
                         message: $"Scope '{scope}' is not recognized or authorized.",
                         code: "InvalidScope",
                         field: nameof(input));
                 }
             }
 
-            return ValidationResultFactory.Success();
+            return ValidationResult.Success();
         }
     }
 }

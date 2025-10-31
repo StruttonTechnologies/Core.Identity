@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using ST.Core.Registration.Attributes;
 using ST.Core.Validators;
-using ST.Core.Validators.Results;
+using ST.Core.Validators.Results.Models;
 using ST.Core.Validators.Results.Interfaces;
 
 namespace ST.Core.Identity.Validators.Identity
@@ -20,17 +20,17 @@ namespace ST.Core.Identity.Validators.Identity
         /// An <see cref="IValidationResult"/> indicating success if the ID is valid,
         /// or failure if it is empty or malformed.
         /// </returns>
-        public IValidationResult Validate(Guid input)
+        public ValidationResult Validate(Guid input)
         {
             if (input == Guid.Empty)
             {
-                return ValidationResultFactory.Failure(
+                return ValidationResult.Failure(
                     message: "User ID is required.",
                     code: "MissingUserId",
                     field: nameof(input));
             }
 
-            return ValidationResultFactory.Success();
+            return ValidationResult.Success();
         }
     }
 }

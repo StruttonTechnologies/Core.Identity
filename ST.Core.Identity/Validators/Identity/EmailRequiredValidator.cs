@@ -1,8 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using ST.Core.Registration.Attributes;
-using ST.Core.Validators;
-using ST.Core.Validators.Results;
 using ST.Core.Validators.Results.Interfaces;
+using ST.Core.Validators.Results.Models;
 
 namespace ST.Core.Identity.Validators.Identity
 {
@@ -20,17 +19,17 @@ namespace ST.Core.Identity.Validators.Identity
         /// An <see cref="IValidationResult"/> indicating success if the email is present,
         /// or failure if it is missing or empty.
         /// </returns>
-        public IValidationResult Validate(string input)
+        public ValidationResult Validate(string input)
         {
             if (string.IsNullOrWhiteSpace(input))
             {
-                return ValidationResultFactory.Failure(
+                return ValidationResult.Failure(
                     message: "Email address is required.",
                     code: "MissingEmail",
                     field: nameof(input));
             }
 
-            return ValidationResultFactory.Success();
+            return ValidationResult.Success();
         }
     }
 }

@@ -1,8 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using ST.Core.Registration.Attributes;
-using ST.Core.Validators;
-using ST.Core.Validators.Results;
 using ST.Core.Validators.Results.Interfaces;
+using ST.Core.Validators.Results.Models;
 
 namespace ST.Core.Identity.Validators.Access
 {
@@ -20,19 +19,19 @@ namespace ST.Core.Identity.Validators.Access
         /// An <see cref="IValidationResult"/> indicating success if the ID is valid,
         /// or failure if it is missing or empty.
         /// </returns>
-        public IValidationResult Validate(string input)
+        public ValidationResult Validate(string input)
         {
             if (string.IsNullOrWhiteSpace(input))
             {
-                return ValidationResultFactory.Failure("Session ID is required.", "Required", "SessionId");
+                return ValidationResult.Failure("Session ID is required.", "Required", "SessionId");
             }
 
             if (!Guid.TryParse(input, out var parsed) || parsed == Guid.Empty)
             {
-                return ValidationResultFactory.Failure("Invalid Session ID format.", "InvalidSessionId", "SessionId");
+                return ValidationResult.Failure("Invalid Session ID format.", "InvalidSessionId", "SessionId");
             }
 
-            return ValidationResultFactory.Success();
+            return ValidationResult.Success();
         }
     }
 }

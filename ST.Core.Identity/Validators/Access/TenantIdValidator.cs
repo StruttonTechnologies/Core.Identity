@@ -1,9 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using ST.Core.Registration.Attributes;
-using ST.Core.Validators;
-using ST.Core.Validators.Results;
 using ST.Core.Validators.Results.Interfaces;
-using System;
+using ST.Core.Validators.Results.Models;
 
 namespace ST.Core.Identity.Validators.Access
 {
@@ -21,13 +19,13 @@ namespace ST.Core.Identity.Validators.Access
         /// An <see cref="IValidationResult"/> indicating success if the ID is valid,
         /// or failure if it is missing, malformed, or represents Guid.Empty.
         /// </returns>
-        public IValidationResult Validate(string input)
+        public ValidationResult Validate(string input)
         {
             const string fieldName = "TenantId";
 
             if (string.IsNullOrWhiteSpace(input))
             {
-                return ValidationResultFactory.Failure(
+                return ValidationResult.Failure(
                     message: "Tenant ID is required.",
                     code: "MissingTenantId",
                     field: fieldName);
@@ -35,13 +33,13 @@ namespace ST.Core.Identity.Validators.Access
 
             if (!Guid.TryParse(input, out var parsed) || parsed == Guid.Empty)
             {
-                return ValidationResultFactory.Failure(
+                return ValidationResult.Failure(
                     message: "Tenant ID must be a valid non-empty GUID.",
                     code: "InvalidTenantId",
                     field: fieldName);
             }
 
-            return ValidationResultFactory.Success();
+            return ValidationResult.Success();
         }
     }
 }

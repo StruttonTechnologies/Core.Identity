@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using ST.Core.Registration.Attributes;
 using ST.Core.Validators;
-using ST.Core.Validators.Results;
+using ST.Core.Validators.Results.Models;
 using ST.Core.Validators.Results.Interfaces;
 using System.Text.RegularExpressions;
 
@@ -38,11 +38,11 @@ namespace ST.Core.Identity.Validators.Security
         /// An <see cref="IValidationResult"/> indicating success if the pattern matches,
         /// or failure with a descriptive message.
         /// </returns>
-        public IValidationResult Validate(string input)
+        public ValidationResult Validate(string input)
         {
             if (string.IsNullOrWhiteSpace(input))
             {
-                return ValidationResultFactory.Failure(
+                return ValidationResult.Failure(
                     message: "Password is required.",
                     code: "Required",
                     field: _fieldName);
@@ -50,13 +50,13 @@ namespace ST.Core.Identity.Validators.Security
 
             if (!_regex.IsMatch(input))
             {
-                return ValidationResultFactory.Failure(
+                return ValidationResult.Failure(
                     message: $"Password must match pattern: {_patternDescription}.",
                     code: "PatternMismatch",
                     field: _fieldName);
             }
 
-            return ValidationResultFactory.Success();
+            return ValidationResult.Success();
         }
     }
 

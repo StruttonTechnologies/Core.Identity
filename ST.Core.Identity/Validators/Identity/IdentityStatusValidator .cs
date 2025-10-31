@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using ST.Core.Registration.Attributes;
 using ST.Core.Validators;
-using ST.Core.Validators.Results;
+using ST.Core.Validators.Results.Models;
 using ST.Core.Validators.Results.Interfaces;
 
 namespace ST.Core.Identity.Validators.Identity
@@ -33,17 +33,17 @@ namespace ST.Core.Identity.Validators.Identity
         /// An <see cref="IValidationResult"/> indicating success if the status is valid,
         /// or failure if the identity is inactive or unauthorized.
         /// </returns>
-        public IValidationResult Validate(IdentityStatus input)
+        public ValidationResult Validate(IdentityStatus input)
         {
             if (input != IdentityStatus.Active)
             {
-                return ValidationResultFactory.Failure(
+                return ValidationResult.Failure(
                     message: $"Identity status '{input}' is not authorized.",
                     code: "InvalidIdentityStatus",
                     field: nameof(input));
             }
 
-            return ValidationResultFactory.Success();
+            return ValidationResult.Success();
         }
     }
 }

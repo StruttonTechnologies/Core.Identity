@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using ST.Core.Registration.Attributes;
 using ST.Core.Validators;
-using ST.Core.Validators.Results;
+using ST.Core.Validators.Results.Models;
 using ST.Core.Validators.Results.Interfaces;
 using System.Text.RegularExpressions;
 
@@ -29,11 +29,11 @@ namespace ST.Core.Identity.Validators.Profile
         /// An <see cref="IValidationResult"/> indicating success if the format is valid,
         /// or failure with a descriptive message.
         /// </returns>
-        public IValidationResult Validate(string input)
+        public ValidationResult Validate(string input)
         {
             if (string.IsNullOrWhiteSpace(input))
             {
-                return ValidationResultFactory.Failure(
+                return ValidationResult.Failure(
                     message: "Username is required.",
                     code: "Required",
                     field: nameof(input));
@@ -41,13 +41,13 @@ namespace ST.Core.Identity.Validators.Profile
 
             if (!_regex.IsMatch(input))
             {
-                return ValidationResultFactory.Failure(
+                return ValidationResult.Failure(
                     message: "Username must start with a letter and contain only letters, digits, underscores, or hyphens. Length must be 3–20 characters.",
                     code: "InvalidUsernameFormat",
                     field: nameof(input));
             }
 
-            return ValidationResultFactory.Success();
+            return ValidationResult.Success();
         }
     }
 }

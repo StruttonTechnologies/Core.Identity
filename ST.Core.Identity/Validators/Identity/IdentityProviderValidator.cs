@@ -2,7 +2,7 @@
 using ST.Core.Identity.Data;
 using ST.Core.Registration.Attributes;
 using ST.Core.Validators;
-using ST.Core.Validators.Results;
+using ST.Core.Validators.Results.Models;
 using ST.Core.Validators.Results.Interfaces;
 
 namespace ST.Core.Identity.Validators.Identity
@@ -22,25 +22,25 @@ namespace ST.Core.Identity.Validators.Identity
         /// An <see cref="IValidationResult"/> indicating success if the provider is valid,
         /// or failure if it is unsupported.
         /// </returns>
-        public IValidationResult Validate(string input)
+        public ValidationResult Validate(string input)
         {
             if (string.IsNullOrWhiteSpace(input))
             {
-                return ValidationResultFactory.Failure(
+                return ValidationResult.Failure(
                     message: "Identity provider is required.",
                     code: "MissingIdentityProvider",
                     field: nameof(input));
             }
 
-            if (!KnownIdentityProviders.All.Contains(input))
+            if (!KnownIdentityProviders.All.Any(p => string.Equals(p, input, StringComparison.OrdinalIgnoreCase)))
             {
-                return ValidationResultFactory.Failure(
+                return ValidationResult.Failure(
                     message: $"Identity provider '{input}' is not supported.",
                     code: "UnsupportedIdentityProvider",
                     field: nameof(input));
             }
 
-            return ValidationResultFactory.Success();
+            return ValidationResult.Success();
         }
     }
 }

@@ -1,13 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using ST.Core.Registration.Attributes;
-using ST.Core.Validators;
 using ST.Core.Validators.Composition;
 using ST.Core.Validators.Results.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using ST.Core.Validators.Results.Models;
 
 namespace ST.Core.Identity.Validators.Security
 {
@@ -45,7 +40,7 @@ namespace ST.Core.Identity.Validators.Security
         /// An <see cref="IValidationResult"/> indicating success if all rules pass,
         /// or the first failure encountered.
         /// </returns>
-        public IValidationResult Validate(string input) => _composite.Validate(input);
+        public ValidationResult Validate(string input) => _composite.Validate(input);
     }
 
 

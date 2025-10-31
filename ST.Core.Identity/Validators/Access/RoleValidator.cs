@@ -2,7 +2,7 @@
 using ST.Core.Identity.Data;
 using ST.Core.Registration.Attributes;
 using ST.Core.Validators;
-using ST.Core.Validators.Results;
+using ST.Core.Validators.Results.Models;
 using ST.Core.Validators.Results.Interfaces;
 
 namespace ST.Core.Identity.Validators.Access
@@ -21,11 +21,11 @@ namespace ST.Core.Identity.Validators.Access
         /// An <see cref="IValidationResult"/> indicating success if the role is valid,
         /// or failure if it is not recognized.
         /// </returns>
-        public IValidationResult Validate(string input)
+        public ValidationResult Validate(string input)
         {
             if (string.IsNullOrWhiteSpace(input))
             {
-                return ValidationResultFactory.Failure(
+                return ValidationResult.Failure(
                     message: "Role is required.",
                     code: "Required",
                     field: nameof(input));
@@ -33,13 +33,13 @@ namespace ST.Core.Identity.Validators.Access
 
             if (!KnownRoles.All.Contains(input))
             {
-                return ValidationResultFactory.Failure(
+                return ValidationResult.Failure(
                     message: $"Role '{input}' is not recognized or authorized.",
                     code: "InvalidRole",
                     field: nameof(input));
             }
 
-            return ValidationResultFactory.Success();
+            return ValidationResult.Success();
         }
     }
 }
