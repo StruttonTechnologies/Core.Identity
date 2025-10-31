@@ -1,13 +1,22 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<!-- Shared NuGet metadata -->
+	<Import Project="$(SolutionDir)..\ST.Assets\Nuget\ST.Branding.props" />
+	<Import Project="$(SolutionDir)\NuGet.Common.props" />
+	<Import Project="$(SolutionDir)\Project.Common.props" />
 
-  <ItemGroup>
-    <Folder Include="PersonLinking\" />
-  </ItemGroup>
+	<PropertyGroup>
+		<!-- Project-specific NuGet metadata -->
+		<PackageId>ST.Core.Identity.Dtos</PackageId>
+		<VersionPrefix>1.0.0</VersionPrefix>
+		<VersionSuffix>alpha</VersionSuffix>
+		<Description>Shared DTOs for ST.Core.Identity orchestration and transport.</Description>
+		<Title>ST.Core.Identity DTO Contracts</Title>
+		<PackageTags>core,identity,dtos,contracts,strutton,StruttonTechnologies</PackageTags>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Folder Include="PersonLinking\" />
+	</ItemGroup>
 
 </Project>
