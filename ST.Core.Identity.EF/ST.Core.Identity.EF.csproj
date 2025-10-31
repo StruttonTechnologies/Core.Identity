@@ -1,22 +1,32 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<!-- Shared NuGet metadata -->
+	<Import Project="$(SolutionDir)..\ST.Assets\Nuget\ST.Branding.props" />
+	<Import Project="$(SolutionDir)\NuGet.Common.props" />
+	<Import Project="$(SolutionDir)\Project.Common.props" />
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.9" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.9" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.0-rc.1.25451.107">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
+	<PropertyGroup>
+		<!-- Project-specific NuGet metadata -->
+		<PackageId>ST.Core.Identity.EF</PackageId>
+		<VersionPrefix>1.0.0</VersionPrefix>
+		<VersionSuffix>alpha</VersionSuffix>
+		<Description>Entity Framework stores and context for ST.Core.Identity.</Description>
+		<Title>ST.Core.Identity EF Integration</Title>
+		<PackageTags>core,identity,ef,entityframework,stores,strutton,StruttonTechnologies</PackageTags>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\ST.Core.Identity.Infrastructure\ST.Core.Identity.Infrastructure.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.10" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.10" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.0-rc.1.25451.107">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\ST.Core.Identity.Domain.Contracts\ST.Core.Identity.Domain.Contracts.csproj" />
+		<ProjectReference Include="..\ST.Core.Identity.Domain\ST.Core.Identity.Domain.csproj" />
+	</ItemGroup>
 
 </Project>

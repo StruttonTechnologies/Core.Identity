@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using ST.Core.Identity.Domain.Entities;
+using ST.Core.Identity.Domain.Interfaces.Jwtoken;
 using ST.Core.Identity.EF;
 
 namespace ST.Core.Identity.EF.Repositories

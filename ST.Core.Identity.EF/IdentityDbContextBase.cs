@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using ST.Core.Identity.Domain.Entities;
 using ST.Core.Identity.Domain.Entities.Base;
-using ST.Core.Identity.Domain.Entities.User;
 using ST.Core.Identity.EF.Configuration;
 
 namespace ST.Core.Identity.EF
