@@ -2,10 +2,9 @@
 using ST.Core.Identity.Validators.Composite;
 using ST.Core.Identity.Validators.Identity;
 using ST.Core.Validators;
-using ST.Core.Validators.Results;
 using ST.Core.Validators.Results.Models;
 
-namespace ST.Core.Identity.Infrastructure.EF.Tests.Validators
+namespace ST.Core.Identity.EF.Tests.Validators
 {
     public class AuthenticationContextValidatorTests
     {
@@ -15,15 +14,15 @@ namespace ST.Core.Identity.Infrastructure.EF.Tests.Validators
         {
             var providerValidator = new Mock<IValidator<string>>();
             providerValidator.Setup(v => v.Validate(It.IsAny<string>()))
-                .Returns(ValidationResultFactory.Success());
+                .Returns(ValidationResult.Success());
 
             var sessionValidator = new Mock<IValidator<string>>();
             sessionValidator.Setup(v => v.Validate(It.IsAny<string>()))
-                .Returns(ValidationResultFactory.Success());
+                .Returns(ValidationResult.Success());
 
             var statusValidator = new Mock<IValidator<IdentityStatus>>();
             statusValidator.Setup(v => v.Validate(It.IsAny<IdentityStatus>()))
-                .Returns(ValidationResultFactory.Success());
+                .Returns(ValidationResult.Success());
 
             _validator = new AuthenticationContextValidator(
                 providerValidator.Object,
@@ -57,7 +56,7 @@ namespace ST.Core.Identity.Infrastructure.EF.Tests.Validators
         {
             var providerValidator = new Mock<IValidator<string>>();
             providerValidator.Setup(v => v.Validate(It.IsAny<string>()))
-                .Returns(ValidationResultFactory.Failure("Invalid provider", "InvalidProvider", "Provider"));
+                .Returns(ValidationResult.Failure("Invalid provider", "InvalidProvider", "Provider"));
 
             var validator = new AuthenticationContextValidator(
                 providerValidator.Object,
