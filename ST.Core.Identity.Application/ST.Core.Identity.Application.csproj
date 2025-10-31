@@ -1,22 +1,37 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net9.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
 
-  <ItemGroup>
+		<!-- NuGet Packaging -->
+		<PackageId>ST.Core.Identity.Application</PackageId>
+		<VersionPrefix>1.0.0</VersionPrefix>
+		<Authors>Shawn Strutton</Authors>
+		<Company>StruttonTechnologies</Company>
+		<Description>Interfaces and orchestration contracts for ST.Core.Identity services.</Description>
+		<Title>ST.Core.Identity Application Layer</Title>
+		<PackageOutputPath>G:\source\Packages</PackageOutputPath>
+		<PackageIconUrl>https://raw.githubusercontent.com/StruttonTechnologies/NuGetPackages/main/assets/StruttonTechnologies_logo_128x128.png</PackageIconUrl>
+		<RepositoryUrl>https://github.com/StruttonTechnologies/CoreCapabilities</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<IncludeSymbols>true</IncludeSymbols>
+	</PropertyGroup>
+
+	<ItemGroup>
 	  <FrameworkReference Include="Microsoft.AspNetCore.App" />
-	<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.9" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.9" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.9" />
-    <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="9.0.9" />
-    <PackageReference Include="ST.Core.Registration" Version="1.0.0-alpha" />
+	<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.10" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.10" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.10" />
+    <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="9.0.10" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.14.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ST.Core.Identity.Application.Contracts\ST.Core.Identity.Application.Contracts.csproj" />
     <ProjectReference Include="..\ST.Core.Identity.Domain\ST.Core.Identity.Domain.csproj" />
     <ProjectReference Include="..\ST.Core.Identity.Dtos\ST.Core.Identity.Dtos.csproj" />
     <ProjectReference Include="..\ST.Core.Identity\ST.Core.Identity.csproj" />
