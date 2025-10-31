@@ -21,8 +21,8 @@ namespace ST.Core.Identity.Dispatch.Users.Handlers
         public async Task<UserProfileDto> Handle(GetUserProfileQuery request, CancellationToken cancellationToken)
         {
             var user = await _userManager.FindByIdAsync(request.UserId);
-            if (user == null)
-                return null;
+            
+            ArgumentNullException.ThrowIfNull(user, $"User with ID '{request.UserId}' not found.");
 
             var userId = await _userManager.GetUserIdAsync(user);
             var email = await _userManager.GetEmailAsync(user);

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ST.Core.Identity.Application.Handlers.Authorization
+namespace ST.Core.Identity.Dispatch.Authorization.Handlers
 {
     [AutoRegister(ServiceLifetime.Scoped)]
     internal class AddClaimCommandHandler

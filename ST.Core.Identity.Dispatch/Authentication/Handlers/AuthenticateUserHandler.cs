@@ -1,42 +1,34 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Identity;
-using ST.Core.Identity.Application.Contracts;
 using ST.Core.Identity.Dispatch.Authentication.Commands;
 using ST.Core.Identity.Dtos.Authentication;
+using ST.Core.Identity.Orchestration.Contracts;
+using ST.Core.Identity.Orchestration.Contracts.UserManager;
 
 namespace ST.Core.Identity.Dispatch.Authentication.Handlers
 {
-    public class AuthenticateUserHandler<TUser> : IRequestHandler<AuthenticateUserCommand, AuthenticationResultDto>
-    where TUser : class
+    /// <summary>
+    /// MediatR handler that delegates user authentication to the orchestration service.
+    /// </summary>
+    public class AuthenticateUserHandler<TKey>
+    : IRequestHandler<AuthenticateUserCommand, AuthenticationResultDto>
+    where TKey : IEquatable<TKey>
     {
-        private readonly UserManager<TUser> _userManager;
-        private readonly SignInManager<TUser> _signInManager;
-        private readonly ITokenService _tokenService;
+        private readonly IAuthenticationOrchestration<TKey> _authOrchestration;
 
-        public AuthenticateUserHandler(
-            UserManager<TUser> userManager,
-            SignInManager<TUser> signInManager,
-            ITokenService tokenService)
+        public AuthenticateUserHandler(IAuthenticationOrchestration<TKey> authOrchestration)
         {
-            _userManager = userManager;
-            _signInManager = signInManager;
-            _tokenService = tokenService;
+            _authOrchestration = authOrchestration
+                ?? throw new ArgumentNullException(nameof(authOrchestration));
         }
 
-        public async Task<AuthenticationResultDto> Handle(AuthenticateUserCommand request, CancellationToken cancellationToken)
+        public Task<AuthenticationResultDto> Handle(
+            AuthenticateUserCommand request,
+            CancellationToken cancellationToken)
         {
-            var user = await _userManager.FindByEmailAsync(request.Email);
-            if (user == null)
-                return AuthenticationResultDto.Failure("Invalid credentials");
-
-            var result = await _signInManager.CheckPasswordSignInAsync(user, request.Password, lockoutOnFailure: true);
-            if (!result.Succeeded)
-                return AuthenticationResultDto.Failure("Invalid credentials");
-
-            var principal = await _signInManager.CreateUserPrincipalAsync(user);
-            var token = _tokenService.GenerateToken(principal);
-
-            return AuthenticationResultDto.SuccessResult(token);
+            return _authOrchestration.AuthenticateAsync(
+                request.Email,
+                request.Password,
+                cancellationToken);
         }
     }
 }

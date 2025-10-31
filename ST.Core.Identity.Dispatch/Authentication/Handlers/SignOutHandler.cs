@@ -1,29 +1,33 @@
-﻿using MediatR;
-using ST.Core.Identity.Application.Contracts;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+using MediatR;
 using ST.Core.Identity.Dispatch.Authentication.Commands;
 using ST.Core.Identity.Dtos.Authentication;
+using ST.Core.Identity.Orchestration.Contracts.JwtToken;
 
 namespace ST.Core.Identity.Dispatch.Authentication.Handlers
 {
-    public class SignOutHandler : IRequestHandler<SignOutCommand, SignOutResultDto>
+    public class SignOutHandler<TKey> : IRequestHandler<SignOutCommand, SignOutResultDto>
+        where TKey : IEquatable<TKey>
     {
-        private readonly ITokenService _tokenService;
+        private readonly ITokenOrchestration<TKey> _tokenService;
 
-        public SignOutHandler(ITokenService tokenService)
+        public SignOutHandler(ITokenOrchestration<TKey> TokenOrchestration)
         {
-            _tokenService = tokenService;
+            _tokenService = TokenOrchestration ?? throw new ArgumentNullException(nameof(TokenOrchestration));
         }
 
-        public Task<SignOutResultDto> Handle(SignOutCommand request, CancellationToken cancellationToken)
+        public async Task<SignOutResultDto> Handle(SignOutCommand request, CancellationToken cancellationToken)
         {
             try
             {
-                _tokenService.RevokeToken(request.Token);
-                return Task.FromResult(SignOutResultDto.SuccessResult());
+                await _tokenService.RevokeRefreshTokenAsync(request.Token, cancellationToken);
+                return SignOutResultDto.SuccessResult();
             }
             catch (Exception ex)
             {
-                return Task.FromResult(SignOutResultDto.Failure($"Failed to revoke token: {ex.Message}"));
+                return SignOutResultDto.Failure($"Failed to revoke token: {ex.Message}");
             }
         }
     }

@@ -1,28 +1,41 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<!-- Shared NuGet metadata -->
+	<Import Project="$(SolutionDir)..\ST.Assets\Nuget\ST.Branding.props" />
+	<Import Project="$(SolutionDir)\NuGet.Common.props" />
+	<Import Project="$(SolutionDir)\Project.Common.props" />
 
-  <ItemGroup>
-    <PackageReference Include="MediatR" Version="13.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="9.0.9" />
-  </ItemGroup>
+	<PropertyGroup>
+		<!-- Project-specific NuGet metadata -->
+		<PackageId>ST.Core.Identity.Dispatch</PackageId>
+		<VersionPrefix>1.0.0</VersionPrefix>
+		<VersionSuffix>alpha</VersionSuffix>
+		<Description>MediatR command and query orchestration for ST.Core.Identity.</Description>
+		<Title>ST.Core.Identity Dispatcher Layer</Title>
+		<PackageTags>core,identity,dispatch,command,query,CQRS,MediatR,strutton,StruttonTechnologies</PackageTags>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\ST.Core.Identity.API\ST.Core.Identity.API.csproj" />
-    <ProjectReference Include="..\ST.Core.Identity.Application.Contracts\ST.Core.Identity.Application.Contracts.csproj" />
-    <ProjectReference Include="..\ST.Core.Identity.Dispatcher.Contracts\ST.Core.Identity.Dispatcher.Contracts.csproj" />
-    <ProjectReference Include="..\ST.Core.Identity.Dtos\ST.Core.Identity.Dtos.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="MediatR" Version="13.1.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="9.0.10" />
+		<PackageReference Include="Microsoft.Extensions.Identity.Core" Version="9.0.10" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+		<PackageReference Include="ST.Core.Registration" Version="1.0.0-alpha" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Authorization\Dispatcher\" />
-    <Folder Include="ExternalLogins\Handlers\" />
-    <Folder Include="JwtTokens\Commands\" />
-    <Folder Include="JwtTokens\Queries\" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\ST.Core.Identity.API\ST.Core.Identity.API.csproj" />
+		<ProjectReference Include="..\ST.Core.Identity.Dispatcher.Contracts\ST.Core.Identity.Dispatcher.Contracts.csproj" />
+		<ProjectReference Include="..\ST.Core.Identity.Dtos\ST.Core.Identity.Dtos.csproj" />
+		<ProjectReference Include="..\ST.Core.Identity.Orchestration.Contracts\ST.Core.Identity.Orchestration.Contracts.csproj" />
+		<ProjectReference Include="..\ST.Core.Identity.Orchestration\ST.Core.Identity.Orchestration.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Folder Include="Authorization\Dispatcher\" />
+		<Folder Include="ExternalLogins\Handlers\" />
+		<Folder Include="JwtTokens\Commands\" />
+		<Folder Include="JwtTokens\Queries\" />
+	</ItemGroup>
 
 </Project>
