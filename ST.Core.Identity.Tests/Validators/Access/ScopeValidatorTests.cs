@@ -1,5 +1,5 @@
 ﻿using ST.Core.Validators;
-using ST.Core.Validators.Results;
+using ST.Core.Validators.Results.Models;
 using ST.Core.Validators.Results.Interfaces;
 
 public class ScopeValidator : IValidator<IEnumerable<string>>
@@ -11,21 +11,21 @@ public class ScopeValidator : IValidator<IEnumerable<string>>
         _allowedScopes = new HashSet<string>(allowedScopes, StringComparer.OrdinalIgnoreCase);
     }
 
-    public IValidationResult Validate(IEnumerable<string> input)
+    public ValidationResult Validate(IEnumerable<string> input)
     {
         if (input is null)
         {
-            return ValidationResultFactory.Failure("Scopes are required.", "MissingScopes", nameof(input));
+            return ValidationResult.Failure("Scopes are required.", "MissingScopes", nameof(input));
         }
 
         foreach (var scope in input)
         {
             if (!_allowedScopes.Contains(scope))
             {
-                return ValidationResultFactory.Failure($"Scope '{scope}' is not recognized or authorized.", "InvalidScope", nameof(input));
+                return ValidationResult.Failure($"Scope '{scope}' is not recognized or authorized.", "InvalidScope", nameof(input));
             }
         }
 
-        return ValidationResultFactory.Success();
+        return ValidationResult.Success();
     }
 }
