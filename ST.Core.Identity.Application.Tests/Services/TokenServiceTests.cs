@@ -1,101 +1,67 @@
-using Microsoft.Extensions.Logging;
-using ST.Core.Identity.Application.Services.JwtTokens;
+using Microsoft.AspNetCore.Identity;
+using Moq;
 using ST.Core.Identity.Fakes.Builders;
-using ST.Core.Identity.Fakes.Factories;
-using System;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
+using ST.Core.Identity.Mocks.Factories;
+using ST.Core.Identity.Orchestration.UserManager;
+using ST.Core.Identity.Stub.Data;
+using ST.Core.Identity.Stub.Entities;
+using ST.Core.Identity.Test.Data;
 using System.Security.Claims;
-using Xunit;
 
 namespace ST.Core.Identity.Application.Tests.Services
 {
-    /// <summary>
-    /// Unit tests for <see cref="TokenService"/>.
-    /// Validates token generation, expiration, revocation, and malformed token handling.
-    /// </summary>
-    public class TokenServiceTests
+    public class AuthenticationOrchestrationTests
     {
-        private readonly ILogger<TokenService> _logger = MockLoggerFactory.Create<TokenService>();
-        private readonly TokenService _service;
+        private readonly StubUser _user = StubUserData.Default;
+        private readonly ClaimsPrincipal _principal = TestClaimsPrincipalBuilder.CreateDefault();
+        private readonly AuthenticationOrchestration<StubUser, Guid> _auth;
 
-        /// <summary>
-        /// Initializes a new instance of <see cref="TokenServiceTests"/> using default token options and a mock logger.
-        /// </summary>
-        public TokenServiceTests()
+        public AuthenticationOrchestrationTests()
         {
-            _service = new TokenService(JwtTokenOptionsFactory.CreateDefault(), _logger);
+            var userManager = MockUserManagerFactory.Create(_user);
+            var signInManager = MockSignInManagerFactory.Create(userManager);
+            signInManager.Setup(m => m.CreateUserPrincipalAsync(_user)).ReturnsAsync(_principal);
+            signInManager.Setup(m => m.CheckPasswordSignInAsync(_user, It.IsAny<string>(), true))
+                         .ReturnsAsync(SignInResult.Success);
+
+            var tokenService = MockTokenServiceFactory.Create<Guid>();
+
+            _auth = new AuthenticationOrchestration<StubUser, Guid>(
+                userManager.Object,
+                signInManager.Object,
+                tokenService.Object);
         }
 
-        /// <summary>
-        /// Verifies that <see cref="TokenService.GenerateToken"/> returns a valid JWT containing expected claims.
-        /// </summary>
         [Fact]
-        public void GenerateToken_ReturnsValidJwt()
+        public async Task AuthenticateAsync_ReturnsSuccessResult()
         {
-            var principal = TestClaimsPrincipalBuilder.CreateDefault();
+            var result = await _auth.AuthenticateAsync(_user.Email, "password", CancellationToken.None);
 
-            var token = _service.GenerateToken(principal);
-
-            Assert.False(string.IsNullOrWhiteSpace(token));
-            var jwt = new JwtSecurityTokenHandler().ReadJwtToken(token);
-            Assert.Equal("issuer", jwt.Issuer);
-            Assert.Equal("audience", jwt.Audiences.First());
-            Assert.Contains(jwt.Claims, c => c.Type == ClaimTypes.Name && c.Value == "StubUser");
-            Assert.Contains(jwt.Claims, c => c.Type == JwtRegisteredClaimNames.Jti);
+            Assert.True(result.IsSuccess);
+            Assert.Equal(KnownTokens.ValidToken, result.Token);
         }
 
-        /// <summary>
-        /// Verifies that <see cref="TokenService.GetExpirationTime"/> returns a timestamp in the future within expected bounds.
-        /// </summary>
         [Fact]
-        public void GetExpirationTime_ReturnsFutureTimestamp()
+        public async Task RegisterAsync_ReturnsSuccessResult()
         {
-            var expiration = _service.GetExpirationTime();
+            var result = await _auth.RegisterAsync("newuser@example.com", "securePassword123!", CancellationToken.None);
 
-            Assert.True(expiration > DateTime.UtcNow);
-            Assert.True(expiration <= DateTime.UtcNow.AddMinutes(60));
+            Assert.True(result.IsSuccess);
+            Assert.Equal(KnownTokens.ValidToken, result.Token);
         }
 
-        /// <summary>
-        /// Verifies that <see cref="TokenService.RevokeToken"/> marks a token as revoked and <see cref="TokenService.IsTokenRevoked"/> returns true.
-        /// </summary>
         [Fact]
-        public void RevokeToken_MarksTokenAsRevoked()
+        public async Task SignOutAsync_RevokesAccessToken()
         {
-            var principal = TestClaimsPrincipalBuilder.CreateDefault();
-            var token = _service.GenerateToken(principal);
+            var tokenService = MockTokenServiceFactory.Create<Guid>();
+            var orchestration = new AuthenticationOrchestration<StubUser, Guid>(
+                MockUserManagerFactory.Create().Object,
+                MockSignInManagerFactory.Create(MockUserManagerFactory.Create()).Object,
+                tokenService.Object);
 
-            _service.RevokeToken(token);
+            await orchestration.SignOutAsync(KnownTokens.ValidToken, CancellationToken.None);
 
-            Assert.True(_service.IsTokenRevoked(token));
-        }
-
-        /// <summary>
-        /// Verifies that <see cref="TokenService.IsTokenRevoked"/> returns false for a token that has not been revoked.
-        /// </summary>
-        [Fact]
-        public void IsTokenRevoked_ReturnsFalse_ForUnrevokedToken()
-        {
-            var principal = TestClaimsPrincipalBuilder.CreateDefault();
-            var token = _service.GenerateToken(principal);
-
-            var isRevoked = _service.IsTokenRevoked(token);
-
-            Assert.False(isRevoked);
-        }
-
-        /// <summary>
-        /// Verifies that <see cref="TokenService.IsTokenRevoked"/> returns false for a malformed token and does not throw.
-        /// </summary>
-        [Fact]
-        public void IsTokenRevoked_ReturnsFalse_ForMalformedToken()
-        {
-            var malformedToken = "not.a.valid.jwt";
-
-            var isRevoked = _service.IsTokenRevoked(malformedToken);
-
-            Assert.False(isRevoked);
+            tokenService.Verify(m => m.RevokeAccessTokenAsync(KnownTokens.ValidToken, It.IsAny<CancellationToken>()), Times.Once);
         }
     }
 }
