@@ -1,6 +1,5 @@
 ﻿using ST.Core.Identity.Domain.Interfaces.Jwtoken;
 using ST.Core.Identity.Fakes.Factories;
-using ST.Core.Identity.Fakes.Models;
 using ST.Core.Identity.Stub.Entities;
 
 namespace ST.Core.Identity.Fakes.Scenarios

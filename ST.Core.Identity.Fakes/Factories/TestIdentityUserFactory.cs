@@ -1,5 +1,4 @@
-﻿using ST.Core.Identity.Fakes.Models;
-using ST.Core.Identity.Stub.Entities;
+﻿using ST.Core.Identity.Stub.Entities;
 
 namespace ST.Core.Identity.Fakes.Factories
 {
