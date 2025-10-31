@@ -1,5 +1,4 @@
 using ST.Core.Identity.Fakes.Factories;
-using ST.Core.Identity.Fakes.Models;
 using System;
 using Xunit;
 

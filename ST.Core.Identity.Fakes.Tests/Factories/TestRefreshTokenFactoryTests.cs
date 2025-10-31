@@ -1,5 +1,4 @@
 using ST.Core.Identity.Fakes.Factories;
-using ST.Core.Identity.Fakes.Models;
 using System;
 using Xunit;
 
@@ -14,7 +13,7 @@ namespace ST.Core.Identity.Fakes.Tests.Factories
 
             Assert.NotNull(token);
             Assert.False(Guid.Empty.Equals(token.UserId));
-            Assert.Equal("test.user", token.Username);
+            Assert.Equal("stub.user", token.Username);
             Assert.False(token.IsRevoked);
             Assert.True(token.ExpiresAt > DateTime.UtcNow);
         }

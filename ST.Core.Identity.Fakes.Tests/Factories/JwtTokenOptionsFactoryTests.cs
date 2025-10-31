@@ -3,6 +3,7 @@ using ST.Core.Identity.Application.Models;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Xunit;
+using ST.Core.Identity.Stub.Factories;
 
 namespace ST.Core.Identity.Fakes.Tests.Factories
 {
