@@ -1,0 +1,22 @@
+﻿<Project>
+	<PropertyGroup>
+		<!-- Target framework (can be overridden in .csproj) -->
+		<TargetFramework>net9.0</TargetFramework>
+
+		<!-- Enable modern C# features -->
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+
+		<!-- Treat warnings as errors for contributor discipline -->
+		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+
+		<!-- Enable deterministic builds -->
+		<Deterministic>true</Deterministic>
+
+		<!-- Enable Source Link (if used) -->
+		<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+
+		<!-- Default language version (optional override) -->
+		<LangVersion>preview</LangVersion>
+	</PropertyGroup>
+</Project>
