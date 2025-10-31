@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using ST.Core.Domain.Identity.Entities;
-using ST.Core.Identity.Domain.Entities.User;
+using ST.Core.Identity.Domain.Entities.Base;
 using System;
 using System.Collections.Generic;
 
@@ -10,8 +9,9 @@ namespace ST.Core.Identity.Stub.Entities
     /// Stub user entity for testing and mocking Identity flows.
     /// Inherits from built-in IdentityUser with Guid key.
     /// </summary>
-    public sealed class StubUser : IdentityUser<Guid>
+    public sealed class StubUser : IdentityUserBase<Guid>
     {
+
         /// <summary>
         /// Optional display name for test scenarios.
         /// </summary>

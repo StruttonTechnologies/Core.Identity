@@ -1,4 +1,4 @@
-﻿using ST.Core.Identity.Domain.Entities.User;
+﻿using ST.Core.Identity.Domain.Entities.Base;
 using ST.Core.Identity.Stub.Entities;
 
 namespace ST.Core.Identity.Stub.Data
