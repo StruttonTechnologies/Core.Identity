@@ -1,25 +1,61 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ST.Core.Identity.Application.Contracts
 {
-    public interface ITokenService
+    /// <summary>
+    /// Default orchestration service for Guid-based JWT tokens.
+    /// </summary>
+    public interface ITokenService : ITokenService<Guid>
     {
-        string GenerateToken(ClaimsPrincipal principal);
+    }
+
+    /// <summary>
+    /// Orchestration service for generating, validating, and revoking JWT tokens.
+    /// </summary>
+    public interface ITokenService<TKey>
+        where TKey : IEquatable<TKey>
+    {
+        /// <summary>
+        /// Asynchronously generates a JWT access token from a ClaimsPrincipal.
+        /// </summary>
+        Task<string> GenerateTokenAsync(ClaimsPrincipal principal);
+
+        /// <summary>
+        /// Gets the expiration time for newly issued tokens.
+        /// </summary>
         DateTime GetExpirationTime();
 
         /// <summary>
-        /// Revokes a token by storing its identifier or associated user in a denylist.
+        /// Revokes a specific access token.
         /// </summary>
-        void RevokeToken(string token);
+        Task RevokeAccessTokenAsync(string token, CancellationToken cancellationToken);
 
         /// <summary>
-        /// Checks whether a token has been revoked.
+        /// Checks whether the specified access token has been revoked.
         /// </summary>
-        bool IsTokenRevoked(string token);
+        Task<bool> IsAccessTokenRevokedAsync(string token, CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Revokes a specific refresh token.
+        /// </summary>
+        Task RevokeRefreshTokenAsync(string token, CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Checks whether the specified refresh token has been revoked.
+        /// </summary>
+        Task<bool> IsRefreshTokenRevokedAsync(string token, CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Validates a token and returns its ClaimsPrincipal if valid.
+        /// </summary>
+        Task<ClaimsPrincipal?> ValidateTokenAsync(string token, CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Extracts the expiration timestamp from a token.
+        /// </summary>
+        Task<DateTime?> GetExpirationAsync(string token, CancellationToken cancellationToken);
     }
 }
