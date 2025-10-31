@@ -1,9 +1,25 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net9.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+
+		<!-- NuGet Packaging -->
+		<PackageId>ST.Core.Identity.Application.Contracts</PackageId>
+		<VersionPrefix>1.0.0</VersionPrefix>
+		<VersionSuffix>alpha</VersionSuffix>
+		<Authors>Shawn Strutton</Authors>
+		<Company>StruttonTechnologies</Company>
+		<Description>Shared contracts and interfaces for ST.Core.Identity application orchestration.</Description>
+		<Title>ST.Core.Identity Application Contracts</Title>
+		<PackageOutputPath>G:\source\Packages</PackageOutputPath>
+		<PackageIconUrl>https://raw.githubusercontent.com/StruttonTechnologies/NuGetPackages/main/assets/StruttonTechnologies_logo_128x128.png</PackageIconUrl>
+		<RepositoryUrl>https://github.com/StruttonTechnologies/CoreCapabilities</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<IncludeSymbols>true</IncludeSymbols>
+	</PropertyGroup>
 
 </Project>
