@@ -1,108 +1,103 @@
-﻿using System;
-using System.Collections.Concurrent;
+﻿using Microsoft.Extensions.Logging;
+using ST.Core.Identity.Application.Contracts;
+using ST.Core.Identity.Application.Models;
+using ST.Core.Identity.Domain.Interfaces.Jwtoken;
+using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
-using System.Text;
-using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Tokens;
-using ST.Core.Identity.Application.Models;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace ST.Core.Identity.Application.Services.JwtTokens
 {
     /// <summary>
-    /// Service responsible for generating and revoking JWT access tokens.
+    /// Service responsible for orchestrating JWT token generation and validation.
     /// </summary>
-    public class TokenService : ITokenService
+    public class TokenService<TKey> : ITokenService<TKey>
+        where TKey : IEquatable<TKey>
     {
         private readonly JwtTokenOptions _options;
-        private readonly ILogger<TokenService> _logger;
-        private static readonly ConcurrentDictionary<string, DateTime> _revokedTokens = new();
+        private readonly ILogger<TokenService<TKey>> _logger;
+        private readonly IJwtUserTokenManager<TKey> _jwtManager;
 
-        public TokenService(JwtTokenOptions options, ILogger<TokenService> logger)
+        public TokenService(
+            JwtTokenOptions options,
+            ILogger<TokenService<TKey>> logger,
+            IJwtUserTokenManager<TKey> jwtManager)
         {
             _options = options ?? throw new ArgumentNullException(nameof(options));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _jwtManager = jwtManager ?? throw new ArgumentNullException(nameof(jwtManager));
         }
 
-        public string GenerateToken(ClaimsPrincipal principal)
+        public async Task<string> GenerateTokenAsync(ClaimsPrincipal principal)
         {
-            if (principal?.Identity is not ClaimsIdentity identity)
-                throw new InvalidOperationException("ClaimsPrincipal must have a ClaimsIdentity.");
+            var identity = principal?.Identity as ClaimsIdentity
+                ?? throw new InvalidOperationException("ClaimsPrincipal must have a ClaimsIdentity.");
 
-            if (!identity.Claims.Any())
-                throw new InvalidOperationException("ClaimsPrincipal must contain claims to generate a token.");
+            var userIdRaw = identity.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                ?? throw new InvalidOperationException("Missing user ID");
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.Key));
-            var credentials = _options.Credentials ?? new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var userId = ConvertToKey(userIdRaw);
+            var userName = identity.FindFirst(ClaimTypes.Name)?.Value ?? string.Empty;
+            var email = identity.FindFirst(ClaimTypes.Email)?.Value ?? string.Empty;
+            var roles = identity.FindAll(ClaimTypes.Role).Select(r => r.Value);
 
-            var jti = Guid.NewGuid().ToString();
-
-            var claims = identity.Claims.ToList();
-            claims.Add(new Claim(JwtRegisteredClaimNames.Jti, jti));
-
-            var token = new JwtSecurityToken(
-                issuer: _options.Issuer,
-                audience: _options.Audience,
-                claims: claims,
-                notBefore: DateTime.UtcNow,
-                expires: DateTime.UtcNow.AddMinutes(_options.ExpirationMinutes),
-                signingCredentials: credentials
-            );
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            return await _jwtManager.GenerateAccessTokenAsync(userId, userName, email, roles, CancellationToken.None);
         }
+
+
 
         public DateTime GetExpirationTime() => DateTime.UtcNow.AddMinutes(_options.ExpirationMinutes);
 
-        public void RevokeToken(string token)
+        public Task RevokeAccessTokenAsync(string token, CancellationToken cancellationToken)
+            => _jwtManager.RevokeAccessTokenAsync(token, cancellationToken);
+
+        public Task<bool> IsAccessTokenRevokedAsync(string token, CancellationToken cancellationToken)
+            => _jwtManager.IsAccessTokenRevokedAsync(token, cancellationToken);
+
+        public Task RevokeRefreshTokenAsync(string token, CancellationToken cancellationToken)
+            => _jwtManager.RevokeRefreshTokenAsync(token, cancellationToken);
+
+        public Task<bool> IsRefreshTokenRevokedAsync(string token, CancellationToken cancellationToken)
+            => _jwtManager.IsRefreshTokenRevokedAsync(token, cancellationToken);
+
+        public Task<ClaimsPrincipal?> ValidateTokenAsync(string token, CancellationToken cancellationToken)
+            => _jwtManager.ValidateTokenAsync(token);
+
+        public Task<DateTime?> GetExpirationAsync(string token, CancellationToken cancellationToken)
+            => _jwtManager.GetExpirationAsync(token);
+
+
+
+        private TKey ConvertToKey(string raw)
         {
-            try
+            if (typeof(TKey) == typeof(Guid))
             {
-                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(token);
-                var jti = jwt.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Jti)?.Value;
+                if (Guid.TryParse(raw, out var guid))
+                    return (TKey)(object)guid;
 
-                if (!string.IsNullOrEmpty(jti))
-                {
-                    _revokedTokens[jti] = jwt.ValidTo;
-                    _logger.LogInformation("Token revoked: {Jti}", jti);
-                }
-                else
-                {
-                    _logger.LogWarning("Token revocation skipped: JTI not found.");
-                }
+                throw new InvalidCastException($"Cannot convert '{raw}' to Guid.");
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Failed to revoke token.");
-            }
-        }
 
-        public bool IsTokenRevoked(string token)
-        {
-            try
+            if (typeof(TKey) == typeof(int))
             {
-                var jwt = new JwtSecurityTokenHandler().ReadJwtToken(token);
-                var jti = jwt?.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Jti)?.Value;
+                if (int.TryParse(raw, out var intVal))
+                    return (TKey)(object)intVal;
 
-                var isRevoked = jti != null && _revokedTokens.ContainsKey(jti);
-                if (isRevoked)
-                {
-                    _logger.LogInformation("Token is revoked: {Jti}", jti);
-                }
+                throw new InvalidCastException($"Cannot convert '{raw}' to int.");
+            }
 
-                return isRevoked;
-            }
-            catch (SecurityTokenException ex)
+            if (typeof(TKey) == typeof(long))
             {
-                _logger.LogWarning(ex, "Token parsing failed. Treating as non-revoked.");
-                return false;
+                if (long.TryParse(raw, out var longVal))
+                    return (TKey)(object)longVal;
+
+                throw new InvalidCastException($"Cannot convert '{raw}' to long.");
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Unexpected error during token revocation check.");
-                return false;
-            }
+
+            return (TKey)Convert.ChangeType(raw, typeof(TKey));
         }
     }
 }
