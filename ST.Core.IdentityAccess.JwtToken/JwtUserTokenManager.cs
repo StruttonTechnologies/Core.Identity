@@ -10,20 +10,27 @@ using System.Text;
 namespace ST.Core.IdentityAccess.JwtToken
 {
     [AutoRegister]
-    public class JwtUserTokenManager : IJwtUserTokenManager
+    public class JwtUserTokenManager<TKey> : IJwtUserTokenManager<TKey>
+        where TKey : IEquatable<TKey>
     {
         private readonly IRefreshTokenStore _refreshTokenStore;
+
+        // In-memory denylist for access tokens (JTI-based)
+        private static readonly Dictionary<string, DateTime> _revokedAccessTokens = new();
+
+        // In-memory denylist for refresh tokens
+        private static readonly HashSet<string> _revokedRefreshTokens = new();
 
         public JwtUserTokenManager(IRefreshTokenStore refreshTokenStore)
         {
             _refreshTokenStore = refreshTokenStore;
         }
 
-        public Task<string> GenerateAccessTokenAsync(string userId, string userName, string email, IEnumerable<string> roles, CancellationToken cancellationToken)
+        public Task<string> GenerateAccessTokenAsync(TKey userId, string userName, string email, IEnumerable<string> roles, CancellationToken cancellationToken)
         {
             var identity = new ClaimsIdentity("Identity.Application");
 
-            identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, userId));
+            identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, userId?.ToString()));
             identity.AddClaim(new Claim(ClaimTypes.Name, userName));
             identity.AddClaim(new Claim(ClaimTypes.Email, email ?? string.Empty));
 
@@ -32,9 +39,9 @@ namespace ST.Core.IdentityAccess.JwtToken
                 identity.AddClaim(new Claim(ClaimTypes.Role, role));
             }
 
-            var principal = new ClaimsPrincipal(identity);
+            var jti = Guid.NewGuid().ToString();
+            identity.AddClaim(new Claim(JwtRegisteredClaimNames.Jti, jti));
 
-            // 🔐 Sign and serialize the token directly here
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("your-secret-key")); // Replace with config
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
@@ -49,18 +56,16 @@ namespace ST.Core.IdentityAccess.JwtToken
 
             var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
             return Task.FromResult(tokenString);
-
-
         }
 
-        public async Task<string> GenerateRefreshTokenAsync(string userId, string username, CancellationToken cancellationToken)
+        public async Task<string> GenerateRefreshTokenAsync(TKey userId, string username, CancellationToken cancellationToken)
         {
             var token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
 
             var refreshToken = new RefreshToken
             {
                 Token = token,
-                UserId = userId,
+                UserId = userId?.ToString(),
                 Username = username,
                 CreatedAt = DateTime.UtcNow,
                 ExpiresAt = DateTime.UtcNow.AddDays(30),
@@ -88,7 +93,13 @@ namespace ST.Core.IdentityAccess.JwtToken
                     ValidAudience = "your-audience",
                     IssuerSigningKey = key,
                     ClockSkew = TimeSpan.Zero
-                }, out _);
+                }, out var validatedToken);
+
+                var jwt = validatedToken as JwtSecurityToken;
+                var jti = jwt?.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Jti)?.Value;
+
+                if (jti != null && _revokedAccessTokens.ContainsKey(jti))
+                    return Task.FromResult<ClaimsPrincipal?>(null);
 
                 return Task.FromResult<ClaimsPrincipal?>(principal);
             }
@@ -102,6 +113,52 @@ namespace ST.Core.IdentityAccess.JwtToken
         {
             var jwt = new JwtSecurityTokenHandler().ReadJwtToken(token);
             return Task.FromResult<DateTime?>(jwt.ValidTo);
+        }
+
+        public Task RevokeAccessTokenAsync(string token, CancellationToken cancellationToken)
+        {
+            var jwt = new JwtSecurityTokenHandler().ReadJwtToken(token);
+            var jti = jwt.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Jti)?.Value;
+
+            if (!string.IsNullOrEmpty(jti))
+            {
+                _revokedAccessTokens[jti] = jwt.ValidTo;
+            }
+
+            return Task.CompletedTask;
+        }
+
+        public Task<bool> IsAccessTokenRevokedAsync(string token, CancellationToken cancellationToken)
+        {
+            var jwt = new JwtSecurityTokenHandler().ReadJwtToken(token);
+            var jti = jwt.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Jti)?.Value;
+
+            var isRevoked = jti != null && _revokedAccessTokens.ContainsKey(jti);
+            return Task.FromResult(isRevoked);
+        }
+
+        public Task RevokeRefreshTokenAsync(string token, CancellationToken cancellationToken)
+        {
+            _revokedRefreshTokens.Add(token);
+            return Task.CompletedTask;
+        }
+
+        public Task<bool> IsRefreshTokenRevokedAsync(string token, CancellationToken cancellationToken)
+        {
+            var isRevoked = _revokedRefreshTokens.Contains(token);
+            return Task.FromResult(isRevoked);
+        }
+
+        public Task RevokeAccessTokensAsync(TKey userId, CancellationToken cancellationToken)
+        {
+            // Optional: implement user-based access token revocation if you store JTI per user
+            return Task.CompletedTask;
+        }
+
+        public Task RevokeRefreshTokensAsync(TKey userId, CancellationToken cancellationToken)
+        {
+            // Optional: implement user-based refresh token revocation if you store tokens per user
+            return Task.CompletedTask;
         }
     }
 }
