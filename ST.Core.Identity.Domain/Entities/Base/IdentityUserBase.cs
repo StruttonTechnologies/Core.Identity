@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using ST.Core.Identity.Domain.Entities.Base;
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace ST.Core.Identity.Domain.Entities.User
+namespace ST.Core.Identity.Domain.Entities.Base
 {
     /// <summary>
     /// Convenience alias for default Guid key type.

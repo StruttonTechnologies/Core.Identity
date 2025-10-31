@@ -1,5 +1,4 @@
 ﻿using ST.Core.Identity.Domain.Entities.Base;
-using ST.Core.Identity.Domain.Entities.User;
 
 namespace ST.Core.Identity.Domain.Entities.Concreate
 {
