@@ -1,0 +1,173 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>StruttonTechnologies.Core.Identity.Fakes</name>
+    </assembly>
+    <members>
+        <member name="T:StruttonTechnologies.Core.Identity.Fakes.Builders.TestClaimsPrincipalBuilder">
+            <summary>
+            Builder for creating test-safe <see cref="T:System.Security.Claims.ClaimsPrincipal"/> instances.
+            Used to simulate authenticated users in token and authorization tests.
+            </summary>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.Fakes.Builders.TestClaimsPrincipalBuilder.CreateDefault">
+            <summary>
+            Creates a default <see cref="T:System.Security.Claims.ClaimsPrincipal"/> with common identity claims.
+            Includes NameIdentifier, Name, and Role ("Admin").
+            </summary>
+            <returns>A configured <see cref="T:System.Security.Claims.ClaimsPrincipal"/> object.</returns>
+        </member>
+        <member name="T:StruttonTechnologies.Core.Identity.Fakes.Data.InvalidData">
+            <summary>
+            Provides invalid test data for identity-related scenarios.
+            </summary>
+        </member>
+        <member name="P:StruttonTechnologies.Core.Identity.Fakes.Data.InvalidData.SessionIds">
+            <summary>
+            Gets a collection of invalid session ID values.
+            </summary>
+        </member>
+        <member name="P:StruttonTechnologies.Core.Identity.Fakes.Data.InvalidData.TenantIds">
+            <summary>
+            Gets a collection of invalid tenant ID values.
+            </summary>
+        </member>
+        <member name="P:StruttonTechnologies.Core.Identity.Fakes.Data.InvalidData.Scopes">
+            <summary>
+            Gets a collection of invalid scope values.
+            </summary>
+        </member>
+        <member name="P:StruttonTechnologies.Core.Identity.Fakes.Data.InvalidData.Roles">
+            <summary>
+            Gets a collection of invalid role values.
+            </summary>
+        </member>
+        <member name="P:StruttonTechnologies.Core.Identity.Fakes.Data.InvalidData.Providers">
+            <summary>
+            Gets a collection of invalid provider values.
+            </summary>
+        </member>
+        <member name="P:StruttonTechnologies.Core.Identity.Fakes.Data.InvalidData.Usernames">
+            <summary>
+            Gets a collection of invalid username values.
+            </summary>
+        </member>
+        <member name="T:StruttonTechnologies.Core.Identity.Fakes.Factories.JwtTokenOptionsFactory">
+            <summary>
+            Factory for creating test-safe <see cref="T:StruttonTechnologies.Core.Identity.Domain.Models.JwtTokenOptions"/> instances.
+            Used to configure token generation logic in unit and integration tests.
+            </summary>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.Fakes.Factories.JwtTokenOptionsFactory.CreateDefault">
+            <summary>
+            Creates a default <see cref="T:StruttonTechnologies.Core.Identity.Domain.Models.JwtTokenOptions"/> instance with hardcoded values.
+            Suitable for most token generation tests.
+            </summary>
+            <returns>A configured <see cref="T:StruttonTechnologies.Core.Identity.Domain.Models.JwtTokenOptions"/> object.</returns>
+        </member>
+        <member name="T:StruttonTechnologies.Core.Identity.Fakes.Factories.MockLoggerFactory">
+            <summary>
+            Factory for creating mock ILogger instances.
+            </summary>
+        </member>
+        <member name="T:StruttonTechnologies.Core.Identity.Fakes.Factories.TestAppUserIdentityFactory">
+            <summary>
+            Factory for creating test-safe <see cref="T:StruttonTechnologies.Core.Identity.Stub.Entities.StubUser"/> instances.
+            Provides default configurations and targeted overrides for identity-related tests.
+            </summary>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.Fakes.Factories.TestAppUserIdentityFactory.CreateDefault">
+            <summary>
+            Creates a default user with safe, realistic values.
+            </summary>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.Fakes.Factories.TestAppUserIdentityFactory.Create(System.String)">
+            <summary>
+            Creates a user with a specified username and derived email.
+            </summary>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.Fakes.Factories.TestAppUserIdentityFactory.LockedOut">
+            <summary>
+            Creates a user marked as locked out with elevated failure count.
+            </summary>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.Fakes.Factories.TestAppUserIdentityFactory.CreateWithEmail(System.String)">
+            <summary>
+            Creates a user with a specified email address.
+            </summary>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.Fakes.Factories.TestAppUserIdentityFactory.CreateWithUserName(System.String)">
+            <summary>
+            Creates a user with a specified username.
+            </summary>
+        </member>
+        <member name="T:StruttonTechnologies.Core.Identity.Fakes.Factories.FakeRefreshTokenFactory">
+            <summary>
+            Factory for creating test-safe instances of <see cref="T:StruttonTechnologies.Core.Identity.Stub.Models.StubRefreshToken"/>.
+            Lives in Fakes for test-only usage, but uses Stub model for realistic shape.
+            </summary>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.Fakes.Factories.FakeRefreshTokenFactory.Create(System.Nullable{System.Guid},System.String)">
+            <summary>
+            Creates a valid refresh token with optional user ID and username.
+            </summary>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.Fakes.Factories.FakeRefreshTokenFactory.Expired(System.Nullable{System.Guid},System.String)">
+            <summary>
+            Creates an expired refresh token for testing expiration logic.
+            </summary>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.Fakes.Factories.FakeRefreshTokenFactory.Revoked(System.Nullable{System.Guid},System.String)">
+            <summary>
+            Creates a revoked refresh token for testing revocation logic.
+            </summary>
+        </member>
+        <member name="T:StruttonTechnologies.Core.Identity.Fakes.Scenarios.LoginScenario">
+            <summary>
+            Fluent builder for composing identity login test scenarios.
+            Wires up user, roles, and tokens for expressive, modular test setup.
+            </summary>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.Fakes.Scenarios.LoginScenario.WithDefaultUser">
+            <summary>
+            Starts a scenario with a default user.
+            </summary>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.Fakes.Scenarios.LoginScenario.WithUser(System.String)">
+            <summary>
+            Starts a scenario with a user created by username.
+            </summary>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.Fakes.Scenarios.LoginScenario.WithUser(StruttonTechnologies.Core.Identity.Stub.Entities.StubUser)">
+            <summary>
+            Starts a scenario with a fully constructed user.
+            </summary>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.Fakes.Scenarios.LoginScenario.WithRoles(System.String[])">
+            <summary>
+            Adds roles to the scenario.
+            </summary>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.Fakes.Scenarios.LoginScenario.WithTokensFrom(StruttonTechnologies.Core.Identity.Domain.Contracts.Jwtoken.IJwtUserTokenManager{System.Guid})">
+            <summary>
+            Injects a token manager to generate access and refresh tokens.
+            </summary>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.Fakes.Scenarios.LoginScenario.Build">
+            <summary>
+            Finalizes the scenario and generates tokens if a token manager is provided.
+            </summary>
+        </member>
+        <member name="T:StruttonTechnologies.Core.Identity.Fakes.Validators.AlwaysFailUserValidator`1">
+            <summary>
+            A test validator that always fails when validating an IdentityUser.
+            Implements IUserValidator to simulate failure in ASP.NET Identity pipelines.
+            </summary>
+        </member>
+        <member name="T:StruttonTechnologies.Core.Identity.Fakes.Validators.ReservedUserNameValidator">
+            <summary>
+            Validates that the username is not part of a reserved list (e.g., 'admin', 'root').
+            </summary>
+        </member>
+    </members>
+</doc>

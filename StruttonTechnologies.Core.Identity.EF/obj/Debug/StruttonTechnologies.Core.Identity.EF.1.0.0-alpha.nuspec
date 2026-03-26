@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>StruttonTechnologies.Core.Identity.EF</id>
+    <version>1.0.0-alpha</version>
+    <title>StruttonTechnologies.Core.Identity EF Integration</title>
+    <authors>Shawn Strutton</authors>
+    <icon>Icon.png</icon>
+    <description>Entity Framework stores and context for StruttonTechnologies.Core.Identity.</description>
+    <tags>core,identity,ef,entityframework,stores,strutton,StruttonTechnologies</tags>
+    <repository type="git" url="https://github.com/StruttonTechnologies/Core.Identity" />
+    <dependencies>
+      <group targetFramework="net10.0">
+        <dependency id="StruttonTechnologies.Core.Identity.Domain.Contracts" version="1.0.0-alpha" exclude="Build,Analyzers" />
+        <dependency id="StruttonTechnologies.Core.Identity.Domain" version="1.0.0-alpha" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.AspNetCore.Identity.EntityFrameworkCore" version="10.0.5" exclude="Build,Analyzers" />
+        <dependency id="StruttonTechnologies.Core.ToolKit.GuardKit" version="1.0.0-alpha" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="G:\source\repos\StruttonTechnologies\Core-Capabilities\Core.Identity\StruttonTechnologies.Core.Identity.EF\bin\Debug\net10.0\StruttonTechnologies.Core.Identity.EF.runtimeconfig.json" target="lib\net10.0\StruttonTechnologies.Core.Identity.EF.runtimeconfig.json" />
+    <file src="G:\source\repos\StruttonTechnologies\Core-Capabilities\Core.Identity\StruttonTechnologies.Core.Identity.EF\bin\Debug\net10.0\StruttonTechnologies.Core.Identity.EF.dll" target="lib\net10.0\StruttonTechnologies.Core.Identity.EF.dll" />
+    <file src="G:\source\repos\StruttonTechnologies\Core-Capabilities\Core.Identity\StruttonTechnologies.Core.Identity.EF\bin\Debug\net10.0\StruttonTechnologies.Core.Identity.EF.xml" target="lib\net10.0\StruttonTechnologies.Core.Identity.EF.xml" />
+    <file src="C:\Users\sstru\.nuget\packages\struttontechnologies.assets.branding\1.0.0\build\Icon.png" target="\Icon.png" />
+  </files>
+</package>

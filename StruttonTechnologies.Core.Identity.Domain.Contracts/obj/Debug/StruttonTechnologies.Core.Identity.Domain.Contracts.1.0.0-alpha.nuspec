@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>StruttonTechnologies.Core.Identity.Domain.Contracts</id>
+    <version>1.0.0-alpha</version>
+    <title>StruttonTechnologies.Core.Identity Domain Contracts</title>
+    <authors>Shawn Strutton</authors>
+    <icon>Icon.png</icon>
+    <description>Contracts for the StruttonTechnologies.Core.Identity domain model.</description>
+    <tags>core,identity,domain,contracts,interface,strutton,StruttonTechnologies</tags>
+    <repository type="git" url="https://github.com/StruttonTechnologies/Core.Identity" />
+    <dependencies>
+      <group targetFramework="net10.0">
+        <dependency id="StruttonTechnologies.Core.Identity.Domain" version="1.0.0-alpha" exclude="Build,Analyzers" />
+        <dependency id="StruttonTechnologies.Core.ToolKit.GuardKit" version="1.0.0-alpha" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="G:\source\repos\StruttonTechnologies\Core-Capabilities\Core.Identity\StruttonTechnologies.Core.Identity.Domain.Contracts\bin\Debug\net10.0\StruttonTechnologies.Core.Identity.Domain.Contracts.dll" target="lib\net10.0\StruttonTechnologies.Core.Identity.Domain.Contracts.dll" />
+    <file src="G:\source\repos\StruttonTechnologies\Core-Capabilities\Core.Identity\StruttonTechnologies.Core.Identity.Domain.Contracts\bin\Debug\net10.0\StruttonTechnologies.Core.Identity.Domain.Contracts.xml" target="lib\net10.0\StruttonTechnologies.Core.Identity.Domain.Contracts.xml" />
+    <file src="C:\Users\sstru\.nuget\packages\struttontechnologies.assets.branding\1.0.0\build\Icon.png" target="\Icon.png" />
+  </files>
+</package>

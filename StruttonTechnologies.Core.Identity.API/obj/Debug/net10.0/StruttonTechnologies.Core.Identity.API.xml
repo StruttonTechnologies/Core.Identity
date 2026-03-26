@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>StruttonTechnologies.Core.Identity.API</name>
+    </assembly>
+    <members>
+        <member name="M:StruttonTechnologies.Core.Identity.API.Controllers.AuthorizationController.GetClaimsPrincipal(System.String)">
+            <summary>
+            Gets a ClaimsPrincipal DTO for the specified user.
+            </summary>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.API.Controllers.UsersController.GetNormalizedEmail(System.String)">
+            <summary>
+            Gets the normalized email for the specified user.
+            </summary>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.API.Controllers.UsersController.GetUserRoles(System.String)">
+            <summary>
+            Gets the roles assigned to the specified user.
+            </summary>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.API.Controllers.UsersController.GetUserProfile(System.String)">
+            <summary>
+            Gets the profile details for the specified user.
+            </summary>
+        </member>
+    </members>
+</doc>

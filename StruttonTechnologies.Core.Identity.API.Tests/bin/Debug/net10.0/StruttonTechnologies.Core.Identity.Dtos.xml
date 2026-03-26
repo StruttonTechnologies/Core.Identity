@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>StruttonTechnologies.Core.Identity.Dtos</name>
+    </assembly>
+    <members>
+        <member name="T:StruttonTechnologies.Core.Identity.Dtos.Authentication.RegisterDto">
+            <summary>
+            Represents a request to register a new user.
+            </summary>
+            <param name="Email">The email address for the new user.</param>
+            <param name="Password">The password for the new user.</param>
+            <param name="ConfirmPassword">The optional password confirmation value.</param>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.Dtos.Authentication.RegisterDto.#ctor(System.String,System.String,System.String)">
+            <summary>
+            Represents a request to register a new user.
+            </summary>
+            <param name="Email">The email address for the new user.</param>
+            <param name="Password">The password for the new user.</param>
+            <param name="ConfirmPassword">The optional password confirmation value.</param>
+        </member>
+        <member name="P:StruttonTechnologies.Core.Identity.Dtos.Authentication.RegisterDto.Email">
+            <summary>The email address for the new user.</summary>
+        </member>
+        <member name="P:StruttonTechnologies.Core.Identity.Dtos.Authentication.RegisterDto.Password">
+            <summary>The password for the new user.</summary>
+        </member>
+        <member name="P:StruttonTechnologies.Core.Identity.Dtos.Authentication.RegisterDto.ConfirmPassword">
+            <summary>The optional password confirmation value.</summary>
+        </member>
+        <member name="T:StruttonTechnologies.Core.Identity.Dtos.Authentication.ExternalLoginDto">
+            <summary>
+            Represents a request to authenticate with an external identity provider.
+            </summary>
+            <param name="Provider">The external identity provider name.</param>
+            <param name="IdToken">The provider-issued ID token.</param>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.Dtos.Authentication.ExternalLoginDto.#ctor(System.String,System.String)">
+            <summary>
+            Represents a request to authenticate with an external identity provider.
+            </summary>
+            <param name="Provider">The external identity provider name.</param>
+            <param name="IdToken">The provider-issued ID token.</param>
+        </member>
+        <member name="P:StruttonTechnologies.Core.Identity.Dtos.Authentication.ExternalLoginDto.Provider">
+            <summary>The external identity provider name.</summary>
+        </member>
+        <member name="P:StruttonTechnologies.Core.Identity.Dtos.Authentication.ExternalLoginDto.IdToken">
+            <summary>The provider-issued ID token.</summary>
+        </member>
+        <member name="T:StruttonTechnologies.Core.Identity.Dtos.Authentication.RefreshTokenDto">
+            <summary>
+            Represents a request to exchange a refresh token for a new access token.
+            </summary>
+            <param name="RefreshToken">The refresh token value.</param>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.Dtos.Authentication.RefreshTokenDto.#ctor(System.String)">
+            <summary>
+            Represents a request to exchange a refresh token for a new access token.
+            </summary>
+            <param name="RefreshToken">The refresh token value.</param>
+        </member>
+        <member name="P:StruttonTechnologies.Core.Identity.Dtos.Authentication.RefreshTokenDto.RefreshToken">
+            <summary>The refresh token value.</summary>
+        </member>
+        <member name="T:StruttonTechnologies.Core.Identity.Dtos.Authentication.TokenResponseDto">
+            <summary>
+            Represents an issued token pair and expiration timestamp.
+            </summary>
+            <param name="AccessToken">The issued access token.</param>
+            <param name="RefreshToken">The issued refresh token.</param>
+            <param name="ExpiresAt">The access token expiration timestamp.</param>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.Dtos.Authentication.TokenResponseDto.#ctor(System.String,System.String,System.DateTime)">
+            <summary>
+            Represents an issued token pair and expiration timestamp.
+            </summary>
+            <param name="AccessToken">The issued access token.</param>
+            <param name="RefreshToken">The issued refresh token.</param>
+            <param name="ExpiresAt">The access token expiration timestamp.</param>
+        </member>
+        <member name="P:StruttonTechnologies.Core.Identity.Dtos.Authentication.TokenResponseDto.AccessToken">
+            <summary>The issued access token.</summary>
+        </member>
+        <member name="P:StruttonTechnologies.Core.Identity.Dtos.Authentication.TokenResponseDto.RefreshToken">
+            <summary>The issued refresh token.</summary>
+        </member>
+        <member name="P:StruttonTechnologies.Core.Identity.Dtos.Authentication.TokenResponseDto.ExpiresAt">
+            <summary>The access token expiration timestamp.</summary>
+        </member>
+    </members>
+</doc>

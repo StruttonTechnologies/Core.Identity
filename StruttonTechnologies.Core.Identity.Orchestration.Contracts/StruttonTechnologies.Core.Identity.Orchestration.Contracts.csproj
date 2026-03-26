@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<!-- Package identity -->
+	<PropertyGroup>
+		<PackageId>StruttonTechnologies.Core.Identity.Orchestration.Contracts</PackageId>
+		<Description>Contracts for the StruttonTechnologies.Core.Identity orchestration layer.</Description>
+		<Title>Identity Orchestration Contracts</Title>
+		<PackageTags>core,identity,orchestration,contracts,MediatR,strutton,StruttonTechnologies</PackageTags>
+		
+		<!-- Versioning -->
+		<VersionPrefix>1.0.0</VersionPrefix>
+		<VersionSuffix>alpha</VersionSuffix>
+	</PropertyGroup>
+	<ItemGroup>
+	  <PackageReference Include="StruttonTechnologies.Core.ToolKit.GuardKit" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\StruttonTechnologies.Core.Identity.Dtos\StruttonTechnologies.Core.Identity.Dtos.csproj" />
+	</ItemGroup>
+</Project>

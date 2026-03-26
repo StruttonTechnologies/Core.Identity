@@ -1,0 +1,343 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>StruttonTechnologies.Core.Identity.Coordinator</name>
+    </assembly>
+    <members>
+        <member name="T:StruttonTechnologies.Core.Identity.Coordinator.Authentication.Handlers.AuthenticateUserHandler`1">
+            <summary>
+            MediatR handler that delegates user authentication to the orchestration service.
+            </summary>
+            <typeparam name="TKey">The type used for user keys, must implement <see cref="T:System.IEquatable`1"/>.</typeparam>
+        </member>
+        <member name="T:StruttonTechnologies.Core.Identity.Coordinator.Authentication.Handlers.ChangePasswordCommandHandler`2">
+            <summary>
+            MediatR handler that processes password change requests for authenticated users.
+            </summary>
+            <typeparam name="TUser">The type representing a user in the system, must inherit from <see cref="T:Microsoft.AspNetCore.Identity.IdentityUser`1"/>.</typeparam>
+            <typeparam name="TKey">The type used for user keys, must implement <see cref="T:System.IEquatable`1"/>.</typeparam>
+        </member>
+        <member name="T:StruttonTechnologies.Core.Identity.Coordinator.Authentication.Handlers.ConfirmEmailCommandHandler`2">
+            <summary>
+            MediatR handler that processes email confirmation requests for users.
+            </summary>
+            <typeparam name="TUser">The type representing a user in the system, must inherit from <see cref="T:Microsoft.AspNetCore.Identity.IdentityUser`1"/>.</typeparam>
+            <typeparam name="TKey">The type used for user keys, must implement <see cref="T:System.IEquatable`1"/>.</typeparam>
+        </member>
+        <member name="T:StruttonTechnologies.Core.Identity.Coordinator.Authentication.Handlers.ExternalLoginCommandHandler`2">
+            <summary>
+            Handles external login requests such as Google, Facebook, or Microsoft authentication.
+            </summary>
+            <typeparam name="TUser">
+            The application user type.
+            </typeparam>
+            <typeparam name="TKey">
+            The user key type.
+            </typeparam>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.Coordinator.Authentication.Handlers.ExternalLoginCommandHandler`2.#ctor(Microsoft.AspNetCore.Identity.UserManager{`0},Microsoft.AspNetCore.Identity.SignInManager{`0})">
+            <summary>
+            Initializes a new instance of the <see cref="T:StruttonTechnologies.Core.Identity.Coordinator.Authentication.Handlers.ExternalLoginCommandHandler`2"/> class.
+            </summary>
+            <param name="userManager">
+            The user manager required for external login workflows.
+            </param>
+            <param name="signInManager">
+            The sign-in manager required for external login workflows.
+            </param>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.Coordinator.Authentication.Handlers.ExternalLoginCommandHandler`2.Handle(StruttonTechnologies.Core.Identity.Coordinator.Authentication.Commands.ExternalLoginCommand,System.Threading.CancellationToken)">
+            <summary>
+            Processes an external login request.
+            </summary>
+            <param name="request">
+            The external login command.
+            </param>
+            <param name="cancellationToken">
+            A token used to cancel the operation.
+            </param>
+            <returns>
+            A token response for the authenticated user.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown when <paramref name="request"/> is <see langword="null"/>.
+            </exception>
+            <exception cref="T:System.NotImplementedException">
+            Thrown because provider token validation has not yet been implemented.
+            </exception>
+        </member>
+        <member name="T:StruttonTechnologies.Core.Identity.Coordinator.Authentication.Handlers.ForgotPasswordCommandHandler`2">
+            <summary>
+            MediatR handler that processes forgot password requests and generates password reset tokens.
+            </summary>
+            <typeparam name="TUser">The type representing a user in the system, must inherit from <see cref="T:Microsoft.AspNetCore.Identity.IdentityUser`1"/>.</typeparam>
+            <typeparam name="TKey">The type used for user keys, must implement <see cref="T:System.IEquatable`1"/>.</typeparam>
+        </member>
+        <member name="T:StruttonTechnologies.Core.Identity.Coordinator.Authentication.Handlers.LinkExternalLoginCommandHandler`2">
+            <summary>
+            MediatR handler that processes requests to link an external login provider (e.g., Google, Facebook, Microsoft) to an existing user account.
+            </summary>
+            <typeparam name="TUser">The type representing a user in the system, must inherit from <see cref="T:Microsoft.AspNetCore.Identity.IdentityUser`1"/>.</typeparam>
+            <typeparam name="TKey">The type used for user keys, must implement <see cref="T:System.IEquatable`1"/>.</typeparam>
+        </member>
+        <member name="T:StruttonTechnologies.Core.Identity.Coordinator.Authentication.Handlers.ResetPasswordCommandHandler`2">
+            <summary>
+            MediatR handler that processes password reset requests for users.
+            </summary>
+            <typeparam name="TUser">The type representing a user in the system, must inherit from <see cref="T:Microsoft.AspNetCore.Identity.IdentityUser`1"/>.</typeparam>
+            <typeparam name="TKey">The type used for user keys, must implement <see cref="T:System.IEquatable`1"/>.</typeparam>
+        </member>
+        <member name="T:StruttonTechnologies.Core.Identity.Coordinator.Authentication.Handlers.UnlinkExternalLoginCommandHandler`2">
+            <summary>
+            MediatR handler that processes requests to unlink an external login provider (e.g., Google, Facebook, Microsoft) from an existing user account.
+            </summary>
+            <typeparam name="TUser">The type representing a user in the system, must inherit from <see cref="T:Microsoft.AspNetCore.Identity.IdentityUser`1"/>.</typeparam>
+            <typeparam name="TKey">The type used for user keys, must implement <see cref="T:System.IEquatable`1"/>.</typeparam>
+        </member>
+        <member name="T:StruttonTechnologies.Core.Identity.Coordinator.Authorization.Commands.AddClaimCommand">
+            <summary>
+            Command to add a claim to a user.
+            </summary>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.Coordinator.Authorization.Commands.AddClaimCommand.#ctor(System.String,System.String,System.String)">
+            <summary>
+            Command to add a claim to a user.
+            </summary>
+        </member>
+        <member name="T:StruttonTechnologies.Core.Identity.Coordinator.Authorization.Commands.AssignRoleCommand">
+            <summary>
+            Command to assign a role to a user.
+            </summary>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.Coordinator.Authorization.Commands.AssignRoleCommand.#ctor(System.String,System.String)">
+            <summary>
+            Command to assign a role to a user.
+            </summary>
+        </member>
+        <member name="T:StruttonTechnologies.Core.Identity.Coordinator.Authorization.Handlers.AddClaimCommandHandler`2">
+            <summary>
+            MediatR handler that processes requests to add a claim to a user.
+            </summary>
+            <typeparam name="TUser">The type representing a user in the system, must inherit from <see cref="T:Microsoft.AspNetCore.Identity.IdentityUser`1"/>.</typeparam>
+            <typeparam name="TKey">The type used for user keys, must implement <see cref="T:System.IEquatable`1"/>.</typeparam>
+        </member>
+        <member name="T:StruttonTechnologies.Core.Identity.Coordinator.Authorization.Handlers.AssignRoleCommandHandler`2">
+            <summary>
+            MediatR handler that processes requests to assign a role to a user.
+            </summary>
+            <typeparam name="TUser">The type representing a user in the system, must inherit from <see cref="T:Microsoft.AspNetCore.Identity.IdentityUser`1"/>.</typeparam>
+            <typeparam name="TKey">The type used for user keys, must implement <see cref="T:System.IEquatable`1"/>.</typeparam>
+        </member>
+        <member name="T:StruttonTechnologies.Core.Identity.Coordinator.Authorization.Handlers.GetUserClaimsQueryHandler`2">
+            <summary>
+            MediatR handler that processes requests to retrieve claims for a user.
+            </summary>
+            <typeparam name="TUser">The type representing a user in the system, must inherit from <see cref="T:Microsoft.AspNetCore.Identity.IdentityUser`1"/>.</typeparam>
+            <typeparam name="TKey">The type used for user keys, must implement <see cref="T:System.IEquatable`1"/>.</typeparam>
+        </member>
+        <member name="T:StruttonTechnologies.Core.Identity.Coordinator.Authorization.Handlers.RemoveRoleCommandHandler`2">
+            <summary>
+            MediatR handler that processes requests to remove a role from a user.
+            </summary>
+            <typeparam name="TUser">The type representing a user in the system, must inherit from <see cref="T:Microsoft.AspNetCore.Identity.IdentityUser`1"/>.</typeparam>
+            <typeparam name="TKey">The type used for user keys, must implement <see cref="T:System.IEquatable`1"/>.</typeparam>
+        </member>
+        <member name="T:StruttonTechnologies.Core.Identity.Coordinator.Authorization.Queries.GetClaimsPrincipalQuery">
+            <summary>
+            Query to retrieve a ClaimsPrincipalDto for a given user ID.
+            </summary>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.Coordinator.Authorization.Queries.GetClaimsPrincipalQuery.#ctor(System.String)">
+            <summary>
+            Query to retrieve a ClaimsPrincipalDto for a given user ID.
+            </summary>
+        </member>
+        <member name="T:StruttonTechnologies.Core.Identity.Coordinator.ExternalLogins.Commands.UnlinkExternalLoginCommand">
+            <summary>
+            Command to unlink an external login provider from a user account.
+            </summary>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.Coordinator.ExternalLogins.Commands.UnlinkExternalLoginCommand.#ctor(System.String,System.String,System.String)">
+            <summary>
+            Command to unlink an external login provider from a user account.
+            </summary>
+        </member>
+        <member name="T:StruttonTechnologies.Core.Identity.Coordinator.JwtTokens.Commands.GenerateTokenCommand">
+            <summary>
+            Command to generate JWT access and refresh tokens for a user.
+            </summary>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.Coordinator.JwtTokens.Commands.GenerateTokenCommand.#ctor(System.String)">
+            <summary>
+            Command to generate JWT access and refresh tokens for a user.
+            </summary>
+        </member>
+        <member name="T:StruttonTechnologies.Core.Identity.Coordinator.JwtTokens.Commands.RefreshTokenCommand">
+            <summary>
+            Command to refresh JWT tokens using a refresh token.
+            </summary>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.Coordinator.JwtTokens.Commands.RefreshTokenCommand.#ctor(System.String)">
+            <summary>
+            Command to refresh JWT tokens using a refresh token.
+            </summary>
+        </member>
+        <member name="T:StruttonTechnologies.Core.Identity.Coordinator.JwtTokens.Commands.RevokeTokenCommand">
+            <summary>
+            Command to revoke JWT tokens. Can revoke a specific token or all tokens for a user.
+            </summary>
+        </member>
+        <member name="P:StruttonTechnologies.Core.Identity.Coordinator.JwtTokens.Commands.RevokeTokenCommand.Token">
+            <summary>
+            The specific token to revoke (optional if UserId is provided).
+            </summary>
+        </member>
+        <member name="P:StruttonTechnologies.Core.Identity.Coordinator.JwtTokens.Commands.RevokeTokenCommand.UserId">
+            <summary>
+            The user ID to revoke all tokens for (optional if Token is provided).
+            </summary>
+        </member>
+        <member name="P:StruttonTechnologies.Core.Identity.Coordinator.JwtTokens.Commands.RevokeTokenCommand.IsRefreshToken">
+            <summary>
+            Indicates whether the token is a refresh token (true) or access token (false).
+            Only used when Token is provided.
+            </summary>
+        </member>
+        <member name="T:StruttonTechnologies.Core.Identity.Coordinator.JwtTokens.Handlers.GenerateTokenCommandHandler`2">
+            <summary>
+            MediatR handler that processes requests to generate JWT access and refresh tokens for a user.
+            </summary>
+            <typeparam name="TUser">The type representing a user in the system, must inherit from <see cref="T:Microsoft.AspNetCore.Identity.IdentityUser`1"/>.</typeparam>
+            <typeparam name="TKey">The type used for user keys, must implement <see cref="T:System.IEquatable`1"/>.</typeparam>
+        </member>
+        <member name="T:StruttonTechnologies.Core.Identity.Coordinator.JwtTokens.Handlers.RefreshTokenCommandHandler`2">
+            <summary>
+            MediatR handler that processes requests to refresh JWT tokens using a refresh token.
+            </summary>
+            <typeparam name="TUser">The type representing a user in the system, must inherit from <see cref="T:Microsoft.AspNetCore.Identity.IdentityUser`1"/>.</typeparam>
+            <typeparam name="TKey">The type used for user keys, must implement <see cref="T:System.IEquatable`1"/>.</typeparam>
+        </member>
+        <member name="T:StruttonTechnologies.Core.Identity.Coordinator.JwtTokens.Handlers.RevokeTokenCommandHandler`2">
+            <summary>
+            MediatR handler that processes requests to revoke JWT tokens.
+            </summary>
+            <typeparam name="TUser">The type representing a user in the system, must inherit from <see cref="T:Microsoft.AspNetCore.Identity.IdentityUser`1"/>.</typeparam>
+            <typeparam name="TKey">The type used for user keys, must implement <see cref="T:System.IEquatable`1"/>.</typeparam>
+        </member>
+        <member name="T:StruttonTechnologies.Core.Identity.Coordinator.Users.Commands.CreateUserCommand">
+            <summary>
+            Command to create a new user in the system.
+            </summary>
+            <param name="UserName">The username for the new user.</param>
+            <param name="Email">The email address for the new user.</param>
+            <param name="Password">The password for the new user (optional if using external authentication).</param>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.Coordinator.Users.Commands.CreateUserCommand.#ctor(System.String,System.String,System.String)">
+            <summary>
+            Command to create a new user in the system.
+            </summary>
+            <param name="UserName">The username for the new user.</param>
+            <param name="Email">The email address for the new user.</param>
+            <param name="Password">The password for the new user (optional if using external authentication).</param>
+        </member>
+        <member name="P:StruttonTechnologies.Core.Identity.Coordinator.Users.Commands.CreateUserCommand.UserName">
+            <summary>The username for the new user.</summary>
+        </member>
+        <member name="P:StruttonTechnologies.Core.Identity.Coordinator.Users.Commands.CreateUserCommand.Email">
+            <summary>The email address for the new user.</summary>
+        </member>
+        <member name="P:StruttonTechnologies.Core.Identity.Coordinator.Users.Commands.CreateUserCommand.Password">
+            <summary>The password for the new user (optional if using external authentication).</summary>
+        </member>
+        <member name="T:StruttonTechnologies.Core.Identity.Coordinator.Users.Commands.DisableUserCommand">
+            <summary>
+            Command to disable a user account.
+            </summary>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.Coordinator.Users.Commands.DisableUserCommand.#ctor(System.String)">
+            <summary>
+            Command to disable a user account.
+            </summary>
+        </member>
+        <member name="T:StruttonTechnologies.Core.Identity.Coordinator.Users.Commands.EnableUserCommand">
+            <summary>
+            Command to enable a user account by removing lockout.
+            </summary>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.Coordinator.Users.Commands.EnableUserCommand.#ctor(System.String)">
+            <summary>
+            Command to enable a user account by removing lockout.
+            </summary>
+        </member>
+        <member name="T:StruttonTechnologies.Core.Identity.Coordinator.Users.Handlers.CreateUserCommandHandler`2">
+            <summary>
+            MediatR handler that processes user creation requests.
+            </summary>
+            <typeparam name="TUser">The type representing a user in the system, must inherit from <see cref="T:Microsoft.AspNetCore.Identity.IdentityUser`1"/>.</typeparam>
+            <typeparam name="TKey">The type used for user keys, must implement <see cref="T:System.IEquatable`1"/>.</typeparam>
+        </member>
+        <member name="T:StruttonTechnologies.Core.Identity.Coordinator.Users.Handlers.DisableUserCommandHandler`2">
+            <summary>
+            MediatR handler that processes requests to disable a user account by setting lockout.
+            </summary>
+            <typeparam name="TUser">The type representing a user in the system, must inherit from <see cref="T:Microsoft.AspNetCore.Identity.IdentityUser`1"/>.</typeparam>
+            <typeparam name="TKey">The type used for user keys, must implement <see cref="T:System.IEquatable`1"/>.</typeparam>
+        </member>
+        <member name="T:StruttonTechnologies.Core.Identity.Coordinator.Users.Handlers.EnableUserCommandHandler`2">
+            <summary>
+            MediatR handler that processes requests to enable a user account by removing lockout.
+            </summary>
+            <typeparam name="TUser">The type representing a user in the system, must inherit from <see cref="T:Microsoft.AspNetCore.Identity.IdentityUser`1"/>.</typeparam>
+            <typeparam name="TKey">The type used for user keys, must implement <see cref="T:System.IEquatable`1"/>.</typeparam>
+        </member>
+        <member name="T:StruttonTechnologies.Core.Identity.Coordinator.Users.Handlers.GetAllUsersQueryHandler`2">
+            <summary>
+            MediatR handler that processes requests to retrieve all users.
+            </summary>
+            <typeparam name="TUser">The type representing a user in the system, must inherit from <see cref="T:Microsoft.AspNetCore.Identity.IdentityUser`1"/>.</typeparam>
+            <typeparam name="TKey">The type used for user keys, must implement <see cref="T:System.IEquatable`1"/>.</typeparam>
+        </member>
+        <member name="T:StruttonTechnologies.Core.Identity.Coordinator.Users.Handlers.GetUserByEmailQueryHandler`2">
+            <summary>
+            MediatR handler that processes requests to retrieve a user by email address.
+            </summary>
+            <typeparam name="TUser">The type representing a user in the system, must inherit from <see cref="T:Microsoft.AspNetCore.Identity.IdentityUser`1"/>.</typeparam>
+            <typeparam name="TKey">The type used for user keys, must implement <see cref="T:System.IEquatable`1"/>.</typeparam>
+        </member>
+        <member name="T:StruttonTechnologies.Core.Identity.Coordinator.Users.Handlers.GetUserLoginsQueryHandler`2">
+            <summary>
+            MediatR handler that processes requests to retrieve all external logins for a user.
+            </summary>
+            <typeparam name="TUser">The type representing a user in the system, must inherit from <see cref="T:Microsoft.AspNetCore.Identity.IdentityUser`1"/>.</typeparam>
+            <typeparam name="TKey">The type used for user keys, must implement <see cref="T:System.IEquatable`1"/>.</typeparam>
+        </member>
+        <member name="T:StruttonTechnologies.Core.Identity.Coordinator.Users.Queries.GetAllUsersQuery`1">
+            <summary>
+            Query to retrieve all users in the system.
+            </summary>
+            <typeparam name="TUser">The type representing a user in the system.</typeparam>
+        </member>
+        <member name="T:StruttonTechnologies.Core.Identity.Coordinator.Users.Queries.GetUserByEmailQuery`1">
+            <summary>
+            Query to retrieve a user by their email address.
+            </summary>
+            <typeparam name="TUser">The type representing a user in the system.</typeparam>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.Coordinator.Users.Queries.GetUserByEmailQuery`1.#ctor(System.String)">
+            <summary>
+            Query to retrieve a user by their email address.
+            </summary>
+            <typeparam name="TUser">The type representing a user in the system.</typeparam>
+        </member>
+        <member name="T:StruttonTechnologies.Core.Identity.Coordinator.Users.Queries.GetUserLoginsQuery">
+            <summary>
+            Query to retrieve all external login providers linked to a user.
+            </summary>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.Coordinator.Users.Queries.GetUserLoginsQuery.#ctor(System.String)">
+            <summary>
+            Query to retrieve all external login providers linked to a user.
+            </summary>
+        </member>
+    </members>
+</doc>

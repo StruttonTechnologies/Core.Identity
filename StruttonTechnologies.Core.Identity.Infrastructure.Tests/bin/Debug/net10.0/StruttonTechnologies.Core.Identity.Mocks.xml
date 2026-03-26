@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>StruttonTechnologies.Core.Identity.Mocks</name>
+    </assembly>
+    <members>
+        <member name="T:StruttonTechnologies.Core.Identity.Mocks.Factories.MockClaimsPrincipalFactory">
+            <summary>
+            Factory for creating a mocked <see cref="T:Microsoft.AspNetCore.Identity.IUserClaimsPrincipalFactory`1"/>.
+            Produces <see cref="T:System.Security.Claims.ClaimsPrincipal"/> objects based on KnownUsers and KnownRoles.
+            </summary>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.Mocks.Factories.MockClaimsPrincipalFactory.Create">
+            <summary>
+            Creates a mocked <see cref="T:Microsoft.AspNetCore.Identity.IUserClaimsPrincipalFactory`1"/>.
+            </summary>
+            <returns>A configured mock factory.</returns>
+        </member>
+        <member name="T:StruttonTechnologies.Core.Identity.Mocks.Factories.MockRoleManagerFactory">
+            <summary>
+            Provides a factory for creating mocked RoleManager instances
+            preconfigured with KnownRoles from Test.Data.
+            </summary>
+        </member>
+        <member name="T:StruttonTechnologies.Core.Identity.Mocks.Factories.MockTokenProviderFactory">
+            <summary>
+            Factory for creating a mocked IUserTwoFactorTokenProvider.
+            Used for Identity flows like password reset, email confirmation, 2FA.
+            </summary>
+        </member>
+        <member name="T:StruttonTechnologies.Core.Identity.Mocks.Factories.MockTokenServiceFactory">
+            <summary>
+            Factory for creating a mocked ITokenOrchestration.
+            Used for orchestration-level JWT scenarios.
+            </summary>
+        </member>
+        <member name="T:StruttonTechnologies.Core.Identity.Mocks.Factories.MockUserManagerFactory">
+            <summary>
+            Factory for creating mocked <see cref="T:Microsoft.AspNetCore.Identity.UserManager`1"/> instances
+            preconfigured with <see cref="!:StubUsers"/>.
+            </summary>
+        </member>
+    </members>
+</doc>

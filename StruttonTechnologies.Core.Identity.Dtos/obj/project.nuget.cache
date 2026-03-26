@@ -1,0 +1,16 @@
+{
+  "version": 2,
+  "dgSpecHash": "Y7kAEl7UbVg=",
+  "success": true,
+  "projectFilePath": "G:\\source\\repos\\StruttonTechnologies\\Core-Capabilities\\Core.Identity\\StruttonTechnologies.Core.Identity.Dtos\\StruttonTechnologies.Core.Identity.Dtos.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\sstru\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\10.0.5\\microsoft.extensions.dependencyinjection.abstractions.10.0.5.nupkg.sha512",
+    "C:\\Users\\sstru\\.nuget\\packages\\roslynator.analyzers\\4.15.0\\roslynator.analyzers.4.15.0.nupkg.sha512",
+    "C:\\Users\\sstru\\.nuget\\packages\\struttontechnologies.assets.branding\\1.0.0\\struttontechnologies.assets.branding.1.0.0.nupkg.sha512",
+    "C:\\Users\\sstru\\.nuget\\packages\\struttontechnologies.core.toolkit.guardkit\\1.0.0-alpha\\struttontechnologies.core.toolkit.guardkit.1.0.0-alpha.nupkg.sha512",
+    "C:\\Users\\sstru\\.nuget\\packages\\struttontechnologies.core.toolkit.registration\\1.0.0-alpha\\struttontechnologies.core.toolkit.registration.1.0.0-alpha.nupkg.sha512",
+    "C:\\Users\\sstru\\.nuget\\packages\\struttontechnologies.core.toolkit.validation\\1.0.0-alpha\\struttontechnologies.core.toolkit.validation.1.0.0-alpha.nupkg.sha512",
+    "C:\\Users\\sstru\\.nuget\\packages\\stylecop.analyzers\\1.1.118\\stylecop.analyzers.1.1.118.nupkg.sha512"
+  ],
+  "logs": []
+}

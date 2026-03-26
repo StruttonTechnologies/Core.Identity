@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>StruttonTechnologies.Core.Identity.Test.Data</name>
+    </assembly>
+    <members>
+        <member name="T:StruttonTechnologies.Core.Identity.Test.Data.KnownClaims">
+            <summary>
+            Provides reusable claim types for test scenarios.
+            </summary>
+        </member>
+        <member name="T:StruttonTechnologies.Core.Identity.Test.Data.KnownIdentityProviders">
+            <summary>
+            Supported identity providers for test scenarios.
+            Order is intentional and mirrors production.
+            </summary>
+        </member>
+        <member name="T:StruttonTechnologies.Core.Identity.Test.Data.KnownPasswordBlacklist">
+            <summary>
+            Centralized list of disallowed passwords that are too common or insecure.
+            </summary>
+        </member>
+        <member name="T:StruttonTechnologies.Core.Identity.Test.Data.KnownRoles">
+            <summary>
+            Provides a centralized set of role names for test scenarios.
+            Order is intentional: Admin > Member > Guest.
+            </summary>
+        </member>
+        <member name="T:StruttonTechnologies.Core.Identity.Test.Data.KnownTokens">
+            <summary>
+            Provides static JWTs or token placeholders for test scenarios.
+            </summary>
+        </member>
+        <member name="T:StruttonTechnologies.Core.Identity.Test.Data.KnownUsers">
+            <summary>
+            Provides known users for test scenarios.
+            </summary>
+        </member>
+        <member name="F:StruttonTechnologies.Core.Identity.Test.Data.KnownUsers.AdminUserName">
+            <summary>
+            The default administrator user name.
+            </summary>
+        </member>
+        <member name="F:StruttonTechnologies.Core.Identity.Test.Data.KnownUsers.DefaultUserName">
+            <summary>
+            The default standard user name.
+            </summary>
+        </member>
+        <member name="F:StruttonTechnologies.Core.Identity.Test.Data.KnownUsers.All">
+            <summary>
+            Gets all known user names.
+            </summary>
+        </member>
+        <member name="F:StruttonTechnologies.Core.Identity.Test.Data.KnownUsers.Default">
+            <summary>
+            Gets the default test user for authentication scenarios.
+            </summary>
+        </member>
+        <member name="F:StruttonTechnologies.Core.Identity.Test.Data.KnownUsers.Admin">
+            <summary>
+            Gets the administrator test user for elevated access scenarios.
+            </summary>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.Test.Data.KnownUsers.First(System.Int32)">
+            <summary>
+            Returns the first known user names.
+            </summary>
+            <param name="count">The number of user names to return.</param>
+            <returns>An array containing the first known user names.</returns>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.Test.Data.KnownUsers.Last(System.Int32)">
+            <summary>
+            Returns the last known user names.
+            </summary>
+            <param name="count">The number of user names to return.</param>
+            <returns>An array containing the last known user names.</returns>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.Test.Data.KnownUsers.WithRole(System.String)">
+            <summary>
+            Creates a test user with the specified role naming pattern.
+            </summary>
+            <param name="role">The role to embed in the generated user identity.</param>
+            <returns>A new test user instance.</returns>
+        </member>
+    </members>
+</doc>

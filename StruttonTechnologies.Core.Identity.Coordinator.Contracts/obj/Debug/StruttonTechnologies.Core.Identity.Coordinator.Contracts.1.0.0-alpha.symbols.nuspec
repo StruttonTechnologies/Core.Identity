@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>StruttonTechnologies.Core.Identity.Coordinator.Contracts</id>
+    <version>1.0.0-alpha</version>
+    <title>StruttonTechnologies.Core.Identity Coordinator Contracts</title>
+    <authors>Shawn Strutton</authors>
+    <icon>Icon.png</icon>
+    <description>MediatR command and query contracts for StruttonTechnologies.Core.Identity orchestration.</description>
+    <tags>core,identity,dispatch,contracts,command,query,CQRS,MediatR,strutton,StruttonTechnologies</tags>
+    <repository type="git" url="https://github.com/StruttonTechnologies/Core.Identity" />
+    <dependencies>
+      <group targetFramework="net10.0">
+        <dependency id="StruttonTechnologies.Core.Identity.Dtos" version="1.0.0-alpha" exclude="Build,Analyzers" />
+        <dependency id="StruttonTechnologies.Core.ToolKit.GuardKit" version="1.0.0-alpha" exclude="Build,Analyzers" />
+        <dependency id="StruttonTechnologies.Core.ToolKit.Registration" version="1.0.0-alpha" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="G:\source\repos\StruttonTechnologies\Core-Capabilities\Core.Identity\StruttonTechnologies.Core.Identity.Coordinator.Contracts\bin\Debug\net10.0\StruttonTechnologies.Core.Identity.Coordinator.Contracts.pdb" target="lib\net10.0\StruttonTechnologies.Core.Identity.Coordinator.Contracts.pdb" />
+  </files>
+</package>

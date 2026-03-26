@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>StruttonTechnologies.Core.Identity.Orchestration.Contracts</name>
+    </assembly>
+    <members>
+        <member name="T:StruttonTechnologies.Core.Identity.Orchestration.Contracts.JwtToken.ITokenOrchestration`1">
+            <summary>
+            Contract for orchestrating JWT token generation, validation, and revocation.
+            </summary>
+            <typeparam name="TKey">The type of the key used to identify entities, must implement <see cref="T:System.IEquatable`1"/>.</typeparam>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.Orchestration.Contracts.JwtToken.ITokenOrchestration`1.GenerateTokenAsync(System.Security.Claims.ClaimsPrincipal,System.Threading.CancellationToken)">
+            <summary>
+            Generates a new JWT access token for the given principal.
+            </summary>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.Orchestration.Contracts.JwtToken.ITokenOrchestration`1.GetExpirationTime">
+            <summary>
+            Gets the expiration time for a newly issued token.
+            </summary>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.Orchestration.Contracts.JwtToken.ITokenOrchestration`1.ValidateTokenAsync(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Validates a JWT token and returns the associated claims principal if valid.
+            </summary>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.Orchestration.Contracts.JwtToken.ITokenOrchestration`1.GetExpirationAsync(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Gets the expiration timestamp from an existing token.
+            </summary>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.Orchestration.Contracts.JwtToken.ITokenOrchestration`1.RevokeAccessTokenAsync(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Revokes a specific access token.
+            </summary>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.Orchestration.Contracts.JwtToken.ITokenOrchestration`1.IsAccessTokenRevokedAsync(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Checks if a given access token has been revoked.
+            </summary>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.Orchestration.Contracts.JwtToken.ITokenOrchestration`1.RevokeRefreshTokenAsync(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Revokes a specific refresh token.
+            </summary>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.Orchestration.Contracts.JwtToken.ITokenOrchestration`1.IsRefreshTokenRevokedAsync(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Checks if a given refresh token has been revoked.
+            </summary>
+        </member>
+        <member name="T:StruttonTechnologies.Core.Identity.Orchestration.Contracts.UserManager.IAuthenticationOrchestration`1">
+            <summary>
+            Contract for orchestrating user authentication workflows.
+            Validates credentials using ASP.NET Core Identity and issues JWT tokens.
+            </summary>
+            <typeparam name="TKey">
+            The type of the unique identifier for the user, typically <c>Guid</c> or <c>string</c>.
+            </typeparam>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>StruttonTechnologies.Core.Identity.Infrastructure.Tests</name>
+    </assembly>
+    <members>
+        <member name="T:StruttonTechnologies.Core.Identity.Infrastructure.Tests.Configuration.TokenProviderOptionsConfigTests">
+            <summary>
+            Contains test scenarios for <see cref="T:StruttonTechnologies.Core.Identity.JwtTokenManager.Configuration.TokenProviderOptionsConfig"/>.
+            </summary>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<!-- Package identity -->
+	<PropertyGroup>
+		<PackageId>StruttonTechnologies.Core.Identity.Stub</PackageId>
+		<Description>Lightweight stub implementations for StruttonTechnologies.Core.Identity (for development and testing).</Description>
+		<Title>StruttonTechnologies.Core.Identity Stub</Title>
+		<PackageTags>core,identity,stub,testing,strutton,StruttonTechnologies</PackageTags>
+
+		<!-- Versioning -->
+		<VersionPrefix>1.0.0</VersionPrefix>
+		<VersionSuffix>alpha</VersionSuffix>
+
+		<!-- Packing -->
+		<IsPackable>flase</IsPackable>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" />
+		<PackageReference Include="StruttonTechnologies.Core.ToolKit.Registration" />
+		<PackageReference Include="StruttonTechnologies.Core.ToolKit.GuardKit" />
+		<PackageReference Include="StruttonTechnologies.Core.ToolKit.Validation" />
+		<PackageReference Include="System.IdentityModel.Tokens.Jwt" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\StruttonTechnologies.Core.Identity.Domain.Contracts\StruttonTechnologies.Core.Identity.Domain.Contracts.csproj" />
+		<ProjectReference Include="..\StruttonTechnologies.Core.Identity.Domain\StruttonTechnologies.Core.Identity.Domain.csproj" />
+		<ProjectReference Include="..\StruttonTechnologies.Core.Identity.Orchestration.Contracts\StruttonTechnologies.Core.Identity.Orchestration.Contracts.csproj" />
+	</ItemGroup>
+
+</Project>

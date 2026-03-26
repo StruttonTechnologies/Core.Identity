@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>StruttonTechnologies.Core.Identity.Dispatch</id>
+    <version>1.0.0-alpha</version>
+    <title>StruttonTechnologies.Core.Identity Coordinator Layer</title>
+    <authors>Shawn Strutton</authors>
+    <icon>Icon.png</icon>
+    <description>MediatR command and query orchestration for StruttonTechnologies.Core.Identity.</description>
+    <tags>core,identity,dispatch,command,query,CQRS,MediatR,strutton,StruttonTechnologies</tags>
+    <repository type="git" url="https://github.com/StruttonTechnologies/Core.Identity" />
+    <dependencies>
+      <group targetFramework="net10.0">
+        <dependency id="StruttonTechnologies.Core.Identity.API" version="1.0.0-alpha" exclude="Build,Analyzers" />
+        <dependency id="StruttonTechnologies.Core.Identity.Coordinator.Contracts" version="1.0.0-alpha" exclude="Build,Analyzers" />
+        <dependency id="StruttonTechnologies.Core.Identity.Dtos" version="1.0.0-alpha" exclude="Build,Analyzers" />
+        <dependency id="StruttonTechnologies.Core.Identity.Orchestration.Contracts" version="1.0.0-alpha" exclude="Build,Analyzers" />
+        <dependency id="StruttonTechnologies.Core.Identity.Orchestration" version="1.0.0-alpha" exclude="Build,Analyzers" />
+        <dependency id="StruttonTechnologies.Core.Identity" version="1.0.0-alpha" exclude="Build,Analyzers" />
+        <dependency id="MediatR" version="14.1.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.AspNetCore.Identity.UI" version="10.0.5" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Extensions.Identity.Core" version="10.0.5" exclude="Build,Analyzers" />
+        <dependency id="Newtonsoft.Json" version="13.0.4" exclude="Build,Analyzers" />
+        <dependency id="StruttonTechnologies.Core.ToolKit.GuardKit" version="1.0.0-alpha" exclude="Build,Analyzers" />
+        <dependency id="StruttonTechnologies.Core.ToolKit.Registration" version="1.0.0-alpha" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="G:\source\repos\StruttonTechnologies\Core-Capabilities\Core.Identity\StruttonTechnologies.Core.Identity.Coordinator\bin\Debug\net10.0\StruttonTechnologies.Core.Identity.Coordinator.pdb" target="lib\net10.0\StruttonTechnologies.Core.Identity.Coordinator.pdb" />
+  </files>
+</package>

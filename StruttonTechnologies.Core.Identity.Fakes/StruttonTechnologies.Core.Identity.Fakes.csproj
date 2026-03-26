@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<!-- Package identity -->
+    <PropertyGroup>
+        <PackageId>StruttonTechnologies.Core.Identity.Fakes</PackageId>
+        <Description>Test fakes and mocks for StruttonTechnologies.Core.Identity (for unit tests).</Description>
+        <Title>StruttonTechnologies.Core.Identity Fakes</Title>
+        <PackageTags>core,identity,fakes,mocks,test,moq,strutton,StruttonTechnologies</PackageTags>
+
+		<!-- Versioning -->
+		<VersionPrefix>1.0.0</VersionPrefix>
+		<VersionSuffix>alpha</VersionSuffix>
+		
+	    <!-- Packing -->
+	    <IsPackable>flase</IsPackable>
+  </PropertyGroup>
+  
+  <ItemGroup>
+	  <PackageReference Include="Moq" />
+	  <PackageReference Include="StruttonTechnologies.Core.ToolKit.GuardKit" />
+	  <PackageReference Include="StruttonTechnologies.Core.ToolKit.Validation" />
+    <ProjectReference Include="..\StruttonTechnologies.Core.Identity.Stub\StruttonTechnologies.Core.Identity.Stub.csproj" />
+  </ItemGroup>
+
+</Project>

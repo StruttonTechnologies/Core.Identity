@@ -1,0 +1,143 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>StruttonTechnologies.Core.Identity.Domain</name>
+    </assembly>
+    <members>
+        <member name="T:StruttonTechnologies.Core.Identity.Domain.Entities.Claim.IdentityClaim`1">
+            <summary>
+            Base identity claim with provider metadata.
+            </summary>
+            <typeparam name="TKey">The type of the primary key for the user associated with the claim.</typeparam>
+        </member>
+        <member name="P:StruttonTechnologies.Core.Identity.Domain.Entities.Claim.IdentityClaim`1.IsActive">
+            <summary>
+            Gets or sets a value indicating whether indicates whether the claim is active.
+            </summary>
+        </member>
+        <member name="P:StruttonTechnologies.Core.Identity.Domain.Entities.Claim.IdentityClaim`1.CreateDate">
+            <summary>
+            Gets or sets timestamp of claim creation.
+            </summary>
+        </member>
+        <member name="P:StruttonTechnologies.Core.Identity.Domain.Entities.Claim.IdentityClaim`1.ModifiedDate">
+            <summary>
+            Gets or sets timestamp of last modification.
+            </summary>
+        </member>
+        <member name="T:StruttonTechnologies.Core.Identity.Domain.Entities.IdentityRole`1">
+            <summary>
+            Concrete identity role with customizable key/>.
+            </summary>
+            <typeparam name="TKey">The type of the unique identifier for the role.</typeparam>
+        </member>
+        <member name="P:StruttonTechnologies.Core.Identity.Domain.Entities.IdentityRole`1.IsActive">
+            <summary>
+            Gets or sets a value indicating whether indicates whether the role is active.
+            </summary>
+        </member>
+        <member name="T:StruttonTechnologies.Core.Identity.Domain.Entities.IdentityUser`1">
+            <summary>
+            Concrete identity user with customizable key and person types.
+            </summary>
+            <typeparam name="TKey">The type of the primary key for the user.</typeparam>
+        </member>
+        <member name="P:StruttonTechnologies.Core.Identity.Domain.Entities.IdentityUser`1.ProviderName">
+            <summary>
+            Gets or sets the name of the identity provider (e.g., Google, Facebook, Local).
+            </summary>
+        </member>
+        <member name="P:StruttonTechnologies.Core.Identity.Domain.Entities.IdentityUser`1.IsActive">
+            <summary>
+            Gets or sets a value indicating whether indicates whether the user is active.
+            </summary>
+        </member>
+        <member name="P:StruttonTechnologies.Core.Identity.Domain.Entities.IdentityUser`1.RowVersion">
+            <summary>
+            Gets or sets used for optimistic concurrency control.
+            </summary>
+        </member>
+        <member name="P:StruttonTechnologies.Core.Identity.Domain.Entities.IdentityUser`1.CreateDate">
+            <summary>
+            Gets or sets timestamp of user creation.
+            </summary>
+        </member>
+        <member name="P:StruttonTechnologies.Core.Identity.Domain.Entities.IdentityUser`1.ModifiedDate">
+            <summary>
+            Gets or sets timestamp of last modification.
+            </summary>
+        </member>
+        <member name="T:StruttonTechnologies.Core.Identity.Domain.Entities.RefreshToken`1">
+            <summary>
+            Represents a refresh token used for renewing authentication sessions.
+            </summary>
+            <typeparam name="TKey">The type of the user identifier.</typeparam>
+        </member>
+        <member name="P:StruttonTechnologies.Core.Identity.Domain.Entities.RefreshToken`1.Id">
+            <summary>
+            Gets or sets surrogate primary key for EF and indexing.
+            </summary>
+        </member>
+        <member name="P:StruttonTechnologies.Core.Identity.Domain.Entities.RefreshToken`1.Token">
+            <summary>
+            The refresh token string.
+            </summary>
+        </member>
+        <member name="P:StruttonTechnologies.Core.Identity.Domain.Entities.RefreshToken`1.UserId">
+            <summary>
+            Gets or sets The identifier of the user associated with this token.
+            </summary>
+        </member>
+        <member name="P:StruttonTechnologies.Core.Identity.Domain.Entities.RefreshToken`1.Username">
+            <summary>
+            The username of the user associated with this token.
+            </summary>
+        </member>
+        <member name="P:StruttonTechnologies.Core.Identity.Domain.Entities.RefreshToken`1.CreatedAt">
+            <summary>
+            When the token was created.
+            </summary>
+        </member>
+        <member name="P:StruttonTechnologies.Core.Identity.Domain.Entities.RefreshToken`1.ExpiresAt">
+            <summary>
+            When the token expires.
+            </summary>
+        </member>
+        <member name="P:StruttonTechnologies.Core.Identity.Domain.Entities.RefreshToken`1.RevokedAt">
+            <summary>
+            When the token was revoked, if applicable.
+            </summary>
+        </member>
+        <member name="P:StruttonTechnologies.Core.Identity.Domain.Entities.RefreshToken`1.IsRevoked">
+            <summary>
+            Whether the token has been revoked.
+            </summary>
+        </member>
+        <member name="P:StruttonTechnologies.Core.Identity.Domain.Entities.RefreshToken`1.CreatedByIp">
+            <summary>
+            IP address where the token was created.
+            </summary>
+        </member>
+        <member name="P:StruttonTechnologies.Core.Identity.Domain.Entities.RefreshToken`1.RevokedByIp">
+            <summary>
+            IP address where the token was revoked.
+            </summary>
+        </member>
+        <member name="P:StruttonTechnologies.Core.Identity.Domain.Entities.RefreshToken`1.ReplacedByToken">
+            <summary>
+            Token that replaced this one (if rotated).
+            </summary>
+        </member>
+        <member name="P:StruttonTechnologies.Core.Identity.Domain.Entities.RefreshToken`1.ReasonRevoked">
+            <summary>
+            Reason for revocation.
+            </summary>
+        </member>
+        <member name="P:StruttonTechnologies.Core.Identity.Domain.Entities.RefreshToken`1.IsActive">
+            <summary>
+            Convenience property to check if the token is still valid.
+            Not mapped to the database.
+            </summary>
+        </member>
+    </members>
+</doc>

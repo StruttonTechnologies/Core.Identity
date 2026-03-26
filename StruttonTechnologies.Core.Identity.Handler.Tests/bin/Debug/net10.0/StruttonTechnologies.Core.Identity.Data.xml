@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>StruttonTechnologies.Core.Identity.Data</name>
+    </assembly>
+    <members>
+        <member name="T:StruttonTechnologies.Core.Identity.Data.KnownClaims">
+            <summary>
+            Default claims seeded into production.
+            </summary>
+        </member>
+        <member name="T:StruttonTechnologies.Core.Identity.Data.KnownIdentityProviders">
+            <summary>
+            Supported identity providers for authentication.
+            Order is intentional and should not be changed without review.
+            </summary>
+        </member>
+        <member name="T:StruttonTechnologies.Core.Identity.Data.KnownPasswordBlacklist">
+            <summary>
+            Centralized list of disallowed passwords that are too common or insecure.
+            </summary>
+        </member>
+        <member name="T:StruttonTechnologies.Core.Identity.Data.KnownRoles">
+            <summary>
+            Supported roles for production seeding.
+            Order is intentional and should not be changed without review.
+            </summary>
+        </member>
+        <member name="T:StruttonTechnologies.Core.Identity.Data.KnownUsers">
+            <summary>
+            Default users seeded into production.
+            </summary>
+        </member>
+    </members>
+</doc>

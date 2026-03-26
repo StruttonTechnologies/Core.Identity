@@ -1,0 +1,80 @@
+﻿using System.Security.Claims;
+
+using Microsoft.AspNetCore.Identity;
+
+using StruttonTechnologies.Core.Identity.Dtos.Authentication;
+using StruttonTechnologies.Core.Identity.Orchestration.Contracts.JwtToken;
+using StruttonTechnologies.Core.Identity.Orchestration.Contracts.UserManager;
+
+namespace StruttonTechnologies.Core.Identity.Orchestration.UserManager
+{
+    public class AuthenticationOrchestration<TUser, TKey> : IAuthenticationOrchestration<TKey>
+        where TUser : IdentityUser<TKey>, new()
+        where TKey : IEquatable<TKey>
+    {
+        private readonly UserManager<TUser> _userManager;
+        private readonly SignInManager<TUser> _signInManager;
+        private readonly ITokenOrchestration<TKey> _tokenService;
+
+        public AuthenticationOrchestration(
+            UserManager<TUser> userManager,
+            SignInManager<TUser> signInManager,
+            ITokenOrchestration<TKey> TokenOrchestration)
+        {
+            _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
+            _signInManager = signInManager ?? throw new ArgumentNullException(nameof(signInManager));
+            _tokenService = TokenOrchestration ?? throw new ArgumentNullException(nameof(TokenOrchestration));
+        }
+
+        public async Task<AuthenticationResultDto> AuthenticateAsync(string email, string password, CancellationToken ct)
+        {
+            TUser? user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                return AuthenticationResultDto.Failure("Invalid credentials");
+            }
+
+            SignInResult result = await _signInManager.CheckPasswordSignInAsync(user, password, lockoutOnFailure: true);
+            if (!result.Succeeded)
+            {
+                return AuthenticationResultDto.Failure("Invalid credentials");
+            }
+
+            ClaimsPrincipal principal = await _signInManager.CreateUserPrincipalAsync(user);
+            string token = await _tokenService.GenerateTokenAsync(principal, ct);
+
+            return AuthenticationResultDto.SuccessResult(token);
+        }
+
+        public async Task<AuthenticationResultDto> RegisterAsync(string email, string password, CancellationToken ct)
+        {
+            TUser user = new TUser
+            {
+                UserName = email,
+                Email = email
+            };
+
+            IdentityResult result = await _userManager.CreateAsync(user, password);
+            if (!result.Succeeded)
+            {
+                string errors = string.Join("; ", result.Errors.Select(e => e.Description));
+                return AuthenticationResultDto.Failure(errors);
+            }
+
+            // Optionally sign in immediately
+            ClaimsPrincipal principal = await _signInManager.CreateUserPrincipalAsync(user);
+            string token = await _tokenService.GenerateTokenAsync(principal, ct);
+
+            return AuthenticationResultDto.SuccessResult(token);
+        }
+
+        public async Task SignOutAsync(string accessToken, CancellationToken ct)
+        {
+            // Clear Identity cookies (if you’re also using them)
+            await _signInManager.SignOutAsync();
+
+            // Revoke the JWT so it can’t be reused
+            await _tokenService.RevokeAccessTokenAsync(accessToken, ct);
+        }
+    }
+}

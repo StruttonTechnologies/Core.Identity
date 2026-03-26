@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<!-- Package identity -->
+	<PropertyGroup>
+		<PackageId>StruttonTechnologies.Core.Identity.Domain.Contracts</PackageId>
+		<Description>Contracts for the StruttonTechnologies.Core.Identity domain model.</Description>
+		<Title>StruttonTechnologies.Core.Identity Domain Contracts</Title>
+		<PackageTags>core,identity,domain,contracts,interface,strutton,StruttonTechnologies</PackageTags>
+
+		<!-- Versioning -->
+		<VersionPrefix>1.0.0</VersionPrefix>
+		<VersionSuffix>alpha</VersionSuffix>
+	</PropertyGroup>
+	<ItemGroup>
+	  <PackageReference Include="StruttonTechnologies.Core.ToolKit.GuardKit" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\StruttonTechnologies.Core.Identity.Domain\StruttonTechnologies.Core.Identity.Domain.csproj" />
+	</ItemGroup>
+</Project>

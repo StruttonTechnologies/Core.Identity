@@ -1,0 +1,39 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<!-- Package identity -->
+		<PackageId>StruttonTechnologies.Core.Identity.Dispatch</PackageId>
+		<Description>MediatR command and query orchestration for StruttonTechnologies.Core.Identity.</Description>
+		<Title>StruttonTechnologies.Core.Identity Coordinator Layer</Title>
+		<PackageTags>core,identity,dispatch,command,query,CQRS,MediatR,strutton,StruttonTechnologies</PackageTags>
+
+    <!-- Versioning -->
+		<VersionPrefix>1.0.0</VersionPrefix>
+		<VersionSuffix>alpha</VersionSuffix>
+	</PropertyGroup>
+
+  <ItemGroup>
+	  <Compile Remove="Authorization\Coordinator\**" />
+	  <EmbeddedResource Remove="Authorization\Coordinator\**" />
+	  <None Remove="Authorization\Coordinator\**" />
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="MediatR" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.UI" />
+		<PackageReference Include="Microsoft.Extensions.Identity.Core" />
+		<PackageReference Include="Newtonsoft.Json" />
+		<PackageReference Include="StruttonTechnologies.Core.ToolKit.Registration" />
+		<PackageReference Include="StruttonTechnologies.Core.ToolKit.GuardKit" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\StruttonTechnologies.Core.Identity.API\StruttonTechnologies.Core.Identity.API.csproj" />
+		<ProjectReference Include="..\StruttonTechnologies.Core.Identity.Coordinator.Contracts\StruttonTechnologies.Core.Identity.Coordinator.Contracts.csproj" />
+		<ProjectReference Include="..\StruttonTechnologies.Core.Identity.Dtos\StruttonTechnologies.Core.Identity.Dtos.csproj" />
+		<ProjectReference Include="..\StruttonTechnologies.Core.Identity.Orchestration.Contracts\StruttonTechnologies.Core.Identity.Orchestration.Contracts.csproj" />
+		<ProjectReference Include="..\StruttonTechnologies.Core.Identity.Orchestration\StruttonTechnologies.Core.Identity.Orchestration.csproj" />
+		<ProjectReference Include="..\StruttonTechnologies.Core.Identity\StruttonTechnologies.Core.Identity.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+		<Folder Include="ExternalLogins\Handlers\" />
+		<Folder Include="JwtTokens\Queries\" />
+	</ItemGroup>
+</Project>

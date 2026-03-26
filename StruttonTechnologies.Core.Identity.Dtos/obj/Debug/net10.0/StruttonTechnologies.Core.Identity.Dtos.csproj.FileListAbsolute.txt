@@ -1,0 +1,14 @@
+G:\source\repos\StruttonTechnologies\Core-Capabilities\Core.Identity\StruttonTechnologies.Core.Identity.Dtos\bin\Debug\net10.0\StruttonTechnologies.Core.Identity.Dtos.deps.json
+G:\source\repos\StruttonTechnologies\Core-Capabilities\Core.Identity\StruttonTechnologies.Core.Identity.Dtos\bin\Debug\net10.0\StruttonTechnologies.Core.Identity.Dtos.dll
+G:\source\repos\StruttonTechnologies\Core-Capabilities\Core.Identity\StruttonTechnologies.Core.Identity.Dtos\bin\Debug\net10.0\StruttonTechnologies.Core.Identity.Dtos.pdb
+G:\source\repos\StruttonTechnologies\Core-Capabilities\Core.Identity\StruttonTechnologies.Core.Identity.Dtos\bin\Debug\net10.0\StruttonTechnologies.Core.Identity.Dtos.xml
+G:\source\repos\StruttonTechnologies\Core-Capabilities\Core.Identity\StruttonTechnologies.Core.Identity.Dtos\obj\Debug\net10.0\StruttonTechnologies.Core.Identity.Dtos.csproj.AssemblyReference.cache
+G:\source\repos\StruttonTechnologies\Core-Capabilities\Core.Identity\StruttonTechnologies.Core.Identity.Dtos\obj\Debug\net10.0\StruttonTechnologies.Core.Identity.Dtos.GeneratedMSBuildEditorConfig.editorconfig
+G:\source\repos\StruttonTechnologies\Core-Capabilities\Core.Identity\StruttonTechnologies.Core.Identity.Dtos\obj\Debug\net10.0\StruttonTechnologies.Core.Identity.Dtos.AssemblyInfoInputs.cache
+G:\source\repos\StruttonTechnologies\Core-Capabilities\Core.Identity\StruttonTechnologies.Core.Identity.Dtos\obj\Debug\net10.0\StruttonTechnologies.Core.Identity.Dtos.AssemblyInfo.cs
+G:\source\repos\StruttonTechnologies\Core-Capabilities\Core.Identity\StruttonTechnologies.Core.Identity.Dtos\obj\Debug\net10.0\StruttonTechnologies.Core.Identity.Dtos.csproj.CoreCompileInputs.cache
+G:\source\repos\StruttonTechnologies\Core-Capabilities\Core.Identity\StruttonTechnologies.Core.Identity.Dtos\obj\Debug\net10.0\StruttonTechnologies.Core.Identity.Dtos.dll
+G:\source\repos\StruttonTechnologies\Core-Capabilities\Core.Identity\StruttonTechnologies.Core.Identity.Dtos\obj\Debug\net10.0\refint\StruttonTechnologies.Core.Identity.Dtos.dll
+G:\source\repos\StruttonTechnologies\Core-Capabilities\Core.Identity\StruttonTechnologies.Core.Identity.Dtos\obj\Debug\net10.0\StruttonTechnologies.Core.Identity.Dtos.xml
+G:\source\repos\StruttonTechnologies\Core-Capabilities\Core.Identity\StruttonTechnologies.Core.Identity.Dtos\obj\Debug\net10.0\StruttonTechnologies.Core.Identity.Dtos.pdb
+G:\source\repos\StruttonTechnologies\Core-Capabilities\Core.Identity\StruttonTechnologies.Core.Identity.Dtos\obj\Debug\net10.0\ref\StruttonTechnologies.Core.Identity.Dtos.dll

@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>StruttonTechnologies.Core.Identity.EF.Tests</name>
+    </assembly>
+    <members>
+        <member name="T:StruttonTechnologies.Core.Identity.EF.Tests.SqlServer.FakeRefreshTokenFactory">
+            <summary>
+            Factory for creating test-safe instances of <see cref="T:StruttonTechnologies.Core.Identity.Stub.Models.StubRefreshToken"/>.
+            Lives in Fakes for test-only usage, but uses Stub model for realistic shape.
+            </summary>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.EF.Tests.SqlServer.FakeRefreshTokenFactory.Create(System.Nullable{System.Guid},System.String)">
+            <summary>
+            Creates a valid refresh token with optional user ID and username.
+            </summary>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.EF.Tests.SqlServer.FakeRefreshTokenFactory.Expired(System.Nullable{System.Guid},System.String)">
+            <summary>
+            Creates an expired refresh token for testing expiration logic.
+            </summary>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.EF.Tests.SqlServer.FakeRefreshTokenFactory.Revoked(System.Nullable{System.Guid},System.String)">
+            <summary>
+            Creates a revoked refresh token for testing revocation logic.
+            </summary>
+        </member>
+    </members>
+</doc>

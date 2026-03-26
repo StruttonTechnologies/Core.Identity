@@ -1,0 +1,120 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>StruttonTechnologies.Core.Identity.Domain.Contracts</name>
+    </assembly>
+    <members>
+        <member name="T:StruttonTechnologies.Core.Identity.Domain.Contracts.Jwtoken.IJwtUserTokenManager`1">
+            <summary>
+            Defines operations for generating, validating, and revoking JWT tokens.
+            </summary>
+            <typeparam name="TKey">The type of the user identifier.</typeparam>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.Domain.Contracts.Jwtoken.IJwtUserTokenManager`1.RevokeAccessTokenAsync(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Revokes a specific access token by its JTI.
+            </summary>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.Domain.Contracts.Jwtoken.IJwtUserTokenManager`1.IsAccessTokenRevokedAsync(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Checks whether the specified access token has been revoked.
+            </summary>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.Domain.Contracts.Jwtoken.IJwtUserTokenManager`1.IsRefreshTokenRevokedAsync(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Checks whether the specified refresh token has been revoked.
+            </summary>
+        </member>
+        <member name="T:StruttonTechnologies.Core.Identity.Domain.Contracts.JwtToken.IJwtUserTokenManager`1">
+            <summary>
+            Defines operations for generating, validating, and revoking JWT tokens.
+            </summary>
+            <typeparam name="TKey">The type of the user identifier.</typeparam>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.Domain.Contracts.JwtToken.IJwtUserTokenManager`1.RevokeAccessTokenAsync(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Revokes a specific access token by its JTI.
+            </summary>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.Domain.Contracts.JwtToken.IJwtUserTokenManager`1.IsAccessTokenRevokedAsync(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Checks whether the specified access token has been revoked.
+            </summary>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.Domain.Contracts.JwtToken.IJwtUserTokenManager`1.IsRefreshTokenRevokedAsync(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Checks whether the specified refresh token has been revoked.
+            </summary>
+        </member>
+        <member name="T:StruttonTechnologies.Core.Identity.Domain.Contracts.JwtToken.IRefreshTokenStore`1">
+            <summary>
+            Defines operations for storing and managing refresh tokens.
+            </summary>
+            <typeparam name="TKey">The type of the user's unique identifier.</typeparam>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.Domain.Contracts.JwtToken.IRefreshTokenStore`1.SaveAsync(StruttonTechnologies.Core.Identity.Domain.Entities.RefreshToken{`0},System.Threading.CancellationToken)">
+            <summary>
+            Saves a refresh token asynchronously.
+            </summary>
+            <param name="token">The refresh token to save.</param>
+            <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.Domain.Contracts.JwtToken.IRefreshTokenStore`1.GetAsync(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Retrieves a refresh token by its token string asynchronously.
+            </summary>
+            <param name="token">The token string to search for.</param>
+            <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+            <returns>The <see cref="T:StruttonTechnologies.Core.Identity.Domain.Entities.RefreshToken`1"/> if found; otherwise, null.</returns>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.Domain.Contracts.JwtToken.IRefreshTokenStore`1.RevokeAsync(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Revokes a refresh token by its token string asynchronously.
+            </summary>
+            <param name="token">The token string to revoke.</param>
+            <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.Domain.Contracts.JwtToken.IRefreshTokenStore`1.RevokeAllAsync(`0,System.Threading.CancellationToken)">
+            <summary>
+            Revokes all refresh tokens associated with the specified user.
+            </summary>
+            <param name="userId">The unique identifier of the user.</param>
+            <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+        </member>
+        <member name="T:StruttonTechnologies.Core.Identity.Domain.Interfaces.Jwtoken.IRefreshTokenStore`1">
+            <summary>
+            Defines operations for storing and managing refresh tokens.
+            </summary>
+            <typeparam name="TKey">The type of the user's unique identifier.</typeparam>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.Domain.Interfaces.Jwtoken.IRefreshTokenStore`1.SaveAsync(StruttonTechnologies.Core.Identity.Domain.Entities.RefreshToken{`0},System.Threading.CancellationToken)">
+            <summary>
+            Saves a refresh token asynchronously.
+            </summary>
+            <param name="token">The refresh token to save.</param>
+            <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.Domain.Interfaces.Jwtoken.IRefreshTokenStore`1.GetAsync(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Retrieves a refresh token by its token string asynchronously.
+            </summary>
+            <param name="token">The token string to search for.</param>
+            <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+            <returns>The <see cref="T:StruttonTechnologies.Core.Identity.Domain.Entities.RefreshToken`1"/> if found; otherwise, null.</returns>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.Domain.Interfaces.Jwtoken.IRefreshTokenStore`1.RevokeAsync(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Revokes a refresh token by its token string asynchronously.
+            </summary>
+            <param name="token">The token string to revoke.</param>
+            <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.Domain.Interfaces.Jwtoken.IRefreshTokenStore`1.RevokeAllAsync(`0,System.Threading.CancellationToken)">
+            <summary>
+            Revokes all refresh tokens associated with the specified user.
+            </summary>
+            <param name="userId">The unique identifier of the user.</param>
+            <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+        </member>
+    </members>
+</doc>

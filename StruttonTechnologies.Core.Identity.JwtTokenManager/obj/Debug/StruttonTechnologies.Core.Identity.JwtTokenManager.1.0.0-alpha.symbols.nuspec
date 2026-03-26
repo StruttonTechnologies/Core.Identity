@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>StruttonTechnologies.Core.Identity.JwtTokenManager</id>
+    <version>1.0.0-alpha</version>
+    <title>StruttonTechnologies.Core.Identity JWT Token Manager</title>
+    <authors>Shawn Strutton</authors>
+    <icon>Icon.png</icon>
+    <description>JWT token management for StruttonTechnologies.Core.Identity.</description>
+    <tags>core,identity,jwt,tokens,security,strutton,StruttonTechnologies</tags>
+    <repository type="git" url="https://github.com/StruttonTechnologies/Core.Identity" />
+    <dependencies>
+      <group targetFramework="net10.0">
+        <dependency id="StruttonTechnologies.Core.Identity.Domain.Contracts" version="1.0.0-alpha" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Extensions.Identity.Core" version="10.0.5" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Extensions.Options.ConfigurationExtensions" version="10.0.5" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.IdentityModel.JsonWebTokens" version="8.16.0" exclude="Build,Analyzers" />
+        <dependency id="StruttonTechnologies.Core.ToolKit.GuardKit" version="1.0.0-alpha" exclude="Build,Analyzers" />
+        <dependency id="StruttonTechnologies.Core.ToolKit.Registration" version="1.0.0-alpha" exclude="Build,Analyzers" />
+        <dependency id="System.IdentityModel.Tokens.Jwt" version="8.16.0" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="G:\source\repos\StruttonTechnologies\Core-Capabilities\Core.Identity\StruttonTechnologies.Core.Identity.JwtTokenManager\bin\Debug\net10.0\StruttonTechnologies.Core.Identity.JwtTokenManager.pdb" target="lib\net10.0\StruttonTechnologies.Core.Identity.JwtTokenManager.pdb" />
+  </files>
+</package>

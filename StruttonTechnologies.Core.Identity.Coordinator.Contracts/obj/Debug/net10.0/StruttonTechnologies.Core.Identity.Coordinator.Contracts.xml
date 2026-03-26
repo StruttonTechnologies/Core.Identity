@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>StruttonTechnologies.Core.Identity.Coordinator.Contracts</name>
+    </assembly>
+    <members>
+        <member name="T:StruttonTechnologies.Core.Identity.Coordinator.Contracts.Authentication.IAuthenticationCoordinator">
+            <summary>
+            Defines the authentication coordination contract for registration, sign-in, and sign-out flows.
+            </summary>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.Coordinator.Contracts.Authentication.IAuthenticationCoordinator.RegisterAsync(System.String,System.String,System.String)">
+            <summary>Registers a new user.</summary>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.Coordinator.Contracts.Authentication.IAuthenticationCoordinator.AuthenticateAsync(System.String,System.String)">
+            <summary>Authenticates an existing user.</summary>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.Coordinator.Contracts.Authentication.IAuthenticationCoordinator.SignOutAsync(System.String)">
+            <summary>Signs the current user out.</summary>
+        </member>
+        <member name="T:StruttonTechnologies.Core.Identity.Coordinator.Contracts.Authorization.IAuthorizationCoordinator">
+            <summary>
+            Defines the authorization coordination contract for claims-based identity retrieval.
+            </summary>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.Coordinator.Contracts.Authorization.IAuthorizationCoordinator.GetClaimsPrincipalAsync(System.String)">
+            <summary>Gets the claims principal projection for the specified user.</summary>
+        </member>
+        <member name="T:StruttonTechnologies.Core.Identity.Coordinator.Contracts.Users.IUserCoordinator">
+            <summary>
+            Defines user coordination operations used by the API layer.
+            </summary>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.Coordinator.Contracts.Users.IUserCoordinator.GetClaimsPrincipalAsync(System.String)">
+            <summary>Gets the claims principal projection for the specified user.</summary>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.Coordinator.Contracts.Users.IUserCoordinator.GetNormalizedEmailAsync(System.String)">
+            <summary>Gets the normalized email for the specified user.</summary>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.Coordinator.Contracts.Users.IUserCoordinator.GetUserRolesAsync(System.String)">
+            <summary>Gets the role names assigned to the specified user.</summary>
+        </member>
+        <member name="M:StruttonTechnologies.Core.Identity.Coordinator.Contracts.Users.IUserCoordinator.GetUserProfileAsync(System.String)">
+            <summary>Gets the user profile for the specified user.</summary>
+        </member>
+    </members>
+</doc>
