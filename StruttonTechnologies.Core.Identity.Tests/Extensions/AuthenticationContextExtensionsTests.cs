@@ -1,10 +1,10 @@
-﻿namespace StruttonTechnologies.Core.Identity.Tests.Extensions
-{
-    using StruttonTechnologies.Core.Identity.Extensions;
-    using StruttonTechnologies.Core.Identity.Models;
-    using StruttonTechnologies.Core.Identity.Validators.Composite;
-    using StruttonTechnologies.Core.Identity.Validators.Identity;
+﻿using StruttonTechnologies.Core.Identity.Extensions;
+using StruttonTechnologies.Core.Identity.Models;
+using StruttonTechnologies.Core.Identity.Validators.Composite;
+using StruttonTechnologies.Core.Identity.Validators.Identity;
 
+namespace StruttonTechnologies.Core.Identity.Tests.Extensions
+{
     /// <summary>
     /// Contains test scenarios for <see cref="AuthenticationContextExtensions"/>.
     /// </summary>

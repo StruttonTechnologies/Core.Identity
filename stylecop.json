@@ -1,0 +1,24 @@
+﻿{
+  "$schema": "https://raw.githubusercontent.com/DotNetAnalyzers/StyleCopAnalyzers/master/StyleCopAnalyzers/StyleCopAnalyzersSettings.schema.json",
+
+  "settings": {
+    "documentationRules": {
+      "companyName": "Strutton Technologies",
+      "copyrightText": "Copyright (c) {companyName}. All rights reserved.",
+      "documentExposedElements": true,
+      "documentInternalElements": false,
+      "documentPrivateElements": false,
+      "documentInterfaces": true,
+      "documentPrivateFields": false
+    },
+
+    "orderingRules": {
+      "usingDirectivesPlacement": "outsideNamespace",
+      "systemUsingDirectivesFirst": true
+    },
+
+    "layoutRules": {
+      "newlineAtEndOfFile": "require"
+    }
+  }
+}

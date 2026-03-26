@@ -1,11 +1,11 @@
-﻿namespace StruttonTechnologies.Core.Identity.API.Tests.Controllers
+﻿using Microsoft.Extensions.Logging;
+
+using StruttonTechnologies.Core.Identity.API.Controllers;
+using StruttonTechnologies.Core.Identity.Coordinator.Contracts.Authentication;
+using StruttonTechnologies.Core.Identity.Dtos.Authentication;
+
+namespace StruttonTechnologies.Core.Identity.API.Tests.Controllers
 {
-    using Microsoft.Extensions.Logging;
-
-    using StruttonTechnologies.Core.Identity.API.Controllers;
-    using StruttonTechnologies.Core.Identity.Coordinator.Contracts.Authentication;
-    using StruttonTechnologies.Core.Identity.Dtos.Authentication;
-
     /// <summary>
     /// Contains test scenarios for <see cref="AuthenticationController"/>.
     /// </summary>

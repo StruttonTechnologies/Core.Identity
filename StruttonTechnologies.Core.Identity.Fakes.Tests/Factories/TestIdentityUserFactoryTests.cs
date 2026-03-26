@@ -30,8 +30,6 @@ namespace StruttonTechnologies.Core.Identity.Fakes.Tests.Factories
             Assert.Equal($"{userName}@example.com", user.Email);
         }
 
-
-
         [Fact]
         public void LockedOut_ReturnsUserWithLockoutProperties()
         {

@@ -1,9 +1,9 @@
-﻿namespace StruttonTechnologies.Core.Identity.Tests.Extensions
+﻿using Microsoft.AspNetCore.Identity;
+
+using StruttonTechnologies.Core.Identity.Extensions;
+
+namespace StruttonTechnologies.Core.Identity.Tests.Extensions
 {
-    using Microsoft.AspNetCore.Identity;
-
-    using StruttonTechnologies.Core.Identity.Extensions;
-
     /// <summary>
     /// Contains test scenarios for <see cref="IdentityResultExtensions"/>.
     /// </summary>
@@ -28,8 +28,8 @@
 
             string message = result.ToErrorString();
 
-            Assert.Contains("A: First", message);
-            Assert.Contains("B: Second", message);
+            Assert.Contains("A: First", message, StringComparison.Ordinal);
+            Assert.Contains("B: Second", message, StringComparison.Ordinal);
         }
     }
 }

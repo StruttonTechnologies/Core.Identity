@@ -10,6 +10,7 @@ namespace StruttonTechnologies.Core.Identity.Mocks.Factories
         public static Mock<SignInManager<TUser>> Create<TUser>(Mock<UserManager<TUser>> userManagerMock)
             where TUser : class
         {
+            ArgumentNullException.ThrowIfNull(userManagerMock, nameof(userManagerMock));
             Mock<IHttpContextAccessor> contextAccessor = new Mock<IHttpContextAccessor>();
             Mock<IUserClaimsPrincipalFactory<TUser>> claimsFactory = new Mock<IUserClaimsPrincipalFactory<TUser>>();
 
@@ -17,7 +18,10 @@ namespace StruttonTechnologies.Core.Identity.Mocks.Factories
                 userManagerMock.Object,
                 contextAccessor.Object,
                 claimsFactory.Object,
-                null!, null!, null!, null!);
+                null!,
+                null!,
+                null!,
+                null!);
         }
     }
 }

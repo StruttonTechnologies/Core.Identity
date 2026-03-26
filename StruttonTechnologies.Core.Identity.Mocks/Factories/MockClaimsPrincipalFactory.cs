@@ -1,18 +1,17 @@
-﻿// <copyright file="MockClaimsPrincipalFactory.cs" company="StruttonTechnologies">
-// Copyright (c) StruttonTechnologies.
+﻿// <copyright file="MockClaimsPrincipalFactory.cs" company="Strutton Technologies">
+// Copyright (c) Strutton Technologies. All rights reserved.
 // </copyright>
+
+using System.Security.Claims;
+
+using Microsoft.AspNetCore.Identity;
+
+using Moq;
+
+using StruttonTechnologies.Core.Identity.Test.Data;
 
 namespace StruttonTechnologies.Core.Identity.Mocks.Factories
 {
-    using System;
-    using System.Security.Claims;
-
-    using Microsoft.AspNetCore.Identity;
-
-    using Moq;
-
-    using StruttonTechnologies.Core.Identity.Test.Data;
-
     /// <summary>
     /// Factory for creating a mocked <see cref="IUserClaimsPrincipalFactory{IdentityUser}"/>.
     /// Produces <see cref="ClaimsPrincipal"/> objects based on KnownUsers and KnownRoles.

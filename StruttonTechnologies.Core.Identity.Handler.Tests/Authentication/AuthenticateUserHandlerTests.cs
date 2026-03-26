@@ -62,12 +62,13 @@ namespace StruttonTechnologies.Core.Identity.Handler.Tests.Authentication
         [Fact]
         public async Task Handle_ValidCredentials_ReturnsToken()
         {
+            ArgumentNullException.ThrowIfNull(_testUser);
             SetupPasswordCheck(_testUser, "correct-password", SignInResult.Success);
             SetupPrincipal(_testUser);
             SetupToken("mock-token");
 
             AuthenticateUserHandler<Guid> handler = CreateHandler();
-            AuthenticateUserCommand command = new AuthenticateUserCommand(_testUser.Email, "correct-password");
+            AuthenticateUserCommand command = new AuthenticateUserCommand("test@example.com", "correct-password");
 
             AuthenticationResultDto result = await handler.Handle(command, CancellationToken.None);
 
@@ -79,9 +80,9 @@ namespace StruttonTechnologies.Core.Identity.Handler.Tests.Authentication
         public async Task Handle_InvalidCredentials_ReturnsFailure()
         {
             SetupPasswordCheck(_testUser, "wrong-password", SignInResult.Failed);
-
+            ArgumentNullException.ThrowIfNull(_testUser);
             AuthenticateUserHandler<Guid> handler = CreateHandler();
-            AuthenticateUserCommand command = new AuthenticateUserCommand(_testUser.Email, "wrong-password");
+            AuthenticateUserCommand command = new AuthenticateUserCommand("test@example.com", "wrong-password");
 
             AuthenticationResultDto result = await handler.Handle(command, CancellationToken.None);
 
@@ -98,11 +99,13 @@ namespace StruttonTechnologies.Core.Identity.Handler.Tests.Authentication
 
         private void SetupPrincipal(StubUser user)
         {
+            ArgumentNullException.ThrowIfNull(user);
             SignInManagerMock
                 .Setup(m => m.CreateUserPrincipalAsync(user))
-                .ReturnsAsync(new ClaimsPrincipal(new ClaimsIdentity(new[]
+                .ReturnsAsync(new ClaimsPrincipal(new ClaimsIdentity(
+                    new[]
                 {
-                    new Claim(ClaimTypes.Name, user.UserName)
+                    new Claim(ClaimTypes.Name, "ExampleUser")
                 }, "mock")));
         }
 

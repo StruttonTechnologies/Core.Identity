@@ -199,6 +199,17 @@ dotnet_diagnostic.SA1633.severity = none
 dotnet_diagnostic.SA1649.severity = none
 dotnet_diagnostic.SA1707.severity = none
 
+[**/Handlers/*.cs]
+dotnet_diagnostic.CA1812.severity = none
+dotnet_diagnostic.CA1852.severity = none
+
+# =========================================================
+# EF infrastructure implementations
+# =========================================================
+[**/EF/**/*.cs]
+dotnet_diagnostic.CA1812.severity = none
+dotnet_diagnostic.CA1852.severity = none
+
 # =========================================================
 # XML / project files
 # =========================================================
@@ -225,3 +236,100 @@ indent_size = 2
 # =========================================================
 [*.md]
 trim_trailing_whitespace = false
+
+# =========================================================
+# Tests
+# =========================================================
+[**/*Tests*.cs]
+dotnet_diagnostic.CA1707.severity = none
+dotnet_diagnostic.CA1812.severity = none
+dotnet_diagnostic.CA1852.severity = none
+dotnet_diagnostic.SA1122.severity = none
+dotnet_diagnostic.SA1600.severity = none
+dotnet_diagnostic.SA1601.severity = none
+dotnet_diagnostic.SA1605.severity = none
+dotnet_diagnostic.SA1611.severity = none
+dotnet_diagnostic.SA1615.severity = none
+dotnet_diagnostic.SA1618.severity = none
+dotnet_diagnostic.SA1633.severity = none
+dotnet_diagnostic.SA1636.severity = none
+dotnet_diagnostic.CA1515.severity = none
+
+[**/Tests/**/*.cs]
+dotnet_diagnostic.CA1515.severity = none
+
+[**/Base/**/*.cs]
+dotnet_diagnostic.CA1515.severity = none
+
+# =========================================================
+# Fakes
+# =========================================================
+[**/Fakes/**/*.cs]
+dotnet_diagnostic.CA1812.severity = none
+dotnet_diagnostic.CA1852.severity = none
+dotnet_diagnostic.SA1600.severity = none
+dotnet_diagnostic.SA1611.severity = none
+dotnet_diagnostic.SA1615.severity = none
+dotnet_diagnostic.SA1618.severity = none
+dotnet_diagnostic.SA1633.severity = none
+dotnet_diagnostic.SA1636.severity = none
+
+# =========================================================
+# Mocks
+# =========================================================
+[**/*Mock*.cs]
+dotnet_diagnostic.CA1812.severity = none
+dotnet_diagnostic.CA1852.severity = none
+
+[**/Mocks/**/*.cs]
+dotnet_diagnostic.CA1812.severity = none
+dotnet_diagnostic.CA1852.severity = none
+dotnet_diagnostic.SA1600.severity = none
+dotnet_diagnostic.SA1611.severity = none
+dotnet_diagnostic.SA1615.severity = none
+dotnet_diagnostic.SA1618.severity = none
+dotnet_diagnostic.SA1633.severity = none
+dotnet_diagnostic.SA1636.severity = none
+
+# =========================================================
+# Stub / Stubs
+# =========================================================
+[**/*Stub*.cs]
+dotnet_diagnostic.CA1812.severity = none
+dotnet_diagnostic.CA1852.severity = none
+
+[**/Stub/**/*.cs]
+dotnet_diagnostic.CA1812.severity = none
+dotnet_diagnostic.CA1852.severity = none
+dotnet_diagnostic.SA1600.severity = none
+dotnet_diagnostic.SA1611.severity = none
+dotnet_diagnostic.SA1615.severity = none
+dotnet_diagnostic.SA1618.severity = none
+dotnet_diagnostic.SA1633.severity = none
+dotnet_diagnostic.SA1636.severity = none
+
+[**/Stubs/**/*.cs]
+dotnet_diagnostic.CA1812.severity = none
+dotnet_diagnostic.CA1852.severity = none
+dotnet_diagnostic.SA1600.severity = none
+dotnet_diagnostic.SA1611.severity = none
+dotnet_diagnostic.SA1615.severity = none
+dotnet_diagnostic.SA1618.severity = none
+dotnet_diagnostic.SA1633.severity = none
+dotnet_diagnostic.SA1636.severity = none
+
+# =========================================================
+# Extensions
+# =========================================================
+[**/*Extensions.cs]
+dotnet_diagnostic.CA1812.severity = none
+dotnet_diagnostic.CA1852.severity = none
+
+# =========================================================
+# TestData
+# =========================================================
+[**/TestData/**/*.cs]
+dotnet_diagnostic.SA1122.severity = none
+dotnet_diagnostic.SA1600.severity = none
+dotnet_diagnostic.SA1633.severity = none
+dotnet_diagnostic.SA1636.severity = none

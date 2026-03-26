@@ -4,8 +4,9 @@ namespace StruttonTechnologies.Core.Identity.Fakes.Validators
 {
     /// <summary>
     /// A test validator that always fails when validating an IdentityUser.
-    /// Implements IUserValidator to simulate failure in ASP.NET Identity pipelines.
+    /// Implements to simulate failure in ASP.NET Identity pipelines.
     /// </summary>
+    /// <typeparam name="TUser">The user type being validated.</typeparam>
     public class AlwaysFailUserValidator<TUser> : IUserValidator<TUser>
         where TUser : IdentityUser<Guid>
     {

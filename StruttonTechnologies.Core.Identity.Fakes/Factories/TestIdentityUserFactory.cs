@@ -22,7 +22,6 @@ namespace StruttonTechnologies.Core.Identity.Fakes.Factories
                 ConcurrencyStamp = Guid.NewGuid().ToString(),
                 LockoutEnabled = false,
                 AccessFailedCount = 0,
-
             };
         }
 
@@ -36,7 +35,6 @@ namespace StruttonTechnologies.Core.Identity.Fakes.Factories
             user.Email = $"{userName}@example.com";
             return user;
         }
-
 
         /// <summary>
         /// Creates a user marked as locked out with elevated failure count.

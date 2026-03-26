@@ -28,7 +28,9 @@ namespace StruttonTechnologies.Core.Identity.Mocks.Factories
 
             // Validation rules based on KnownTokens
             mock.Setup(s => s.ValidateTokenAsync(It.Is<string>(t => t == KnownTokens.ValidToken), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new ClaimsPrincipal(new ClaimsIdentity(new[] {
+                .ReturnsAsync(new ClaimsPrincipal(new ClaimsIdentity(
+                    new[]
+                {
                     new Claim(ClaimTypes.NameIdentifier, "known-user"),
                     new Claim(ClaimTypes.Name, "KnownUser"),
                     new Claim(ClaimTypes.Email, "known@example.com"),

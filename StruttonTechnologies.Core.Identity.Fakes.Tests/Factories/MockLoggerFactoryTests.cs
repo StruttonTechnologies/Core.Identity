@@ -16,7 +16,7 @@ namespace StruttonTechnologies.Core.Identity.Fakes.Tests.Factories
         {
             object logger = CreateLoggerOfType(type);
             Assert.NotNull(logger);
-            Assert.IsAssignableFrom(typeof(ILogger<>).MakeGenericType(type), logger);
+            Assert.IsType(typeof(ILogger<>).MakeGenericType(type), logger, exactMatch: false);
         }
 
         [Fact]
@@ -30,7 +30,7 @@ namespace StruttonTechnologies.Core.Identity.Fakes.Tests.Factories
             Assert.NotSame(logger1, logger2);
         }
 
-        private object CreateLoggerOfType(Type type)
+        private static object CreateLoggerOfType(Type type)
         {
             MethodInfo method = typeof(MockLoggerFactory).GetMethod("Create")!.MakeGenericMethod(type);
             return method.Invoke(null, null)!;

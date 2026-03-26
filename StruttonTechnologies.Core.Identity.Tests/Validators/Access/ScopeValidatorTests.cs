@@ -1,18 +1,20 @@
-﻿using StruttonTechnologies.Core.ToolKit.Validation.Models;
+﻿using StruttonTechnologies.Core.Identity.Validators.Access;
+using StruttonTechnologies.Core.ToolKit.Validation.Models;
 
 namespace StruttonTechnologies.Core.Identity.Tests.Validators.Access
 {
     /// <summary>
-    /// Contains test scenarios for <see cref="StruttonTechnologies.Core.Identity.Validators.Access.ScopeValidator"/>.
+    /// Contains test scenarios for <see cref="ScopeValidator"/>.
     /// </summary>
     public class ScopeValidatorTests
     {
-        private readonly StruttonTechnologies.Core.Identity.Validators.Access.ScopeValidator _sut = new();
-        private static readonly string[] input = new[] { "openid", "api.read" };
+        private readonly ScopeValidator _sut = new();
 
         [Fact]
         public void Validate_WithKnownScopes_ReturnsSuccess()
         {
+            string[] input = new[] { "openid", "api.read" };
+
             ValidationResult result = _sut.Validate(input);
 
             Assert.True(result.IsValid);
@@ -30,7 +32,8 @@ namespace StruttonTechnologies.Core.Identity.Tests.Validators.Access
         [Fact]
         public void Validate_WithUnknownScope_ReturnsInvalidScopeFailure()
         {
-            ValidationResult result = _sut.Validate(new[] { "openid", "unknown.scope" });
+            string[] input = new[] { "openid", "unknown.scope" };
+            ValidationResult result = _sut.Validate(input);
 
             Assert.False(result.IsValid);
             Assert.Equal("InvalidScope", result.Code);

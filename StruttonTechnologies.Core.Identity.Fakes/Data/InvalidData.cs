@@ -11,7 +11,7 @@
         public static IEnumerable<object[]> SessionIds =>
             [
                 [null!],
-                [""],
+                [string.Empty],
                 ["not-a-guid"],
                 [Guid.Empty.ToString()]
             ];
@@ -22,7 +22,7 @@
         public static IEnumerable<object[]> TenantIds =>
             [
                 [null!],
-                [""],
+                [string.Empty],
                 ["not-a-guid"],
                 [Guid.Empty.ToString()]
             ];
@@ -43,7 +43,7 @@
         public static IEnumerable<object[]> Roles =>
             [
                 [null!],
-                [""],
+                [string.Empty],
                 ["UnknownRole"]
             ];
 
@@ -53,7 +53,7 @@
         public static IEnumerable<object[]> Providers =>
             [
                 [null!],
-                [""],
+                [string.Empty],
                 ["UnknownSSO"]
             ];
 
@@ -63,7 +63,7 @@
         public static IEnumerable<object[]> Usernames =>
             [
                 [null!],
-                [""],
+                [string.Empty],
                 ["admin"],
                 ["root"],
                 ["user name"],

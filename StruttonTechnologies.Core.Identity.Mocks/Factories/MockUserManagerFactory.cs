@@ -11,7 +11,7 @@ namespace StruttonTechnologies.Core.Identity.Mocks.Factories
 {
     /// <summary>
     /// Factory for creating mocked <see cref="UserManager{TUser}"/> instances
-    /// preconfigured with <see cref="StubUsers"/>.
+    /// preconfigured with <see cref="StubUser"/>.
     /// </summary>
     public static class MockUserManagerFactory
     {
@@ -20,7 +20,14 @@ namespace StruttonTechnologies.Core.Identity.Mocks.Factories
             Mock<IUserStore<StubUser>> store = new Mock<IUserStore<StubUser>>();
             Mock<UserManager<StubUser>> mgr = new Mock<UserManager<StubUser>>(
                 store.Object,
-                null!, null!, null!, null!, null!, null!, null!, null!);
+                null!,
+                null!,
+                null!,
+                null!,
+                null!,
+                null!,
+                null!,
+                null!);
 
             StubUser stub = user ?? StubUserData.Default;
 

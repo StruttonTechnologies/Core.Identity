@@ -1,7 +1,7 @@
-﻿namespace StruttonTechnologies.Core.Identity.Infrastructure.Tests.Configuration
-{
-    using StruttonTechnologies.Core.Identity.JwtTokenManager.Configuration;
+﻿using StruttonTechnologies.Core.Identity.JwtTokenManager.Configuration;
 
+namespace StruttonTechnologies.Core.Identity.Infrastructure.Tests.Configuration
+{
     /// <summary>
     /// Contains test scenarios for <see cref="TokenProviderOptionsConfig"/>.
     /// </summary>

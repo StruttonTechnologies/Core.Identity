@@ -12,13 +12,19 @@ using StruttonTechnologies.Core.Identity.Stub.Entities;
 
 namespace StruttonTechnologies.Core.Identity.Handler.Tests.Base
 {
+#pragma warning disable CA1515 // Consider making public types internal
     public abstract class HandlerTestBase
+#pragma warning restore CA1515 // Consider making public types internal
     {
-        protected readonly StubUser TestUser;
-        protected readonly ClaimsPrincipal TestPrincipal;
-        protected readonly Mock<UserManager<StubUser>> UserManagerMock;
-        protected readonly Mock<SignInManager<StubUser>> SignInManagerMock;
-        protected readonly Mock<ITokenOrchestration<Guid>> TokenServiceMock;
+        protected StubUser TestUser { get; }
+
+        protected ClaimsPrincipal TestPrincipal { get; }
+
+        protected Mock<UserManager<StubUser>> UserManagerMock { get; }
+
+        protected Mock<SignInManager<StubUser>> SignInManagerMock { get; }
+
+        protected Mock<ITokenOrchestration<Guid>> TokenServiceMock { get; }
 
         protected HandlerTestBase()
         {
@@ -31,7 +37,9 @@ namespace StruttonTechnologies.Core.Identity.Handler.Tests.Base
 
             // SignInManager mock with principal setup
             SignInManagerMock = MockSignInManagerFactory.Create(UserManagerMock);
-            SignInManagerMock.Setup(m => m.CreateUserPrincipalAsync(TestUser)).ReturnsAsync(TestPrincipal);
+            SignInManagerMock
+                .Setup(m => m.CreateUserPrincipalAsync(TestUser))
+                .ReturnsAsync(TestPrincipal);
 
             // Token service mock with explicit generic type
             TokenServiceMock = MockTokenServiceFactory.Create<Guid>();

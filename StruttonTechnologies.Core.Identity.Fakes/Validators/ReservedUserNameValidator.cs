@@ -20,7 +20,8 @@ namespace StruttonTechnologies.Core.Identity.Fakes.Validators
 
         public Task<IdentityResult> ValidateAsync(UserManager<StubUser> manager, StubUser user)
         {
-            if (_reservedNames.Contains(user.UserName ?? ""))
+            ArgumentNullException.ThrowIfNull(user);
+            if (_reservedNames.Contains(user.UserName ?? string.Empty))
             {
                 return Task.FromResult(IdentityResult.Failed(new IdentityError
                 {
@@ -33,4 +34,3 @@ namespace StruttonTechnologies.Core.Identity.Fakes.Validators
         }
     }
 }
-

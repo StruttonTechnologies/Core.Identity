@@ -1,5 +1,4 @@
-﻿
-namespace StruttonTechnologies.Core.Identity.Tests.Exceptions
+﻿namespace StruttonTechnologies.Core.Identity.Tests.Exceptions
 {
     /// <summary>
     /// Contains test scenarios for <see cref="StruttonTechnologies.Core.Identity.AggregateValidationException"/>.

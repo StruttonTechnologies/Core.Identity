@@ -1,12 +1,12 @@
-﻿namespace StruttonTechnologies.Core.Identity.Tests.Validators.Composite
-{
-    using StruttonTechnologies.Core.Identity.Extensions;
-    using StruttonTechnologies.Core.Identity.Models;
-    using StruttonTechnologies.Core.Identity.Validators.Access;
-    using StruttonTechnologies.Core.Identity.Validators.Composite;
-    using StruttonTechnologies.Core.Identity.Validators.Identity;
-    using StruttonTechnologies.Core.ToolKit.Validation.Models;
+﻿using StruttonTechnologies.Core.Identity.Extensions;
+using StruttonTechnologies.Core.Identity.Models;
+using StruttonTechnologies.Core.Identity.Validators.Access;
+using StruttonTechnologies.Core.Identity.Validators.Composite;
+using StruttonTechnologies.Core.Identity.Validators.Identity;
+using StruttonTechnologies.Core.ToolKit.Validation.Models;
 
+namespace StruttonTechnologies.Core.Identity.Tests.Validators.Composite
+{
     /// <summary>
     /// Contains test scenarios for <see cref="StruttonTechnologies.Core.Identity.Validators.Composite.AuthenticationContextValidator"/>.
     /// </summary>

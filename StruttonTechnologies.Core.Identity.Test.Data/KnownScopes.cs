@@ -1,4 +1,4 @@
-namespace StruttonTechnologies.Core.Identity.Test.Data
+﻿namespace StruttonTechnologies.Core.Identity.Test.Data
 {
     public static class KnownScopes
     {

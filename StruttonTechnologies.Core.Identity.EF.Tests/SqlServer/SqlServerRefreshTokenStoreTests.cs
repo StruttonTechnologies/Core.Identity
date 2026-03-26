@@ -6,7 +6,7 @@ namespace StruttonTechnologies.Core.Identity.EF.Tests.SqlServer
     /// Factory for creating test-safe instances of <see cref="StubRefreshToken"/>.
     /// Lives in Fakes for test-only usage, but uses Stub model for realistic shape.
     /// </summary>
-    public static class FakeRefreshTokenFactory
+    internal static class FakeRefreshTokenFactory
     {
         /// <summary>
         /// Creates a valid refresh token with optional user ID and username.

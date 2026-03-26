@@ -29,12 +29,9 @@ namespace StruttonTechnologies.Core.Identity.Mocks.Factories
                 new object(), // ILookupNormalizer
                 new object(), // IdentityErrorDescriber
                 new object(), // IServiceProvider
-                new object()  // ILogger<UserManager<TUser>>
-            );
-
+                new object());  // ILogger<UserManager<TUser>>
 
             SignInManagerMock = MockSignInManagerFactory.Create(UserManagerMock);
-
 
             TokenOrchestrationMock = new Mock<ITokenOrchestration<TKey>>();
 

@@ -1,14 +1,11 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 using StruttonTechnologies.Core.Identity.Dispatch.Services.JwtTokens;
-using StruttonTechnologies.Core.Identity.Domain.Contracts.Jwtoken;
 using StruttonTechnologies.Core.Identity.Domain.Models;
 using StruttonTechnologies.Core.Identity.Fakes.Builders;
-using StruttonTechnologies.Core.Identity.Fakes.Factories;
 using StruttonTechnologies.Core.Identity.Stub.Factories;
 
 namespace StruttonTechnologies.Core.Identity.Orchestration.Tests.Services
@@ -19,8 +16,7 @@ namespace StruttonTechnologies.Core.Identity.Orchestration.Tests.Services
     /// </summary>
     public class TokenOrchestrationTests
     {
-        private readonly ILogger<TokenOrchestration<Guid>> _logger = MockLoggerFactory.Create<TokenOrchestration<Guid>>();
-        private readonly IRevocableTokenManager _jwtManager;
+        private readonly StubRevocableTokenManager _jwtManager;
         private readonly TokenOrchestration<Guid> _service;
 
         /// <summary>
@@ -38,7 +34,7 @@ namespace StruttonTechnologies.Core.Identity.Orchestration.Tests.Services
         {
             ClaimsPrincipal principal = TestClaimsPrincipalBuilder.CreateDefault();
 
-            string token = await _service.GenerateTokenAsync(principal);
+            string token = await _service.GenerateTokenAsync(principal, TestContext.Current.CancellationToken);
 
             Assert.False(string.IsNullOrWhiteSpace(token));
             JwtSecurityToken jwt = new JwtSecurityTokenHandler().ReadJwtToken(token);
@@ -61,11 +57,11 @@ namespace StruttonTechnologies.Core.Identity.Orchestration.Tests.Services
         public async Task RevokeToken_MarksTokenAsRevoked()
         {
             ClaimsPrincipal principal = TestClaimsPrincipalBuilder.CreateDefault();
-            string token = await _service.GenerateTokenAsync(principal);
+            string token = await _service.GenerateTokenAsync(principal, TestContext.Current.CancellationToken);
 
-            await _jwtManager.RevokeAccessTokenAsync(token, CancellationToken.None);
+            await _jwtManager.RevokeAccessTokenAsync(token, TestContext.Current.CancellationToken);
 
-            bool isRevoked = await _jwtManager.IsAccessTokenRevokedAsync(token, CancellationToken.None);
+            bool isRevoked = await _jwtManager.IsAccessTokenRevokedAsync(token, TestContext.Current.CancellationToken);
             Assert.True(isRevoked);
         }
 
@@ -73,9 +69,9 @@ namespace StruttonTechnologies.Core.Identity.Orchestration.Tests.Services
         public async Task IsTokenRevoked_ReturnsFalse_ForUnrevokedToken()
         {
             ClaimsPrincipal principal = TestClaimsPrincipalBuilder.CreateDefault();
-            string token = await _service.GenerateTokenAsync(principal);
+            string token = await _service.GenerateTokenAsync(principal, TestContext.Current.CancellationToken);
 
-            bool isRevoked = await _jwtManager.IsAccessTokenRevokedAsync(token, CancellationToken.None);
+            bool isRevoked = await _jwtManager.IsAccessTokenRevokedAsync(token, TestContext.Current.CancellationToken);
             Assert.False(isRevoked);
         }
 
@@ -84,7 +80,7 @@ namespace StruttonTechnologies.Core.Identity.Orchestration.Tests.Services
         {
             string malformedToken = "not.a.valid.jwt";
 
-            bool isRevoked = await _jwtManager.IsAccessTokenRevokedAsync(malformedToken, CancellationToken.None);
+            bool isRevoked = await _jwtManager.IsAccessTokenRevokedAsync(malformedToken, TestContext.Current.CancellationToken);
             Assert.False(isRevoked);
         }
     }
