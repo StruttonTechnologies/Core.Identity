@@ -1,6 +1,6 @@
-﻿using System.Security.Claims;
+using System.Security.Claims;
 
-using StruttonTechnologies.Core.Identity.Domain.Contracts.Jwtoken;
+using StruttonTechnologies.Core.Identity.Domain.Contracts.JwtToken;
 
 namespace StruttonTechnologies.Core.Identity.Stub.Managers
 {

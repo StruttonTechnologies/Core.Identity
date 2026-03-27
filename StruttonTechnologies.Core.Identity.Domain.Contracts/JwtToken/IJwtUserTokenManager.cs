@@ -13,41 +13,41 @@ namespace StruttonTechnologies.Core.Identity.Domain.Contracts.JwtToken
     public interface IJwtUserTokenManager<TKey>
         where TKey : IEquatable<TKey>
     {
-        Task<string> GenerateAccessTokenAsync(
+        public Task<string> GenerateAccessTokenAsync(
             TKey userId,
             string username,
             string email,
             IEnumerable<string> roles,
             CancellationToken cancellationToken);
 
-        Task<ClaimsPrincipal?> ValidateTokenAsync(string token);
+        public Task<ClaimsPrincipal?> ValidateTokenAsync(string token);
 
-        Task<DateTime?> GetExpirationAsync(string token);
+        public Task<DateTime?> GetExpirationAsync(string token);
 
-        Task RevokeAccessTokensAsync(TKey userId, CancellationToken cancellationToken);
+        public Task RevokeAccessTokensAsync(TKey userId, CancellationToken cancellationToken);
 
         /// <summary>
         /// Revokes a specific access token by its JTI.
         /// </summary>
-        Task RevokeAccessTokenAsync(string token, CancellationToken cancellationToken);
+        public Task RevokeAccessTokenAsync(string token, CancellationToken cancellationToken);
 
         /// <summary>
         /// Checks whether the specified access token has been revoked.
         /// </summary>
-        Task<bool> IsAccessTokenRevokedAsync(string token, CancellationToken cancellationToken);
+        public Task<bool> IsAccessTokenRevokedAsync(string token, CancellationToken cancellationToken);
 
-        Task<string> GenerateRefreshTokenAsync(
+        public Task<string> GenerateRefreshTokenAsync(
             TKey userId,
             string username,
             CancellationToken cancellationToken);
 
-        Task RevokeRefreshTokensAsync(TKey userId, CancellationToken cancellationToken);
+        public Task RevokeRefreshTokensAsync(TKey userId, CancellationToken cancellationToken);
 
-        Task RevokeRefreshTokenAsync(string token, CancellationToken cancellationToken);
+        public Task RevokeRefreshTokenAsync(string token, CancellationToken cancellationToken);
 
         /// <summary>
         /// Checks whether the specified refresh token has been revoked.
         /// </summary>
-        Task<bool> IsRefreshTokenRevokedAsync(string token, CancellationToken cancellationToken);
+        public Task<bool> IsRefreshTokenRevokedAsync(string token, CancellationToken cancellationToken);
     }
 }

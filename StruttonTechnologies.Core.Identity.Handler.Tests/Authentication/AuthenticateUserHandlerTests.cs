@@ -1,124 +1,39 @@
-﻿using System.Security.Claims;
-
-using FluentAssertions;
-
-using Microsoft.AspNetCore.Identity;
-
-using Moq;
-
-using StruttonTechnologies.Core.Identity.Coordinator.Authentication.Commands;
-using StruttonTechnologies.Core.Identity.Coordinator.Authentication.Handlers;
+﻿using StruttonTechnologies.Core.Identity.Coordinator.Authentication.Handlers;
+using StruttonTechnologies.Core.Identity.Coordinator.Contracts.Authentication.Commands;
 using StruttonTechnologies.Core.Identity.Dtos.Authentication;
 using StruttonTechnologies.Core.Identity.Handler.Tests.Base;
-using StruttonTechnologies.Core.Identity.Orchestration.Contracts.UserManager;
-using StruttonTechnologies.Core.Identity.Stub.Entities;
 
 namespace StruttonTechnologies.Core.Identity.Handler.Tests.Authentication
 {
-    public class AuthenticateUserHandlerTests : HandlerTestBase
+    [ExcludeFromCodeCoverage]
+    public class AuthenticateUserHandlerTests : CoordinatorHandlerTestBase
     {
-        private readonly StubUser _testUser;
-        private readonly Mock<IAuthenticationOrchestration<Guid>> _authOrchestrationMock;
-
-        public AuthenticateUserHandlerTests()
+        [Fact]
+        public async Task Handle_WhenRequestIsValid_DelegatesToAuthenticationOrchestration()
         {
-            _testUser = new StubUser
-            {
-                Id = Guid.NewGuid(),
-                UserName = "testuser",
-                Email = "testuser@example.com",
-                IsEmailConfirmed = true,
-                IsLockedOut = false
-            };
+            AuthenticateUserCommand request = new("user@example.com", "password");
+            AuthenticationResultDto expected = AuthenticationResultDto.SuccessResult("access-token");
 
-            UserManagerMock
-                .Setup(m => m.FindByEmailAsync(_testUser.Email))
-                .ReturnsAsync(_testUser);
+            AuthenticationOrchestrationMock
+                .Setup(x => x.AuthenticateAsync(request.Email, request.Password, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(expected);
 
-            _authOrchestrationMock = new Mock<IAuthenticationOrchestration<Guid>>();
-            _authOrchestrationMock
-                .Setup(a => a.AuthenticateAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
-                .Returns<string, string, CancellationToken>(async (email, password, ct) =>
-                {
-                    StubUser? user = await UserManagerMock.Object.FindByEmailAsync(email);
-                    if (user == null)
-                    {
-                        return AuthenticationResultDto.Failure("Invalid credentials");
-                    }
+            AuthenticateUserHandler<Guid> sut = new(AuthenticationOrchestrationMock.Object);
 
-                    SignInResult checkResult = await SignInManagerMock.Object.CheckPasswordSignInAsync(user, password, true);
-                    if (checkResult == null || !checkResult.Succeeded)
-                    {
-                        return AuthenticationResultDto.Failure("Invalid credentials");
-                    }
+            AuthenticationResultDto result = await sut.Handle(request, CancellationToken.None);
 
-                    ClaimsPrincipal principal = await SignInManagerMock.Object.CreateUserPrincipalAsync(user);
-                    string token = await TokenServiceMock.Object.GenerateTokenAsync(principal, ct);
-
-                    return AuthenticationResultDto.SuccessResult(token);
-                });
+            result.Should().Be(expected);
+            AuthenticationOrchestrationMock.VerifyAll();
         }
 
         [Fact]
-        public async Task Handle_ValidCredentials_ReturnsToken()
+        public async Task Handle_WhenRequestIsNull_ThrowsArgumentNullException()
         {
-            ArgumentNullException.ThrowIfNull(_testUser);
-            SetupPasswordCheck(_testUser, "correct-password", SignInResult.Success);
-            SetupPrincipal(_testUser);
-            SetupToken("mock-token");
+            AuthenticateUserHandler<Guid> sut = new(AuthenticationOrchestrationMock.Object);
 
-            AuthenticateUserHandler<Guid> handler = CreateHandler();
-            AuthenticateUserCommand command = new AuthenticateUserCommand("test@example.com", "correct-password");
+            Func<Task> act = async () => await sut.Handle(null!, CancellationToken.None);
 
-            AuthenticationResultDto result = await handler.Handle(command, CancellationToken.None);
-
-            result.IsSuccess.Should().BeTrue();
-            result.Token.Should().Be("mock-token");
-        }
-
-        [Fact]
-        public async Task Handle_InvalidCredentials_ReturnsFailure()
-        {
-            SetupPasswordCheck(_testUser, "wrong-password", SignInResult.Failed);
-            ArgumentNullException.ThrowIfNull(_testUser);
-            AuthenticateUserHandler<Guid> handler = CreateHandler();
-            AuthenticateUserCommand command = new AuthenticateUserCommand("test@example.com", "wrong-password");
-
-            AuthenticationResultDto result = await handler.Handle(command, CancellationToken.None);
-
-            result.IsSuccess.Should().BeFalse();
-            result.FailureReason.Should().Contain("Invalid credentials");
-        }
-
-        private void SetupPasswordCheck(StubUser user, string password, SignInResult result)
-        {
-            SignInManagerMock
-                .Setup(m => m.CheckPasswordSignInAsync(user, password, true))
-                .ReturnsAsync(result);
-        }
-
-        private void SetupPrincipal(StubUser user)
-        {
-            ArgumentNullException.ThrowIfNull(user);
-            SignInManagerMock
-                .Setup(m => m.CreateUserPrincipalAsync(user))
-                .ReturnsAsync(new ClaimsPrincipal(new ClaimsIdentity(
-                    new[]
-                {
-                    new Claim(ClaimTypes.Name, "ExampleUser")
-                }, "mock")));
-        }
-
-        private void SetupToken(string token)
-        {
-            TokenServiceMock
-                .Setup(t => t.GenerateTokenAsync(It.IsAny<ClaimsPrincipal>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(token);
-        }
-
-        private AuthenticateUserHandler<Guid> CreateHandler()
-        {
-            return new AuthenticateUserHandler<Guid>(_authOrchestrationMock.Object);
+            await act.Should().ThrowAsync<ArgumentNullException>();
         }
     }
 }

@@ -2,8 +2,8 @@
 {
     public interface IResetPasswordRequest
     {
-        string UserId { get; }
-        string Token { get; }
-        string NewPassword { get; }
+        public string UserId { get; }
+        public string Token { get; }
+        public string NewPassword { get; }
     }
 }

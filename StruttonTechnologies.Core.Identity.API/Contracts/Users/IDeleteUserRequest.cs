@@ -2,6 +2,6 @@
 {
     public interface IDeleteUserRequest
     {
-        string UserId { get; }
+        public string UserId { get; }
     }
 }

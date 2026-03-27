@@ -1,13 +1,9 @@
-﻿using MediatR;
-
-using Microsoft.AspNetCore.Identity;
-
-using StruttonTechnologies.Core.Identity.Coordinator.Users.Queries;
+﻿using StruttonTechnologies.Core.Identity.Coordinator.Contracts.Users.Queries;
 using StruttonTechnologies.Core.Identity.Dtos.Users;
 
 namespace StruttonTechnologies.Core.Identity.Coordinator.Users.Handlers
 {
-    public class GetUserProfileHandler<TUser> : IRequestHandler<GetUserProfileQuery, UserProfileDto>
+    public class GetUserProfileHandler<TUser> : IRequestHandler<GetUserProfileQuery, UserProfileResult>
     where TUser : class
     {
         private readonly UserManager<TUser> _userManager;
@@ -17,7 +13,7 @@ namespace StruttonTechnologies.Core.Identity.Coordinator.Users.Handlers
             _userManager = userManager;
         }
 
-        public async Task<UserProfileDto> Handle(GetUserProfileQuery request, CancellationToken cancellationToken)
+        public async Task<UserProfileResult> Handle(GetUserProfileQuery request, CancellationToken cancellationToken)
         {
             ArgumentNullException.ThrowIfNull(request, nameof(request));
 
@@ -30,11 +26,11 @@ namespace StruttonTechnologies.Core.Identity.Coordinator.Users.Handlers
             string? displayName = await _userManager.GetUserNameAsync(user);
             bool isLockedOut = await _userManager.IsLockedOutAsync(user);
 
-            return UserProfileDto.PopulateDto(
-                userId,
-                email,
-                displayName,
-                isLockedOut);
+            return new UserProfileResult(
+                userId?.ToString() ?? string.Empty,
+                email ?? string.Empty,
+                displayName ?? string.Empty, // or DisplayName if you have one
+                await _userManager.IsLockedOutAsync(user));
         }
     }
 }

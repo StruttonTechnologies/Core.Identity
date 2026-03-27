@@ -1,11 +1,9 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-
 using Microsoft.Extensions.Options;
-
-using StruttonTechnologies.Core.Identity.Dispatch.Services.JwtTokens;
 using StruttonTechnologies.Core.Identity.Domain.Models;
 using StruttonTechnologies.Core.Identity.Fakes.Builders;
+using StruttonTechnologies.Core.Identity.Orchestration.JwtTokens;
 using StruttonTechnologies.Core.Identity.Stub.Factories;
 
 namespace StruttonTechnologies.Core.Identity.Orchestration.Tests.Services

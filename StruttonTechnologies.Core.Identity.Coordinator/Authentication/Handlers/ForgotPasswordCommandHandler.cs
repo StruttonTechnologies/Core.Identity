@@ -1,8 +1,4 @@
-﻿using MediatR;
-
-using Microsoft.AspNetCore.Identity;
-
-using StruttonTechnologies.Core.Identity.Coordinator.Authentication.Commands;
+﻿using StruttonTechnologies.Core.Identity.Coordinator.Contracts.Authentication.Commands;
 
 namespace StruttonTechnologies.Core.Identity.Coordinator.Authentication.Handlers
 {

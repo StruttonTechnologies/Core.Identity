@@ -12,8 +12,8 @@ namespace StruttonTechnologies.Core.Identity.Orchestration.Contracts.UserManager
     public interface IAuthenticationOrchestration<TKey>
         where TKey : IEquatable<TKey>
     {
-        Task<AuthenticationResultDto> AuthenticateAsync(string email, string password, CancellationToken ct);
-        Task<AuthenticationResultDto> RegisterAsync(string email, string password, CancellationToken ct);
-        Task SignOutAsync(string accessToken, CancellationToken ct);
+        public Task<AuthenticationResultDto> AuthenticateAsync(string email, string password, CancellationToken ct);
+        public Task<AuthenticationResultDto> RegisterAsync(string email, string password, CancellationToken ct);
+        public Task SignOutAsync(string accessToken, CancellationToken ct);
     }
 }

@@ -9,15 +9,15 @@ namespace StruttonTechnologies.Core.Identity.Coordinator.Contracts.Users
     public interface IUserCoordinator
     {
         /// <summary>Gets the claims principal projection for the specified user.</summary>
-        Task<ClaimsPrincipalDto?> GetClaimsPrincipalAsync(string userId);
+        public Task<ClaimsPrincipalDto?> GetClaimsPrincipalAsync(string userId);
 
         /// <summary>Gets the normalized email for the specified user.</summary>
-        Task<string?> GetNormalizedEmailAsync(string userId);
+        public Task<string?> GetNormalizedEmailAsync(string userId);
 
         /// <summary>Gets the role names assigned to the specified user.</summary>
-        Task<IReadOnlyList<string>> GetUserRolesAsync(string userId);
+        public Task<IReadOnlyList<string>> GetUserRolesAsync(string userId);
 
         /// <summary>Gets the user profile for the specified user.</summary>
-        Task<UserProfileDto> GetUserProfileAsync(string userId);
+        public Task<UserProfileResult> GetUserProfileAsync(string userId);
     }
 }

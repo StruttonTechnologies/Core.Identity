@@ -2,7 +2,7 @@
 {
     public interface ILoginRequest
     {
-        string Email { get; }
-        string Password { get; }
+        public string Email { get; }
+        public string Password { get; }
     }
 }

@@ -1,4 +1,4 @@
-﻿using StruttonTechnologies.Core.Identity.Domain.Contracts.Jwtoken;
+using StruttonTechnologies.Core.Identity.Domain.Contracts.JwtToken;
 using StruttonTechnologies.Core.Identity.Fakes.Factories;
 using StruttonTechnologies.Core.Identity.Stub.Entities;
 

@@ -2,6 +2,6 @@
 {
     public interface IGetUserClaimsRequest
     {
-        string UserId { get; }
+        public string UserId { get; }
     }
 }

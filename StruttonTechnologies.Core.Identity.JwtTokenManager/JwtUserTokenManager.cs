@@ -1,13 +1,13 @@
-﻿using System.IdentityModel.Tokens.Jwt;
+﻿using System.Globalization;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 
 using Microsoft.IdentityModel.Tokens;
 
-using StruttonTechnologies.Core.Identity.Domain.Contracts.Jwtoken;
+using StruttonTechnologies.Core.Identity.Domain.Contracts.JwtToken;
 using StruttonTechnologies.Core.Identity.Domain.Entities;
-using StruttonTechnologies.Core.Identity.Domain.Interfaces.Jwtoken;
 using StruttonTechnologies.Core.Identity.Domain.Models;
 
 using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
@@ -17,16 +17,18 @@ namespace StruttonTechnologies.Core.Identity.JwtTokenManager
     public class JwtUserTokenManager<TKey> : IJwtUserTokenManager<TKey>
         where TKey : IEquatable<TKey>
     {
-        private static readonly Dictionary<string, DateTime> _revokedAccessTokens = [];
-        private static readonly HashSet<string> _revokedRefreshTokens = [];
-
         private readonly IRefreshTokenStore<TKey> _refreshTokenStore;
+        private readonly IAccessTokenRevocationStore<TKey> _accessTokenRevocationStore;
         private readonly JwtTokenOptions _options;
 
-        public JwtUserTokenManager(IRefreshTokenStore<TKey> refreshTokenStore, JwtTokenOptions options)
+        public JwtUserTokenManager(
+            IRefreshTokenStore<TKey> refreshTokenStore,
+            IAccessTokenRevocationStore<TKey> accessTokenRevocationStore,
+            JwtTokenOptions options)
         {
-            _refreshTokenStore = refreshTokenStore;
-            _options = options;
+            _refreshTokenStore = refreshTokenStore ?? throw new ArgumentNullException(nameof(refreshTokenStore));
+            _accessTokenRevocationStore = accessTokenRevocationStore ?? throw new ArgumentNullException(nameof(accessTokenRevocationStore));
+            _options = options ?? throw new ArgumentNullException(nameof(options));
         }
 
         public Task<string> GenerateAccessTokenAsync(
@@ -36,9 +38,9 @@ namespace StruttonTechnologies.Core.Identity.JwtTokenManager
             IEnumerable<string> roles,
             CancellationToken cancellationToken)
         {
-            ArgumentNullException.ThrowIfNull(username, nameof(username));
-            ClaimsIdentity identity = new ClaimsIdentity("Identity.Application");
+            ArgumentNullException.ThrowIfNull(username);
 
+            ClaimsIdentity identity = new ClaimsIdentity("Identity.Application");
             identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, userId?.ToString() ?? string.Empty));
             identity.AddClaim(new Claim(ClaimTypes.Name, username));
             identity.AddClaim(new Claim(ClaimTypes.Email, email ?? string.Empty));
@@ -48,10 +50,9 @@ namespace StruttonTechnologies.Core.Identity.JwtTokenManager
                 identity.AddClaim(new Claim(ClaimTypes.Role, role));
             }
 
-            string jti = Guid.NewGuid().ToString();
+            string jti = Guid.NewGuid().ToString("N");
             identity.AddClaim(new Claim(JwtRegisteredClaimNames.Jti, jti));
 
-            // Build signing credentials from SigningKey
             SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.SigningKey));
             SigningCredentials creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
@@ -63,8 +64,7 @@ namespace StruttonTechnologies.Core.Identity.JwtTokenManager
                 expires: DateTime.UtcNow.AddMinutes(_options.ExpirationMinutes),
                 signingCredentials: creds);
 
-            string tokenString = new JwtSecurityTokenHandler().WriteToken(token);
-            return Task.FromResult(tokenString);
+            return Task.FromResult(new JwtSecurityTokenHandler().WriteToken(token));
         }
 
         public async Task<string> GenerateRefreshTokenAsync(TKey userId, string username, CancellationToken cancellationToken)
@@ -78,14 +78,14 @@ namespace StruttonTechnologies.Core.Identity.JwtTokenManager
                 Username = username,
                 CreatedAt = DateTime.UtcNow,
                 ExpiresAt = DateTime.UtcNow.AddDays(30),
-                IsRevoked = false
+                IsRevoked = false,
             };
 
             await _refreshTokenStore.SaveAsync(refreshToken, cancellationToken);
             return token;
         }
 
-        public Task<ClaimsPrincipal?> ValidateTokenAsync(string token)
+        public async Task<ClaimsPrincipal?> ValidateTokenAsync(string token)
         {
             JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
             SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.SigningKey));
@@ -103,27 +103,28 @@ namespace StruttonTechnologies.Core.Identity.JwtTokenManager
                         ValidIssuer = _options.Issuer,
                         ValidAudience = _options.Audience,
                         IssuerSigningKey = key,
-                        ClockSkew = TimeSpan.Zero
+                        ClockSkew = TimeSpan.Zero,
                     },
                     out SecurityToken? validatedToken);
 
                 JwtSecurityToken? jwt = validatedToken as JwtSecurityToken;
                 string? jti = jwt?.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Jti)?.Value;
 
-                if (jti != null && _revokedAccessTokens.ContainsKey(jti))
+                if (!string.IsNullOrWhiteSpace(jti) &&
+                    await _accessTokenRevocationStore.IsRevokedAsync(jti, CancellationToken.None))
                 {
-                    return Task.FromResult<ClaimsPrincipal?>(null);
+                    return null;
                 }
 
-                return Task.FromResult<ClaimsPrincipal?>(principal);
+                return principal;
             }
             catch (SecurityTokenException)
             {
-                return Task.FromResult<ClaimsPrincipal?>(null);
+                return null;
             }
             catch (ArgumentException)
             {
-                return Task.FromResult<ClaimsPrincipal?>(null);
+                return null;
             }
         }
 
@@ -133,50 +134,72 @@ namespace StruttonTechnologies.Core.Identity.JwtTokenManager
             return Task.FromResult<DateTime?>(jwt.ValidTo);
         }
 
-        public Task RevokeAccessTokenAsync(string token, CancellationToken cancellationToken)
+        public async Task RevokeAccessTokenAsync(string token, CancellationToken cancellationToken)
         {
             JwtSecurityToken jwt = new JwtSecurityTokenHandler().ReadJwtToken(token);
             string? jti = jwt.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Jti)?.Value;
+            string? sub = jwt.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
 
-            if (!string.IsNullOrEmpty(jti))
+            if (string.IsNullOrWhiteSpace(jti))
             {
-                _revokedAccessTokens[jti] = jwt.ValidTo;
+                return;
             }
 
-            return Task.CompletedTask;
+            TKey? userId = default;
+            if (!string.IsNullOrWhiteSpace(sub))
+            {
+                try
+                {
+                    userId = (TKey?)Convert.ChangeType(
+                        sub,
+                        typeof(TKey),
+                        CultureInfo.InvariantCulture);
+                }
+                catch (InvalidCastException)
+                {
+                    return;
+                }
+                catch (FormatException)
+                {
+                    return;
+                }
+                catch (OverflowException)
+                {
+                    return;
+                }
+            }
+
+            await _accessTokenRevocationStore.RevokeAsync(jti, userId, jwt.ValidTo, cancellationToken);
         }
 
-        public Task<bool> IsAccessTokenRevokedAsync(string token, CancellationToken cancellationToken)
+        public async Task<bool> IsAccessTokenRevokedAsync(string token, CancellationToken cancellationToken)
         {
             JwtSecurityToken jwt = new JwtSecurityTokenHandler().ReadJwtToken(token);
             string? jti = jwt.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Jti)?.Value;
 
-            bool isRevoked = jti != null && _revokedAccessTokens.ContainsKey(jti);
-            return Task.FromResult(isRevoked);
+            return !string.IsNullOrWhiteSpace(jti) &&
+                await _accessTokenRevocationStore.IsRevokedAsync(jti, cancellationToken);
         }
 
         public Task RevokeRefreshTokenAsync(string token, CancellationToken cancellationToken)
         {
-            _revokedRefreshTokens.Add(token);
-            return Task.CompletedTask;
+            return _refreshTokenStore.RevokeAsync(token, cancellationToken);
         }
 
-        public Task<bool> IsRefreshTokenRevokedAsync(string token, CancellationToken cancellationToken)
+        public async Task<bool> IsRefreshTokenRevokedAsync(string token, CancellationToken cancellationToken)
         {
-            bool isRevoked = _revokedRefreshTokens.Contains(token);
-            return Task.FromResult(isRevoked);
+            RefreshToken<TKey>? refreshToken = await _refreshTokenStore.GetAsync(token, cancellationToken);
+            return refreshToken is null || refreshToken.IsRevoked || refreshToken.ExpiresAt <= DateTime.UtcNow;
         }
 
         public Task RevokeAccessTokensAsync(TKey userId, CancellationToken cancellationToken)
         {
-            // Could be extended to revoke all tokens for a user
-            return Task.CompletedTask;
+            return _accessTokenRevocationStore.RevokeAllAsync(userId, cancellationToken);
         }
 
         public Task RevokeRefreshTokensAsync(TKey userId, CancellationToken cancellationToken)
         {
-            // Could be extended to revoke all refresh tokens for a user
-            return Task.CompletedTask;
+            return _refreshTokenStore.RevokeAllAsync(userId, cancellationToken);
         }
     }
 }

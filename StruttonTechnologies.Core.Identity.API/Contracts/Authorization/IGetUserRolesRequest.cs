@@ -2,6 +2,6 @@
 {
     public interface IGetUserRolesRequest
     {
-        string UserId { get; }
+        public string UserId { get; }
     }
 }

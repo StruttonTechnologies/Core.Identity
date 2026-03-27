@@ -1,10 +1,6 @@
 ﻿using System.Security.Claims;
 
-using MediatR;
-
-using Microsoft.AspNetCore.Identity;
-
-using StruttonTechnologies.Core.Identity.Coordinator.Authorization.Queries;
+using StruttonTechnologies.Core.Identity.Coordinator.Contracts.Authorization.Queries;
 using StruttonTechnologies.Core.Identity.Coordinator.Users.Mapping;
 using StruttonTechnologies.Core.Identity.Dtos.Authorization;
 using StruttonTechnologies.Core.Identity.Exceptions;

@@ -1,8 +1,4 @@
-﻿using MediatR;
-
-using Microsoft.AspNetCore.Identity;
-
-using StruttonTechnologies.Core.Identity.Coordinator.ExternalLogins.Commands;
+﻿using StruttonTechnologies.Core.Identity.Coordinator.Contracts.ExternalLogins.Commands;
 
 namespace StruttonTechnologies.Core.Identity.Coordinator.Authentication.Handlers
 {

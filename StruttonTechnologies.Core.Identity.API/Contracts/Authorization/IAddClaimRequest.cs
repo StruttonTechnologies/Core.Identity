@@ -2,8 +2,8 @@
 {
     public interface IAddClaimRequest
     {
-        string UserId { get; }
-        string ClaimType { get; }
-        string ClaimValue { get; }
+        public string UserId { get; }
+        public string ClaimType { get; }
+        public string ClaimValue { get; }
     }
 }

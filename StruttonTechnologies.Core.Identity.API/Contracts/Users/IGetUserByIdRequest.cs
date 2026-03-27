@@ -2,6 +2,6 @@
 {
     public interface IGetUserByIdRequest
     {
-        string UserId { get; }
+        public string UserId { get; }
     }
 }

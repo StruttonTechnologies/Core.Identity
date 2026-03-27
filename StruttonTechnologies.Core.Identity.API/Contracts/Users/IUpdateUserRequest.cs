@@ -2,8 +2,8 @@
 {
     public interface IUpdateUserRequest
     {
-        string UserId { get; }
-        string? Email { get; }
-        string? PhoneNumber { get; }
+        public string UserId { get; }
+        public string? Email { get; }
+        public string? PhoneNumber { get; }
     }
 }

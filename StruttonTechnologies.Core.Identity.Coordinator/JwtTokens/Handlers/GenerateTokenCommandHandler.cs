@@ -1,11 +1,7 @@
 ﻿using System.Security.Claims;
 
-using MediatR;
-
-using Microsoft.AspNetCore.Identity;
-
-using StruttonTechnologies.Core.Identity.Coordinator.JwtTokens.Commands;
-using StruttonTechnologies.Core.Identity.Domain.Contracts.Jwtoken;
+using StruttonTechnologies.Core.Identity.Coordinator.Contracts.JwtTokens.Commands;
+using StruttonTechnologies.Core.Identity.Domain.Contracts.JwtToken;
 using StruttonTechnologies.Core.Identity.Dtos.Authentication;
 
 namespace StruttonTechnologies.Core.Identity.Coordinator.JwtTokens.Handlers
@@ -46,14 +42,12 @@ namespace StruttonTechnologies.Core.Identity.Coordinator.JwtTokens.Handlers
                 throw new InvalidOperationException($"User with ID '{request.UserId}' not found.");
             }
 
-            // Get user claims and roles
             IList<Claim> userClaims = await _userManager.GetClaimsAsync(user);
             IList<string> roles = await _userManager.GetRolesAsync(user);
 
             string? userName = await _userManager.GetUserNameAsync(user);
             string? email = await _userManager.GetEmailAsync(user);
 
-            // Generate access token
             string accessToken = await _tokenManager.GenerateAccessTokenAsync(
                 user.Id,
                 userName ?? string.Empty,
@@ -61,13 +55,11 @@ namespace StruttonTechnologies.Core.Identity.Coordinator.JwtTokens.Handlers
                 roles,
                 cancellationToken);
 
-            // Generate refresh token
             string refreshToken = await _tokenManager.GenerateRefreshTokenAsync(
                 user.Id,
                 userName ?? string.Empty,
                 cancellationToken);
 
-            // Get expiration time
             DateTime? expiresAt = await _tokenManager.GetExpirationAsync(accessToken);
 
             return new TokenResponseDto(

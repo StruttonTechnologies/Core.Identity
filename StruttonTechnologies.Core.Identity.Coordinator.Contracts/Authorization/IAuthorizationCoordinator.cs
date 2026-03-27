@@ -8,6 +8,6 @@ namespace StruttonTechnologies.Core.Identity.Coordinator.Contracts.Authorization
     public interface IAuthorizationCoordinator
     {
         /// <summary>Gets the claims principal projection for the specified user.</summary>
-        Task<ClaimsPrincipalDto?> GetClaimsPrincipalAsync(string userId);
+        public Task<ClaimsPrincipalDto?> GetClaimsPrincipalAsync(string userId);
     }
 }

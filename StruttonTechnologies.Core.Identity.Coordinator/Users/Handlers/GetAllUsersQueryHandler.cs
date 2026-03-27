@@ -1,18 +1,13 @@
-﻿using MediatR;
-
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-
-using StruttonTechnologies.Core.Identity.Coordinator.Users.Queries;
+﻿using StruttonTechnologies.Core.Identity.Coordinator.Contracts.Users.Queries;
 
 namespace StruttonTechnologies.Core.Identity.Coordinator.Users.Handlers
 {
     /// <summary>
-    /// MediatR handler that processes requests to retrieve all users.
+    /// Handles requests to retrieve all users in the system.
     /// </summary>
-    /// <typeparam name="TUser">The type representing a user in the system, must inherit from <see cref="IdentityUser{TKey}"/>.</typeparam>
-    /// <typeparam name="TKey">The type used for user keys, must implement <see cref="IEquatable{TKey}"/>.</typeparam>
-    internal class GetAllUsersQueryHandler<TUser, TKey>
+    /// <typeparam name="TUser">The user type.</typeparam>
+    /// <typeparam name="TKey">The key type.</typeparam>
+    public class GetAllUsersQueryHandler<TUser, TKey>
         : IRequestHandler<GetAllUsersQuery<TUser>, IEnumerable<TUser>>
         where TUser : IdentityUser<TKey>, new()
         where TKey : IEquatable<TKey>
@@ -25,14 +20,15 @@ namespace StruttonTechnologies.Core.Identity.Coordinator.Users.Handlers
                 ?? throw new ArgumentNullException(nameof(userManager));
         }
 
-        public async Task<IEnumerable<TUser>> Handle(
+        public Task<IEnumerable<TUser>> Handle(
             GetAllUsersQuery<TUser> request,
             CancellationToken cancellationToken)
         {
             ArgumentNullException.ThrowIfNull(request);
 
-            // Return all users from the UserManager
-            return await _userManager.Users.ToListAsync(cancellationToken);
+            IEnumerable<TUser> users = _userManager.Users.ToList();
+
+            return Task.FromResult(users);
         }
     }
 }

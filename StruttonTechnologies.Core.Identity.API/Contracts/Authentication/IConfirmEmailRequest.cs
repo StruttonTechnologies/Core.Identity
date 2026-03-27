@@ -2,7 +2,7 @@
 {
     public interface IConfirmEmailRequest
     {
-        string UserId { get; }
-        string Token { get; }
+        public string UserId { get; }
+        public string Token { get; }
     }
 }

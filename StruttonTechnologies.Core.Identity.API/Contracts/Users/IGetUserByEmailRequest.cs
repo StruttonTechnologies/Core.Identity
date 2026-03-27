@@ -2,6 +2,6 @@
 {
     public interface IGetUserByEmailRequest
     {
-        string Email { get; }
+        public string Email { get; }
     }
 }

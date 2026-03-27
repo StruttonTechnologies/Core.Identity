@@ -48,7 +48,7 @@ namespace StruttonTechnologies.Core.Identity.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetUserProfile(string id)
         {
-            UserProfileDto result = await _coordinator.GetUserProfileAsync(id);
+            UserProfileResult result = await _coordinator.GetUserProfileAsync(id);
             return ApiResponse.From(result, r => r is null, "User profile not found.");
         }
     }

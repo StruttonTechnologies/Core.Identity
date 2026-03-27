@@ -2,6 +2,6 @@
 {
     public interface IDisableUserRequest
     {
-        string UserId { get; }
+        public string UserId { get; }
     }
 }

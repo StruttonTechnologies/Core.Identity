@@ -2,8 +2,8 @@
 {
     public interface IChangePasswordRequest
     {
-        string UserId { get; }
-        string CurrentPassword { get; }
-        string NewPassword { get; }
+        public string UserId { get; }
+        public string CurrentPassword { get; }
+        public string NewPassword { get; }
     }
 }

@@ -1,8 +1,6 @@
-﻿using MediatR;
-
-using StruttonTechnologies.Core.Identity.Coordinator.Authorization.Queries;
+﻿using StruttonTechnologies.Core.Identity.Coordinator.Contracts.Authorization.Queries;
 using StruttonTechnologies.Core.Identity.Coordinator.Contracts.Users;
-using StruttonTechnologies.Core.Identity.Coordinator.Users.Queries;
+using StruttonTechnologies.Core.Identity.Coordinator.Contracts.Users.Queries;
 using StruttonTechnologies.Core.Identity.Dtos.Authorization;
 using StruttonTechnologies.Core.Identity.Dtos.Users;
 
@@ -33,7 +31,7 @@ namespace StruttonTechnologies.Core.Identity.Coordinator.Users.Coordinator
             return (roles as IReadOnlyList<string>) ?? roles.ToList().AsReadOnly();
         }
 
-        public async Task<UserProfileDto> GetUserProfileAsync(string userId)
+        public async Task<UserProfileResult> GetUserProfileAsync(string userId)
         {
             return await _mediator.Send(new GetUserProfileQuery(userId));
         }

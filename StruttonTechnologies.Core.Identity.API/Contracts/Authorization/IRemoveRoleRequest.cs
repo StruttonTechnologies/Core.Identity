@@ -2,7 +2,7 @@
 {
     public interface IRemoveRoleRequest
     {
-        string UserId { get; }
-        string RoleName { get; }
+        public string UserId { get; }
+        public string RoleName { get; }
     }
 }

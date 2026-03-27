@@ -2,6 +2,6 @@
 {
     public interface IForgotPasswordRequest
     {
-        string Email { get; }
+        public string Email { get; }
     }
 }

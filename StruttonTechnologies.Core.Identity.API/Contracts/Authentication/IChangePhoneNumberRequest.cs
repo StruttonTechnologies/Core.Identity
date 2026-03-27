@@ -2,8 +2,8 @@
 {
     public interface IChangePhoneNumberRequest
     {
-        string UserId { get; }
-        string PhoneNumber { get; }
-        string Token { get; }
+        public string UserId { get; }
+        public string PhoneNumber { get; }
+        public string Token { get; }
     }
 }

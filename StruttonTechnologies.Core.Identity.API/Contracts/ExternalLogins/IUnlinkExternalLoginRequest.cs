@@ -2,8 +2,8 @@
 {
     public interface IUnlinkExternalLoginRequest
     {
-        string UserId { get; }
-        string Provider { get; }
-        string ProviderKey { get; }
+        public string UserId { get; }
+        public string Provider { get; }
+        public string ProviderKey { get; }
     }
 }

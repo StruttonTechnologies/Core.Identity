@@ -2,7 +2,7 @@
 {
     public interface IRegisterRequest
     {
-        string Email { get; }
-        string Password { get; }
+        public string Email { get; }
+        public string Password { get; }
     }
 }

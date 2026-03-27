@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 using StruttonTechnologies.Core.Identity.Domain.Entities;
 using StruttonTechnologies.Core.Identity.EF.Configuration;
@@ -23,12 +23,15 @@ namespace StruttonTechnologies.Core.Identity.EF
 
         public DbSet<RefreshToken<TKey>> RefreshTokens => Set<RefreshToken<TKey>>();
 
+        public DbSet<AccessTokenRevocation<TKey>> AccessTokenRevocations => Set<AccessTokenRevocation<TKey>>();
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             ArgumentNullException.ThrowIfNull(builder);
             base.OnModelCreating(builder);
 
             RefreshTokenConfiguration.Configure(builder.Entity<RefreshToken<TKey>>());
+            AccessTokenRevocationConfiguration.Configure(builder.Entity<AccessTokenRevocation<TKey>>());
         }
     }
 }

@@ -12,6 +12,7 @@
     </PackageReference>
     <PackageReference Include="FluentAssertions" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="Moq" />
     <PackageReference Include="StruttonTechnologies.Core.ToolKit.GuardKit" />
     <PackageReference Include="xunit.runner.visualstudio">
       <PrivateAssets>all</PrivateAssets>
@@ -29,6 +30,8 @@
   <ItemGroup>
     <ProjectReference Include="..\StruttonTechnologies.Core.Identity.Coordinator\StruttonTechnologies.Core.Identity.Coordinator.csproj" />
     <ProjectReference Include="..\StruttonTechnologies.Core.Identity.Mocks\StruttonTechnologies.Core.Identity.Mocks.csproj" />
+    <ProjectReference Include="..\StruttonTechnologies.Core.Identity.Orchestration.Contracts\StruttonTechnologies.Core.Identity.Orchestration.Contracts.csproj" />
+    <ProjectReference Include="..\StruttonTechnologies.Core.Identity.Domain.Contracts\StruttonTechnologies.Core.Identity.Domain.Contracts.csproj" />
     <ProjectReference Include="..\StruttonTechnologies.Core.Identity.Stub\StruttonTechnologies.Core.Identity.Stub.csproj" />
   </ItemGroup>
 </Project>

@@ -2,7 +2,8 @@
 
 using Moq;
 
-using StruttonTechnologies.Core.Identity.Domain.Contracts.Jwtoken;
+using StruttonTechnologies.Core.Identity.Domain.Contracts.JwtToken;
+using StruttonTechnologies.Core.Identity.Test.Data;
 
 namespace StruttonTechnologies.Core.Identity.Mocks.Factories
 {
@@ -12,7 +13,7 @@ namespace StruttonTechnologies.Core.Identity.Mocks.Factories
         {
             Mock<IRevocableTokenManager> mock = new Mock<IRevocableTokenManager>();
 
-            mock.Setup(m => m.RevokeAccessTokenAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            mock.Setup(s => s.RevokeAccessTokenAsync(KnownTokens.ValidToken, It.IsAny<CancellationToken>()))
                 .Returns(Task.CompletedTask);
 
             mock.Setup(m => m.IsAccessTokenRevokedAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))

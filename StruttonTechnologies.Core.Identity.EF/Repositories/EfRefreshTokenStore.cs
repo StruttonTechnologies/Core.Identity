@@ -1,5 +1,5 @@
-﻿using StruttonTechnologies.Core.Identity.Domain.Entities;
-using StruttonTechnologies.Core.Identity.Domain.Interfaces.Jwtoken;
+﻿using StruttonTechnologies.Core.Identity.Domain.Contracts.JwtToken;
+using StruttonTechnologies.Core.Identity.Domain.Entities;
 
 namespace StruttonTechnologies.Core.Identity.EF.Repositories
 {

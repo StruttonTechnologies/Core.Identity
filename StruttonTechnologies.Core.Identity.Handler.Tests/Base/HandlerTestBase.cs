@@ -1,10 +1,4 @@
-﻿using System.Security.Claims;
-
-using Microsoft.AspNetCore.Identity;
-
-using Moq;
-
-using StruttonTechnologies.Core.Identity.Mocks.Factories;
+﻿using StruttonTechnologies.Core.Identity.Mocks.Factories;
 using StruttonTechnologies.Core.Identity.Orchestration.Contracts.JwtToken;
 using StruttonTechnologies.Core.Identity.Stub.Builders;
 using StruttonTechnologies.Core.Identity.Stub.Data;
@@ -12,6 +6,7 @@ using StruttonTechnologies.Core.Identity.Stub.Entities;
 
 namespace StruttonTechnologies.Core.Identity.Handler.Tests.Base
 {
+    [ExcludeFromCodeCoverage]
 #pragma warning disable CA1515 // Consider making public types internal
     public abstract class HandlerTestBase
 #pragma warning restore CA1515 // Consider making public types internal

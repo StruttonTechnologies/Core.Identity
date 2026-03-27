@@ -1,8 +1,4 @@
-﻿using MediatR;
-
-using Microsoft.AspNetCore.Identity;
-
-using StruttonTechnologies.Core.Identity.Coordinator.Users.Queries;
+﻿using StruttonTechnologies.Core.Identity.Coordinator.Contracts.Users.Queries;
 using StruttonTechnologies.Core.ToolKit.GuardKit;
 
 namespace StruttonTechnologies.Core.Identity.Coordinator.Users.Handlers

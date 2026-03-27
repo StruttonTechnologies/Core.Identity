@@ -2,6 +2,6 @@
 {
     public interface IRefreshTokenRequest
     {
-        string RefreshToken { get; }
+        public string RefreshToken { get; }
     }
 }

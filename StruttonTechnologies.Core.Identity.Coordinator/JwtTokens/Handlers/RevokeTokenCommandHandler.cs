@@ -1,9 +1,5 @@
-﻿using MediatR;
-
-using Microsoft.AspNetCore.Identity;
-
-using StruttonTechnologies.Core.Identity.Coordinator.JwtTokens.Commands;
-using StruttonTechnologies.Core.Identity.Domain.Contracts.Jwtoken;
+﻿using StruttonTechnologies.Core.Identity.Coordinator.Contracts.JwtTokens.Commands;
+using StruttonTechnologies.Core.Identity.Domain.Contracts.JwtToken;
 
 namespace StruttonTechnologies.Core.Identity.Coordinator.JwtTokens.Handlers
 {

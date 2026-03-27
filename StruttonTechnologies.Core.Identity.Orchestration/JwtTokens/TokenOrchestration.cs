@@ -1,12 +1,12 @@
-﻿using System.Security.Claims;
+using System.Security.Claims;
 
 using Microsoft.Extensions.Options;
 
-using StruttonTechnologies.Core.Identity.Domain.Contracts.Jwtoken;
+using StruttonTechnologies.Core.Identity.Domain.Contracts.JwtToken;
 using StruttonTechnologies.Core.Identity.Domain.Models;
 using StruttonTechnologies.Core.Identity.Orchestration.Contracts.JwtToken;
 
-namespace StruttonTechnologies.Core.Identity.Dispatch.Services.JwtTokens
+namespace StruttonTechnologies.Core.Identity.Orchestration.JwtTokens
 {
     /// <summary>
     /// Service responsible for orchestrating JWT token generation and validation.

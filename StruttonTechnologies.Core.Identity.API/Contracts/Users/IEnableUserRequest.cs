@@ -2,6 +2,6 @@
 {
     public interface IEnableUserRequest
     {
-        string UserId { get; }
+        public string UserId { get; }
     }
 }

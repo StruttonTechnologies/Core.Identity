@@ -2,7 +2,7 @@
 {
     public interface IExternalLoginRequest
     {
-        string Provider { get; }
-        string IdToken { get; }
+        public string Provider { get; }
+        public string IdToken { get; }
     }
 }
