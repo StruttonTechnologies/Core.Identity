@@ -1,10 +1,13 @@
-﻿using StruttonTechnologies.Core.ToolKit.Validation.Models;
+﻿using System.Diagnostics.CodeAnalysis;
+
+using StruttonTechnologies.Core.ToolKit.Validation.Models;
 
 namespace StruttonTechnologies.Core.Identity.Tests.Validators.Security
 {
     /// <summary>
     /// Contains test scenarios for <see cref="StruttonTechnologies.Core.Identity.Validators.Security.BlacklistPasswordValidator"/>.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public class BlacklistPasswordValidatorTests
     {
         private readonly StruttonTechnologies.Core.Identity.Validators.Security.BlacklistPasswordValidator _sut = new(new[] { "password", "123456" });

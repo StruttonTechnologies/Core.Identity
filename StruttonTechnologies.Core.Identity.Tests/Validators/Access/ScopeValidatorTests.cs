@@ -1,4 +1,6 @@
-﻿using StruttonTechnologies.Core.Identity.Validators.Access;
+﻿using System.Diagnostics.CodeAnalysis;
+
+using StruttonTechnologies.Core.Identity.Validators.Access;
 using StruttonTechnologies.Core.ToolKit.Validation.Models;
 
 namespace StruttonTechnologies.Core.Identity.Tests.Validators.Access
@@ -6,6 +8,7 @@ namespace StruttonTechnologies.Core.Identity.Tests.Validators.Access
     /// <summary>
     /// Contains test scenarios for <see cref="ScopeValidator"/>.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public class ScopeValidatorTests
     {
         private readonly ScopeValidator _sut = new();

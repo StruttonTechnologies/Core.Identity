@@ -1,4 +1,6 @@
-﻿using StruttonTechnologies.Core.Identity.Extensions;
+﻿using System.Diagnostics.CodeAnalysis;
+
+using StruttonTechnologies.Core.Identity.Extensions;
 using StruttonTechnologies.Core.Identity.Models;
 using StruttonTechnologies.Core.Identity.Validators.Access;
 using StruttonTechnologies.Core.Identity.Validators.Composite;
@@ -10,6 +12,7 @@ namespace StruttonTechnologies.Core.Identity.Tests.Validators.Composite
     /// <summary>
     /// Contains test scenarios for <see cref="StruttonTechnologies.Core.Identity.Validators.Composite.AuthenticationContextValidator"/>.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public class AuthenticationContextValidatorTests
     {
         private readonly StruttonTechnologies.Core.Identity.Validators.Composite.AuthenticationContextValidator _sut = new(

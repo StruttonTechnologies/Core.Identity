@@ -1,10 +1,13 @@
-﻿using StruttonTechnologies.Core.Identity.JwtTokenManager.Configuration;
+﻿using System.Diagnostics.CodeAnalysis;
+
+using StruttonTechnologies.Core.Identity.JwtTokenManager.Configuration;
 
 namespace StruttonTechnologies.Core.Identity.Infrastructure.Tests.Configuration
 {
     /// <summary>
     /// Contains test scenarios for <see cref="TokenProviderOptionsConfig"/>.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public class TokenProviderOptionsConfigTests
     {
         [Fact]

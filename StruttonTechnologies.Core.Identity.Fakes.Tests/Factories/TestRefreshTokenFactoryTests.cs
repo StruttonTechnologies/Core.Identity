@@ -1,8 +1,11 @@
-﻿using StruttonTechnologies.Core.Identity.Fakes.Factories;
+﻿using System.Diagnostics.CodeAnalysis;
+
+using StruttonTechnologies.Core.Identity.Fakes.Factories;
 using StruttonTechnologies.Core.Identity.Stub.Models;
 
 namespace StruttonTechnologies.Core.Identity.Fakes.Tests.Factories
 {
+    [ExcludeFromCodeCoverage]
     public class TestRefreshTokenFactoryTests
     {
         [Fact]

@@ -1,8 +1,11 @@
-﻿namespace StruttonTechnologies.Core.Identity.Tests.Exceptions
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace StruttonTechnologies.Core.Identity.Tests.Exceptions
 {
     /// <summary>
     /// Contains test scenarios for <see cref="StruttonTechnologies.Core.Identity.AggregateValidationException"/>.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public class AggregateValidationExceptionTests
     {
         [Fact]

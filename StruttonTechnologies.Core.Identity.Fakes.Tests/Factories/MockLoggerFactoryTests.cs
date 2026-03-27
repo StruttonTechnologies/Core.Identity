@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 
 using Microsoft.Extensions.Logging;
 
@@ -6,6 +7,7 @@ using StruttonTechnologies.Core.Identity.Fakes.Factories;
 
 namespace StruttonTechnologies.Core.Identity.Fakes.Tests.Factories
 {
+    [ExcludeFromCodeCoverage]
     public class MockLoggerFactoryTests
     {
         [Theory]

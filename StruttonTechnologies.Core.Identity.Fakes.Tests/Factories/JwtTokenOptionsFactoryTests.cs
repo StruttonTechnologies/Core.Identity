@@ -1,8 +1,11 @@
-﻿using StruttonTechnologies.Core.Identity.Domain.Models;
+﻿using System.Diagnostics.CodeAnalysis;
+
+using StruttonTechnologies.Core.Identity.Domain.Models;
 using StruttonTechnologies.Core.Identity.Fakes.Factories;
 
 namespace StruttonTechnologies.Core.Identity.Fakes.Tests.Factories
 {
+    [ExcludeFromCodeCoverage]
     public class JwtTokenOptionsFactoryTests
     {
         [Fact]

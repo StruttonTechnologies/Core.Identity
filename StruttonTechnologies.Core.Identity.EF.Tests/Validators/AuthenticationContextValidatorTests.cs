@@ -1,4 +1,6 @@
-﻿using Moq;
+﻿using System.Diagnostics.CodeAnalysis;
+
+using Moq;
 
 using StruttonTechnologies.Core.Identity.Validators.Composite;
 using StruttonTechnologies.Core.Identity.Validators.Identity;
@@ -7,6 +9,7 @@ using StruttonTechnologies.Core.ToolKit.Validation.Models;
 
 namespace StruttonTechnologies.Core.Identity.EF.Tests.Validators
 {
+    [ExcludeFromCodeCoverage]
     public class AuthenticationContextValidatorTests
     {
         private readonly AuthenticationContextValidator _validator;

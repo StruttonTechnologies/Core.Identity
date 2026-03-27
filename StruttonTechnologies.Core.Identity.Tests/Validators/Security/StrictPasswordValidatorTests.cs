@@ -1,10 +1,13 @@
-﻿using StruttonTechnologies.Core.ToolKit.Validation.Models;
+﻿using System.Diagnostics.CodeAnalysis;
+
+using StruttonTechnologies.Core.ToolKit.Validation.Models;
 
 namespace StruttonTechnologies.Core.Identity.Tests.Validators.Security
 {
     /// <summary>
     /// Contains test scenarios for <see cref="StruttonTechnologies.Core.Identity.Validators.Security.StrictPasswordValidator"/>.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public class StrictPasswordValidatorTests
     {
         private readonly StruttonTechnologies.Core.Identity.Validators.Security.StrictPasswordValidator _sut = new();

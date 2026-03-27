@@ -1,4 +1,6 @@
-﻿using StruttonTechnologies.Core.Identity.API.Controllers;
+﻿using System.Diagnostics.CodeAnalysis;
+
+using StruttonTechnologies.Core.Identity.API.Controllers;
 using StruttonTechnologies.Core.Identity.Coordinator.Contracts.Authorization;
 using StruttonTechnologies.Core.Identity.Dtos.Authorization;
 
@@ -7,6 +9,7 @@ namespace StruttonTechnologies.Core.Identity.API.Tests.Controllers
     /// <summary>
     /// Contains test scenarios for <see cref="AuthorizationController"/>.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public class AuthorizationControllerTests
     {
         [Fact]

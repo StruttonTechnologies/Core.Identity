@@ -1,10 +1,13 @@
-﻿using StruttonTechnologies.Core.Identity.Exceptions;
+﻿using System.Diagnostics.CodeAnalysis;
+
+using StruttonTechnologies.Core.Identity.Exceptions;
 
 namespace StruttonTechnologies.Core.Identity.Tests.Exceptions
 {
     /// <summary>
     /// Contains test scenarios for <see cref="UserValidationException"/>.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public class UserValidationExceptionTests
     {
         private static readonly string[] Errors = new[] { "error" };

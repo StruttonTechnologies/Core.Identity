@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System.Diagnostics.CodeAnalysis;
+
+using Microsoft.Extensions.Logging;
 
 using StruttonTechnologies.Core.Identity.API.Controllers;
 using StruttonTechnologies.Core.Identity.Coordinator.Contracts.Users;
@@ -9,6 +11,7 @@ namespace StruttonTechnologies.Core.Identity.API.Tests.Controllers
     /// <summary>
     /// Contains test scenarios for <see cref="UsersController"/>.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public class UsersControllerTests
     {
         private static readonly string[] Value = new[] { "Admin" };

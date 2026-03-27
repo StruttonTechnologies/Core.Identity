@@ -1,6 +1,9 @@
-﻿using System.IdentityModel.Tokens.Jwt;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+
 using Microsoft.Extensions.Options;
+
 using StruttonTechnologies.Core.Identity.Domain.Models;
 using StruttonTechnologies.Core.Identity.Fakes.Builders;
 using StruttonTechnologies.Core.Identity.Orchestration.JwtTokens;
@@ -12,6 +15,7 @@ namespace StruttonTechnologies.Core.Identity.Orchestration.Tests.Services
     /// Unit tests for <see cref="TokenOrchestration{TKey}"/>.
     /// Validates token generation, expiration, revocation, and malformed token handling.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public class TokenOrchestrationTests
     {
         private readonly StubRevocableTokenManager _jwtManager;

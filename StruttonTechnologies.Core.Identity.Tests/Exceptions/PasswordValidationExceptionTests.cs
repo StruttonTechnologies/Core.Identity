@@ -1,10 +1,13 @@
-﻿using StruttonTechnologies.Core.Identity.Exceptions;
+﻿using System.Diagnostics.CodeAnalysis;
+
+using StruttonTechnologies.Core.Identity.Exceptions;
 
 namespace StruttonTechnologies.Core.Identity.Tests.Exceptions
 {
     /// <summary>
     /// Contains test scenarios for <see cref="PasswordValidationException"/>.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public class PasswordValidationExceptionTests
     {
         private static readonly string[] Errors = new[] { "one", "two" };

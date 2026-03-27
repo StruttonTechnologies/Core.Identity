@@ -1,10 +1,13 @@
-﻿using StruttonTechnologies.Core.ToolKit.Validation.Models;
+﻿using System.Diagnostics.CodeAnalysis;
+
+using StruttonTechnologies.Core.ToolKit.Validation.Models;
 
 namespace StruttonTechnologies.Core.Identity.Tests.Validators.Access
 {
     /// <summary>
     /// Contains test scenarios for <see cref="StruttonTechnologies.Core.Identity.Validators.Access.RoleValidator"/>.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public class RoleValidatorTests
     {
         private readonly StruttonTechnologies.Core.Identity.Validators.Access.RoleValidator _sut = new();

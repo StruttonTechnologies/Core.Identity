@@ -1,10 +1,13 @@
-﻿using StruttonTechnologies.Core.ToolKit.Validation.Models;
+﻿using System.Diagnostics.CodeAnalysis;
+
+using StruttonTechnologies.Core.ToolKit.Validation.Models;
 
 namespace StruttonTechnologies.Core.Identity.Tests.Validators.Access
 {
     /// <summary>
     /// Contains test scenarios for <see cref="StruttonTechnologies.Core.Identity.Validators.Access.SessionIdValidator"/>.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public class SessionIdValidatorTests
     {
         private readonly StruttonTechnologies.Core.Identity.Validators.Access.SessionIdValidator _sut = new();

@@ -1,9 +1,11 @@
-﻿using System.Security.Claims;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Security.Claims;
 
 using StruttonTechnologies.Core.Identity.Fakes.Builders;
 
 namespace StruttonTechnologies.Core.Identity.Fakes.Tests.Builders
 {
+    [ExcludeFromCodeCoverage]
     public class TestClaimsPrincipalBuilderTests
     {
         [Fact]

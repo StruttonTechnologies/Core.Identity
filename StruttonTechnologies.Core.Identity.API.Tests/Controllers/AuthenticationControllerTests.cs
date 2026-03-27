@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System.Diagnostics.CodeAnalysis;
+
+using Microsoft.Extensions.Logging;
 
 using StruttonTechnologies.Core.Identity.API.Controllers;
 using StruttonTechnologies.Core.Identity.Coordinator.Contracts.Authentication;
@@ -9,6 +11,7 @@ namespace StruttonTechnologies.Core.Identity.API.Tests.Controllers
     /// <summary>
     /// Contains test scenarios for <see cref="AuthenticationController"/>.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public class AuthenticationControllerTests
     {
         private readonly Mock<IAuthenticationCoordinator> _coordinator = new();
