@@ -68,4 +68,8 @@ This results in:
 - cleaner application code  
 - reduced duplication of identity logic  
 - improved maintainability  
-- stronger architectural boundaries  
+- stronger architectural boundaries
+
+  ### 🚧 Status
+
+This project is currently in active development. Changes are being made regularly as the architecture and implementation continue to evolve. 
