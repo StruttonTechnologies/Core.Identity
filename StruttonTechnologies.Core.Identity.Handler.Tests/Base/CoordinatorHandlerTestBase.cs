@@ -9,7 +9,9 @@ using StruttonTechnologies.Core.Identity.Stub.Entities;
 namespace StruttonTechnologies.Core.Identity.Handler.Tests.Base
 {
     [ExcludeFromCodeCoverage]
+#pragma warning disable CA1515 // Consider making public types internal
     public abstract class CoordinatorHandlerTestBase
+#pragma warning restore CA1515 // Consider making public types internal
     {
         protected CoordinatorHandlerTestBase()
         {

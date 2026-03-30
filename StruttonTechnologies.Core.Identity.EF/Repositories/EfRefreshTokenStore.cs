@@ -7,7 +7,7 @@ namespace StruttonTechnologies.Core.Identity.EF.Repositories
     /// Provides Entity Framework-backed operations for storing, retrieving, and revoking refresh tokens.
     /// </summary>
     /// <typeparam name="TKey">The type of the user's unique identifier.</typeparam>
-    internal class EfRefreshTokenStore<TKey> : IRefreshTokenStore<TKey>
+    public class EfRefreshTokenStore<TKey> : IRefreshTokenStore<TKey>
         where TKey : IEquatable<TKey>
     {
         private readonly CoreIdentityDbContext<TKey, IdentityUser<TKey>, Microsoft.AspNetCore.Identity.IdentityRole<TKey>> _context;
