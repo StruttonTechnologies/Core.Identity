@@ -1,4 +1,4 @@
-﻿### Identity
+﻿### Core.Identity
 
 A structured identity and authentication framework designed to integrate with the application architecture while enforcing clear boundaries and controlled execution.
 
