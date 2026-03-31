@@ -25,7 +25,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Authorization\" />
-    <Folder Include="Users\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\StruttonTechnologies.Core.Identity.Coordinator\StruttonTechnologies.Core.Identity.Coordinator.csproj" />

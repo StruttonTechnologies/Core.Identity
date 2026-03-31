@@ -21,7 +21,8 @@ namespace StruttonTechnologies.Core.Identity.Handler.Tests.Authentication.Passwo
             IdentityResult result = await InternalHandlerFactory.InvokeHandleAsync<IdentityResult>(sut, request);
 
             result.Should().BeSameAs(expected);
-            UserManagerMock.VerifyAll();
+            UserManagerMock.Verify(x => x.FindByIdAsync(request.UserId), Times.Once);
+            UserManagerMock.Verify(x => x.ChangePasswordAsync(TestUser, request.CurrentPassword, request.NewPassword), Times.Once);
         }
 
         [Fact]

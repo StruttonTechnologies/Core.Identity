@@ -150,10 +150,17 @@ namespace StruttonTechnologies.Core.Identity.JwtTokenManager
             {
                 try
                 {
-                    userId = (TKey?)Convert.ChangeType(
-                        sub,
-                        typeof(TKey),
-                        CultureInfo.InvariantCulture);
+                    if (typeof(TKey) == typeof(Guid))
+                    {
+                        userId = (TKey?)(object?)Guid.Parse(sub);
+                    }
+                    else
+                    {
+                        userId = (TKey?)Convert.ChangeType(
+                            sub,
+                            typeof(TKey),
+                            CultureInfo.InvariantCulture);
+                    }
                 }
                 catch (InvalidCastException)
                 {

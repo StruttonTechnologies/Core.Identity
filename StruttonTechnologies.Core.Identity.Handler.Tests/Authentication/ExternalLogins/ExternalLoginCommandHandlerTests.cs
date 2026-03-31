@@ -22,6 +22,25 @@ namespace StruttonTechnologies.Core.Identity.Handler.Tests.Authentication.Extern
                     TestUser.DisplayName,
                     new[] { new Claim("given_name", "Stub") }));
 
+            UserManagerMock
+                .Setup(x => x.FindByLoginAsync("Google", "provider-key"))
+                .ReturnsAsync(TestUser);
+
+            UserManagerMock
+                .Setup(x => x.GetLoginsAsync(TestUser))
+                .ReturnsAsync(new List<UserLoginInfo>
+                {
+                    new UserLoginInfo("Google", "provider-key", "Google")
+                });
+
+            UserManagerMock
+                .Setup(x => x.GetRolesAsync(TestUser))
+                .ReturnsAsync(new List<string>());
+
+            UserManagerMock
+                .Setup(x => x.GetEmailAsync(TestUser))
+                .ReturnsAsync(TestUser.Email);
+
             TokenOrchestrationMock
                 .Setup(x => x.GenerateTokenAsync(It.IsAny<ClaimsPrincipal>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync("access-token");

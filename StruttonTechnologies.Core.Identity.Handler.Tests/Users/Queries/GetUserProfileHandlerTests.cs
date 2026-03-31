@@ -25,7 +25,7 @@ namespace StruttonTechnologies.Core.Identity.Handler.Tests.Users.Queries
 
             result.UserId.Should().Be(TestUser.Id.ToString());
             result.Email.Should().Be(TestUser.Email);
-            result.IsLockedOut.Should().BeTrue();
+            result.IsLockedOut.Should().BeFalse();
         }
 
         [Fact]

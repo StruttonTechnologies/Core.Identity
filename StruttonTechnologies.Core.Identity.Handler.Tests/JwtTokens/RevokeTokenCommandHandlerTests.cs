@@ -35,7 +35,7 @@ namespace StruttonTechnologies.Core.Identity.Handler.Tests.JwtTokens
                 .ReturnsAsync(TestUser);
 
             JwtUserTokenManagerMock
-                .Setup(x => x.RevokeRefreshTokenAsync(request.Token!, It.IsAny<CancellationToken>()))
+                .Setup(x => x.RevokeRefreshTokensAsync(TestUser.Id, It.IsAny<CancellationToken>()))
                 .Returns(Task.CompletedTask);
 
             JwtUserTokenManagerMock

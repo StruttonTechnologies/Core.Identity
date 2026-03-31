@@ -82,6 +82,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Directoryh.Build.targets = Directoryh.Build.targets
 		README.md = README.md
 		stylecop.json = stylecop.json
+		C:\Users\sstru\OneDrive\Documents\test analyzer.xml = C:\Users\sstru\OneDrive\Documents\test analyzer.xml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Orchestration", "Orchestration", "{C4241D37-A4D0-4C10-B82C-6B8A480EDF3B}"
