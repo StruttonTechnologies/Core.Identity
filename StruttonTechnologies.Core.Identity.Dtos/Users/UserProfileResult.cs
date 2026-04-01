@@ -1,5 +1,8 @@
-﻿namespace StruttonTechnologies.Core.Identity.Dtos.Users
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace StruttonTechnologies.Core.Identity.Dtos.Users
 {
+    [ExcludeFromCodeCoverage]
     public record UserProfileResult(
         string UserId,
         string Email,
