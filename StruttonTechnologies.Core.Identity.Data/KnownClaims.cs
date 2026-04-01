@@ -1,4 +1,4 @@
-namespace StruttonTechnologies.Core.Identity.Data
+﻿namespace StruttonTechnologies.Core.Identity.Data
 {
     /// <summary>
     /// Default claims seeded into production.

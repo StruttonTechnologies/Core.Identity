@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.Diagnostics.CodeAnalysis;
+
+using Microsoft.AspNetCore.Identity;
 
 namespace StruttonTechnologies.Core.Identity.Stub.Entities
 {
@@ -6,6 +8,7 @@ namespace StruttonTechnologies.Core.Identity.Stub.Entities
     /// Stub user entity for testing and mocking Identity flows.
     /// Inherits from built-in IdentityUser with Guid key.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public sealed class StubUser : IdentityUser<Guid>
     {
         /// <summary>
