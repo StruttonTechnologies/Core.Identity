@@ -1,10 +1,12 @@
-﻿using System.Security.Claims;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Security.Claims;
 
 namespace StruttonTechnologies.Core.Identity.Orchestration.Contracts.ExternalLogins
 {
     /// <summary>
     /// Represents the validated identity returned from an external identity provider.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public sealed record ExternalLoginIdentity(
         string Provider,
         string ProviderKey,

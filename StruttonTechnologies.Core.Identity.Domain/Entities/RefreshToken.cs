@@ -1,9 +1,12 @@
+﻿using System.Diagnostics.CodeAnalysis;
+
 namespace StruttonTechnologies.Core.Identity.Domain.Entities
 {
     /// <summary>
     /// Represents a refresh token used for renewing authentication sessions.
     /// </summary>
     /// <typeparam name="TKey">The type of the user identifier.</typeparam>
+    [ExcludeFromCodeCoverage]
     public class RefreshToken<TKey>
         where TKey : IEquatable<TKey>
     {

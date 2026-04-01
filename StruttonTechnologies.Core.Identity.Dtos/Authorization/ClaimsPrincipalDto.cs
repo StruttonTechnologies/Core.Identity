@@ -1,5 +1,9 @@
-﻿namespace StruttonTechnologies.Core.Identity.Dtos.Authorization
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace StruttonTechnologies.Core.Identity.Dtos.Authorization
 {
+    [ExcludeFromCodeCoverage]
+
     public record ClaimsPrincipalDto(
         string? AuthenticationType,
         bool IsAuthenticated,

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace StruttonTechnologies.Core.Identity.Domain.Entities
 {
@@ -6,6 +7,7 @@ namespace StruttonTechnologies.Core.Identity.Domain.Entities
     /// Concrete identity user with customizable key and person types.
     /// </summary>
     /// <typeparam name="TKey">The type of the primary key for the user.</typeparam>
+    [ExcludeFromCodeCoverage]
     public class IdentityUser<TKey> : Microsoft.AspNetCore.Identity.IdentityUser<TKey>
         where TKey : IEquatable<TKey>
     {

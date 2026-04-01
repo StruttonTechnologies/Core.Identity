@@ -1,3 +1,5 @@
+﻿using System.Diagnostics.CodeAnalysis;
+
 using MediatR;
 
 namespace StruttonTechnologies.Core.Identity.Coordinator.Contracts.JwtTokens.Commands
@@ -5,6 +7,7 @@ namespace StruttonTechnologies.Core.Identity.Coordinator.Contracts.JwtTokens.Com
     /// <summary>
     /// Command to revoke JWT tokens. Can revoke a specific token or all tokens for a user.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public sealed record RevokeTokenCommand : IRequest<Unit>
     {
         /// <summary>

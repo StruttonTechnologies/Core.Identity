@@ -1,9 +1,12 @@
+﻿using System.Diagnostics.CodeAnalysis;
+
 using MediatR;
 
 using StruttonTechnologies.Core.Identity.Dtos.Authentication;
 
 namespace StruttonTechnologies.Core.Identity.Coordinator.Contracts.Authentication.Commands
 {
+    [ExcludeFromCodeCoverage]
     public class SignOutCommand : IRequest<SignOutResultDto>
     {
         public string Token { get; }

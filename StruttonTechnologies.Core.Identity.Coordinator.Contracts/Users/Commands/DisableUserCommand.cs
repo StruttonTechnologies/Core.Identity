@@ -1,3 +1,5 @@
+﻿using System.Diagnostics.CodeAnalysis;
+
 using MediatR;
 
 using Microsoft.AspNetCore.Identity;
@@ -7,5 +9,6 @@ namespace StruttonTechnologies.Core.Identity.Coordinator.Contracts.Users.Command
     /// <summary>
     /// Command to disable a user account.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public sealed record DisableUserCommand(string UserId) : IRequest<IdentityResult>;
 }

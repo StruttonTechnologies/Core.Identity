@@ -1,9 +1,12 @@
-﻿namespace StruttonTechnologies.Core.Identity.Dtos.Authentication
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace StruttonTechnologies.Core.Identity.Dtos.Authentication
 {
+    [ExcludeFromCodeCoverage]
+
     public record SignOutResultDto(
-    bool Success,
-    string? Message = null
-)
+        bool Success,
+        string? Message = null)
     {
         public static SignOutResultDto SuccessResult()
         {

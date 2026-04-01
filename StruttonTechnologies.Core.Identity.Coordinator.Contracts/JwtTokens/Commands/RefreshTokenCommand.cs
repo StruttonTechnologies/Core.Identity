@@ -1,3 +1,5 @@
+﻿using System.Diagnostics.CodeAnalysis;
+
 using MediatR;
 
 using StruttonTechnologies.Core.Identity.Dtos.Authentication;
@@ -7,5 +9,6 @@ namespace StruttonTechnologies.Core.Identity.Coordinator.Contracts.JwtTokens.Com
     /// <summary>
     /// Command to refresh JWT tokens using a refresh token.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public sealed record RefreshTokenCommand(string RefreshToken) : IRequest<TokenResponseDto>;
 }
