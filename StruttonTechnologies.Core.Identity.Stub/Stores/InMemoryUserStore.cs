@@ -1,7 +1,10 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.Diagnostics.CodeAnalysis;
+
+using Microsoft.AspNetCore.Identity;
 
 namespace StruttonTechnologies.Core.Identity.Stub.Stores
 {
+    [ExcludeFromCodeCoverage]
     public class InMemoryUserStore<TUser> : IUserStore<TUser>
     where TUser : IdentityUser<Guid>, new()
     {

@@ -1,3 +1,4 @@
+﻿using System.Diagnostics.CodeAnalysis;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -15,6 +16,7 @@ namespace StruttonTechnologies.Core.Identity.Stub.Factories
     /// Stub implementation of IRevocableTokenManager for unit testing.
     /// Simulates token generation, validation, and revocation behavior.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public class StubRevocableTokenManager : IRevocableTokenManager
     {
         private readonly HashSet<string> _revokedAccessTokens = [];

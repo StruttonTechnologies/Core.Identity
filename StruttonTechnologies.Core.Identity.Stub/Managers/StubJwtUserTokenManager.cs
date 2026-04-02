@@ -1,9 +1,11 @@
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Security.Claims;
 
 using StruttonTechnologies.Core.Identity.Domain.Contracts.JwtToken;
 
 namespace StruttonTechnologies.Core.Identity.Stub.Managers
 {
+    [ExcludeFromCodeCoverage]
     internal class StubJwtUserTokenManager : IJwtUserTokenManager<Guid>
     {
         private readonly HashSet<string> _revokedAccessTokens = [];

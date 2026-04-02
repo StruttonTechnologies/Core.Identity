@@ -1,4 +1,5 @@
 ﻿using System.Collections.Concurrent;
+using System.Diagnostics.CodeAnalysis;
 
 using Microsoft.AspNetCore.Identity;
 
@@ -9,6 +10,7 @@ namespace StruttonTechnologies.Core.Identity.Stub.Stores
     /// <summary>
     /// In-memory stub implementation of IUserStore for testing Identity flows.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public sealed class StubUserStore :
         IUserStore<StubUser>,
         IUserPasswordStore<StubUser>,

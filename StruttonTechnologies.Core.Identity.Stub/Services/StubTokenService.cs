@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Security.Claims;
 
 using StruttonTechnologies.Core.Identity.Orchestration.Contracts.JwtToken;
 
@@ -8,6 +9,7 @@ namespace StruttonTechnologies.Core.Identity.Stub.Services
     /// Stub implementation of <see cref="ITokenOrchestration{TKey}"/> for unit tests.
     /// Provides deterministic, test-safe behavior.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public class StubTokenService : ITokenOrchestration<Guid>
     {
         public Task<string> GenerateTokenAsync(ClaimsPrincipal principal, CancellationToken cancellationToken = default)

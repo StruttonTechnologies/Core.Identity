@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Security.Claims;
 
 using StruttonTechnologies.Core.Identity.Stub.Entities;
 
@@ -7,6 +8,7 @@ namespace StruttonTechnologies.Core.Identity.Stub.Builders
     /// <summary>
     /// Builds stubbed <see cref="ClaimsPrincipal"/> instances for testing token generation and validation.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public static class StubClaimsPrincipalBuilder
     {
         /// <summary>

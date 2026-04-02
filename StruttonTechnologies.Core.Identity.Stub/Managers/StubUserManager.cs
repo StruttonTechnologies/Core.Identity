@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.Diagnostics.CodeAnalysis;
+
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -10,6 +12,7 @@ namespace StruttonTechnologies.Core.Identity.Stub.Managers
     /// <summary>
     /// Stubbed UserManager for testing Identity flows without EF or external dependencies.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public sealed class StubUserManager : UserManager<StubUser>
     {
         private readonly StubUserStore _store;

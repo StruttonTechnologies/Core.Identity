@@ -1,7 +1,10 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.Diagnostics.CodeAnalysis;
+
+using Microsoft.AspNetCore.Identity;
 
 namespace StruttonTechnologies.Core.Identity.Stub.Data
 {
+    [ExcludeFromCodeCoverage]
     public static class StubRoleData
     {
         /// <summary>
