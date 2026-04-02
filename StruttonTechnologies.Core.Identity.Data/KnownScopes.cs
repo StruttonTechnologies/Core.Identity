@@ -1,5 +1,8 @@
-﻿namespace StruttonTechnologies.Core.Identity.Data
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace StruttonTechnologies.Core.Identity.Data
 {
+    [ExcludeFromCodeCoverage]
     public static class KnownScopes
     {
         public const string OpenId = "openid";

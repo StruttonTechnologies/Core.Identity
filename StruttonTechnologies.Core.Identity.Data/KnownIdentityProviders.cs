@@ -1,9 +1,12 @@
+﻿using System.Diagnostics.CodeAnalysis;
+
 namespace StruttonTechnologies.Core.Identity.Data
 {
     /// <summary>
     /// Supported identity providers for authentication.
     /// Order is intentional and should not be changed without review.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public static class KnownIdentityProviders
     {
         public const string Google = "Google";

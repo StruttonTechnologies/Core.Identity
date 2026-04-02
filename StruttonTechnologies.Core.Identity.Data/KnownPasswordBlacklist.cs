@@ -1,8 +1,11 @@
+﻿using System.Diagnostics.CodeAnalysis;
+
 namespace StruttonTechnologies.Core.Identity.Data
 {
     /// <summary>
     /// Centralized list of disallowed passwords that are too common or insecure.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public static class KnownPasswordBlacklist
     {
         public static readonly string[] All =

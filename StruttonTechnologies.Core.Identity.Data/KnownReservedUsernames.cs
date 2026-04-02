@@ -1,5 +1,8 @@
+﻿using System.Diagnostics.CodeAnalysis;
+
 namespace StruttonTechnologies.Core.Identity.Data
 {
+    [ExcludeFromCodeCoverage]
     public static class KnownReservedUsernames
     {
         // Intentionally case-insensitive matching will be handled by the validator

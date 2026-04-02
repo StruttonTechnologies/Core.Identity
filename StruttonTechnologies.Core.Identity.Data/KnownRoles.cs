@@ -1,9 +1,12 @@
+﻿using System.Diagnostics.CodeAnalysis;
+
 namespace StruttonTechnologies.Core.Identity.Data
 {
     /// <summary>
     /// Supported roles for production seeding.
     /// Order is intentional and should not be changed without review.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public static class KnownRoles
     {
         public const string Admin = "Admin";
