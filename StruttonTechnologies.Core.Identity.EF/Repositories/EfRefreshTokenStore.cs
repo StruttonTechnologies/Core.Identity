@@ -49,7 +49,11 @@ namespace StruttonTechnologies.Core.Identity.EF.Repositories
 
         public async Task RevokeAllAsync(TKey userId, CancellationToken cancellationToken = default)
         {
-            ArgumentNullException.ThrowIfNull(userId);
+            if (EqualityComparer<TKey>.Default.Equals(userId, default))
+            {
+                throw new ArgumentNullException(nameof(userId));
+            }
+
             List<RefreshToken<TKey>> tokens = await _context.RefreshTokens
                 .Where(t => t.UserId.Equals(userId) && !t.IsRevoked)
                 .ToListAsync(cancellationToken);

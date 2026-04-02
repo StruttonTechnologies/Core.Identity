@@ -271,7 +271,7 @@ namespace StruttonTechnologies.Core.Identity.EF.Tests.SqlServer
             CancellationTokenSource cts = new();
             cts.Cancel();
 
-            await Assert.ThrowsAsync<OperationCanceledException>(async () =>
+            await Assert.ThrowsAsync<TaskCanceledException>(async () =>
                 await _store.SaveAsync(token, cts.Token));
         }
 
