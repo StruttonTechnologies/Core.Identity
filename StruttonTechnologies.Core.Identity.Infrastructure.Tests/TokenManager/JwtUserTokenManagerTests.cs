@@ -1,10 +1,15 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Text;
+
+using Microsoft.IdentityModel.Tokens;
 
 using StruttonTechnologies.Core.Identity.Domain.Contracts.JwtToken;
 using StruttonTechnologies.Core.Identity.Domain.Entities;
 using StruttonTechnologies.Core.Identity.Domain.Models;
 using StruttonTechnologies.Core.Identity.JwtTokenManager;
 using StruttonTechnologies.Core.Identity.Stub.Factories;
+
+using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
 
 namespace StruttonTechnologies.Core.Identity.Infrastructure.Tests.TokenManager
 {
@@ -406,6 +411,565 @@ namespace StruttonTechnologies.Core.Identity.Infrastructure.Tests.TokenManager
             JwtSecurityToken jwt = handler.ReadJwtToken(token);
 
             Assert.DoesNotContain(jwt.Claims, c => c.Type == ClaimTypes.Role);
+        }
+
+        [Fact]
+        public async Task GenerateAccessTokenAsync_HandlesEmptyRoles()
+        {
+            string token = await _manager.GenerateAccessTokenAsync(
+                Guid.NewGuid(),
+                "StubUser",
+                "stub@example.com",
+                Array.Empty<string>(),
+                TestContext.Current.CancellationToken);
+
+            JwtSecurityTokenHandler handler = new();
+            JwtSecurityToken jwt = handler.ReadJwtToken(token);
+
+            Assert.DoesNotContain(jwt.Claims, c => c.Type == ClaimTypes.Role);
+        }
+
+        [Fact]
+        public async Task GenerateAccessTokenAsync_HandlesMultipleRoles()
+        {
+            string[] multipleRoles = ["User", "Admin", "Manager"];
+
+            string token = await _manager.GenerateAccessTokenAsync(
+                Guid.NewGuid(),
+                "StubUser",
+                "stub@example.com",
+                multipleRoles,
+                TestContext.Current.CancellationToken);
+
+            JwtSecurityTokenHandler handler = new();
+            JwtSecurityToken jwt = handler.ReadJwtToken(token);
+
+            List<Claim> roleClaims = jwt.Claims.Where(c => c.Type == ClaimTypes.Role).ToList();
+            Assert.Equal(3, roleClaims.Count);
+            Assert.Contains(roleClaims, c => c.Value == "User");
+            Assert.Contains(roleClaims, c => c.Value == "Admin");
+            Assert.Contains(roleClaims, c => c.Value == "Manager");
+        }
+
+        [Fact]
+        public async Task GenerateAccessTokenAsync_IncludesUserIdClaim()
+        {
+            Guid userId = Guid.NewGuid();
+
+            string token = await _manager.GenerateAccessTokenAsync(
+                userId,
+                "StubUser",
+                "stub@example.com",
+                Roles,
+                TestContext.Current.CancellationToken);
+
+            JwtSecurityTokenHandler handler = new();
+            JwtSecurityToken jwt = handler.ReadJwtToken(token);
+
+            Claim? nameIdentifierClaim = jwt.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+            Assert.NotNull(nameIdentifierClaim);
+            Assert.Equal(userId.ToString(), nameIdentifierClaim.Value);
+        }
+
+        [Fact]
+        public async Task RevokeAccessTokenAsync_DoesNothing_WhenTokenHasNoJtiClaim()
+        {
+            JwtTokenOptions options = StubJwtOptionsFactory.CreateDefault();
+            SymmetricSecurityKey key = new(Encoding.UTF8.GetBytes(options.SigningKey));
+            SigningCredentials creds = new(key, SecurityAlgorithms.HmacSha256);
+
+            ClaimsIdentity identity = new("Identity.Application");
+            identity.AddClaim(new Claim(ClaimTypes.Name, "StubUser"));
+
+            JwtSecurityToken tokenWithoutJti = new(
+                issuer: options.Issuer,
+                audience: options.Audience,
+                claims: identity.Claims,
+                notBefore: DateTime.UtcNow,
+                expires: DateTime.UtcNow.AddMinutes(options.ExpirationMinutes),
+                signingCredentials: creds);
+
+            string token = new JwtSecurityTokenHandler().WriteToken(tokenWithoutJti);
+
+            await _manager.RevokeAccessTokenAsync(token, TestContext.Current.CancellationToken);
+
+            _accessTokenRevocationStore.Verify(
+                store => store.RevokeAsync(
+                    It.IsAny<string>(),
+                    It.IsAny<Guid>(),
+                    It.IsAny<DateTime>(),
+                    It.IsAny<CancellationToken>()),
+                Times.Never);
+        }
+
+        [Fact]
+        public async Task RevokeAccessTokenAsync_HandlesTokenWithEmptyJti()
+        {
+            JwtTokenOptions options = StubJwtOptionsFactory.CreateDefault();
+            SymmetricSecurityKey key = new(Encoding.UTF8.GetBytes(options.SigningKey));
+            SigningCredentials creds = new(key, SecurityAlgorithms.HmacSha256);
+
+            ClaimsIdentity identity = new("Identity.Application");
+            identity.AddClaim(new Claim(ClaimTypes.Name, "StubUser"));
+            identity.AddClaim(new Claim(JwtRegisteredClaimNames.Jti, string.Empty));
+
+            JwtSecurityToken tokenWithEmptyJti = new(
+                issuer: options.Issuer,
+                audience: options.Audience,
+                claims: identity.Claims,
+                notBefore: DateTime.UtcNow,
+                expires: DateTime.UtcNow.AddMinutes(options.ExpirationMinutes),
+                signingCredentials: creds);
+
+            string token = new JwtSecurityTokenHandler().WriteToken(tokenWithEmptyJti);
+
+            await _manager.RevokeAccessTokenAsync(token, TestContext.Current.CancellationToken);
+
+            _accessTokenRevocationStore.Verify(
+                store => store.RevokeAsync(
+                    It.IsAny<string>(),
+                    It.IsAny<Guid>(),
+                    It.IsAny<DateTime>(),
+                    It.IsAny<CancellationToken>()),
+                Times.Never);
+        }
+
+        [Fact]
+        public async Task RevokeAccessTokenAsync_WorksWithoutSubjectClaim()
+        {
+            JwtTokenOptions options = StubJwtOptionsFactory.CreateDefault();
+            SymmetricSecurityKey key = new(Encoding.UTF8.GetBytes(options.SigningKey));
+            SigningCredentials creds = new(key, SecurityAlgorithms.HmacSha256);
+
+            ClaimsIdentity identity = new("Identity.Application");
+            identity.AddClaim(new Claim(ClaimTypes.Name, "StubUser"));
+            identity.AddClaim(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("N")));
+
+            JwtSecurityToken tokenWithoutSub = new(
+                issuer: options.Issuer,
+                audience: options.Audience,
+                claims: identity.Claims,
+                notBefore: DateTime.UtcNow,
+                expires: DateTime.UtcNow.AddMinutes(options.ExpirationMinutes),
+                signingCredentials: creds);
+
+            string token = new JwtSecurityTokenHandler().WriteToken(tokenWithoutSub);
+
+            _accessTokenRevocationStore
+                .Setup(store => store.RevokeAsync(
+                    It.IsAny<string>(),
+                    It.IsAny<Guid>(),
+                    It.IsAny<DateTime>(),
+                    It.IsAny<CancellationToken>()))
+                .Returns(Task.CompletedTask);
+
+            await _manager.RevokeAccessTokenAsync(token, TestContext.Current.CancellationToken);
+
+            _accessTokenRevocationStore.Verify(
+                store => store.RevokeAsync(
+                    It.IsAny<string>(),
+                    It.Is<Guid>(g => g == default),
+                    It.IsAny<DateTime>(),
+                    It.IsAny<CancellationToken>()),
+                Times.Once);
+        }
+
+        [Fact]
+        public async Task IsAccessTokenRevokedAsync_ReturnsFalse_WhenTokenHasNoJti()
+        {
+            JwtTokenOptions options = StubJwtOptionsFactory.CreateDefault();
+            SymmetricSecurityKey key = new(Encoding.UTF8.GetBytes(options.SigningKey));
+            SigningCredentials creds = new(key, SecurityAlgorithms.HmacSha256);
+
+            ClaimsIdentity identity = new("Identity.Application");
+            identity.AddClaim(new Claim(ClaimTypes.Name, "StubUser"));
+
+            JwtSecurityToken tokenWithoutJti = new(
+                issuer: options.Issuer,
+                audience: options.Audience,
+                claims: identity.Claims,
+                notBefore: DateTime.UtcNow,
+                expires: DateTime.UtcNow.AddMinutes(options.ExpirationMinutes),
+                signingCredentials: creds);
+
+            string token = new JwtSecurityTokenHandler().WriteToken(tokenWithoutJti);
+
+            bool isRevoked = await _manager.IsAccessTokenRevokedAsync(token, TestContext.Current.CancellationToken);
+
+            Assert.False(isRevoked);
+        }
+
+        [Fact]
+        public async Task GenerateRefreshTokenAsync_CreatesTokenWithCorrectProperties()
+        {
+            Guid userId = Guid.NewGuid();
+            string username = "TestUser";
+            RefreshToken<Guid>? savedToken = null;
+
+            _refreshTokenStore
+                .Setup(store => store.SaveAsync(It.IsAny<RefreshToken<Guid>>(), It.IsAny<CancellationToken>()))
+                .Callback<RefreshToken<Guid>, CancellationToken>((token, ct) => savedToken = token)
+                .Returns(Task.CompletedTask);
+
+            string token = await _manager.GenerateRefreshTokenAsync(userId, username, TestContext.Current.CancellationToken);
+
+            Assert.NotNull(savedToken);
+            Assert.Equal(userId, savedToken.UserId);
+            Assert.Equal(username, savedToken.Username);
+            Assert.False(savedToken.IsRevoked);
+            Assert.True(savedToken.ExpiresAt > DateTime.UtcNow);
+            Assert.True(savedToken.CreatedAt <= DateTime.UtcNow);
+        }
+
+        [Fact]
+        public async Task ValidateTokenAsync_ReturnsNull_ForExpiredToken()
+        {
+            JwtTokenOptions options = StubJwtOptionsFactory.CreateDefault();
+            SymmetricSecurityKey key = new(Encoding.UTF8.GetBytes(options.SigningKey));
+            SigningCredentials creds = new(key, SecurityAlgorithms.HmacSha256);
+
+            ClaimsIdentity identity = new("Identity.Application");
+            identity.AddClaim(new Claim(ClaimTypes.Name, "StubUser"));
+            identity.AddClaim(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("N")));
+
+            JwtSecurityToken expiredToken = new(
+                issuer: options.Issuer,
+                audience: options.Audience,
+                claims: identity.Claims,
+                notBefore: DateTime.UtcNow.AddMinutes(-60),
+                expires: DateTime.UtcNow.AddMinutes(-30),
+                signingCredentials: creds);
+
+            string token = new JwtSecurityTokenHandler().WriteToken(expiredToken);
+
+            ClaimsPrincipal? principal = await _manager.ValidateTokenAsync(token);
+
+            Assert.Null(principal);
+        }
+
+        [Fact]
+        public async Task RevokeAccessTokenAsync_HandlesInvalidGuidFormat()
+        {
+            JwtTokenOptions options = StubJwtOptionsFactory.CreateDefault();
+            SymmetricSecurityKey key = new(Encoding.UTF8.GetBytes(options.SigningKey));
+            SigningCredentials creds = new(key, SecurityAlgorithms.HmacSha256);
+
+            ClaimsIdentity identity = new("Identity.Application");
+            identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, "not-a-valid-guid"));
+            identity.AddClaim(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("N")));
+
+            JwtSecurityToken tokenWithInvalidGuid = new(
+                issuer: options.Issuer,
+                audience: options.Audience,
+                claims: identity.Claims,
+                notBefore: DateTime.UtcNow,
+                expires: DateTime.UtcNow.AddMinutes(options.ExpirationMinutes),
+                signingCredentials: creds);
+
+            string token = new JwtSecurityTokenHandler().WriteToken(tokenWithInvalidGuid);
+
+            await _manager.RevokeAccessTokenAsync(token, TestContext.Current.CancellationToken);
+
+            _accessTokenRevocationStore.Verify(
+                store => store.RevokeAsync(
+                    It.IsAny<string>(),
+                    It.IsAny<Guid>(),
+                    It.IsAny<DateTime>(),
+                    It.IsAny<CancellationToken>()),
+                                                  Times.Never);
+        }
+
+        [Fact]
+        public async Task RevokeAccessTokenAsync_UsesConvertChangeType_ForNonGuidKeyType()
+        {
+            Mock<IRefreshTokenStore<int>> refreshTokenStoreInt = new();
+            Mock<IAccessTokenRevocationStore<int>> accessTokenRevocationStoreInt = new();
+            JwtTokenOptions options = StubJwtOptionsFactory.CreateDefault();
+
+            JwtUserTokenManager<int> managerInt = new(
+                refreshTokenStoreInt.Object,
+                accessTokenRevocationStoreInt.Object,
+                options);
+
+            SymmetricSecurityKey key = new(Encoding.UTF8.GetBytes(options.SigningKey));
+            SigningCredentials creds = new(key, SecurityAlgorithms.HmacSha256);
+
+            ClaimsIdentity identity = new("Identity.Application");
+            identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, "123"));
+            identity.AddClaim(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("N")));
+
+            JwtSecurityToken tokenWithIntUserId = new(
+                issuer: options.Issuer,
+                audience: options.Audience,
+                claims: identity.Claims,
+                notBefore: DateTime.UtcNow,
+                expires: DateTime.UtcNow.AddMinutes(options.ExpirationMinutes),
+                signingCredentials: creds);
+
+            string token = new JwtSecurityTokenHandler().WriteToken(tokenWithIntUserId);
+
+            accessTokenRevocationStoreInt
+                .Setup(store => store.RevokeAsync(
+                    It.IsAny<string>(),
+                    It.IsAny<int>(),
+                    It.IsAny<DateTime>(),
+                    It.IsAny<CancellationToken>()))
+                .Returns(Task.CompletedTask);
+
+            await managerInt.RevokeAccessTokenAsync(token, TestContext.Current.CancellationToken);
+
+            accessTokenRevocationStoreInt.Verify(
+                store => store.RevokeAsync(
+                    It.IsAny<string>(),
+                    123,
+                    It.IsAny<DateTime>(),
+                    It.IsAny<CancellationToken>()),
+                Times.Once);
+        }
+
+        [Fact]
+        public async Task RevokeAccessTokenAsync_HandlesOverflowException_ForSmallKeyType()
+        {
+            Mock<IRefreshTokenStore<sbyte>> refreshTokenStoreSByte = new();
+            Mock<IAccessTokenRevocationStore<sbyte>> accessTokenRevocationStoreSByte = new();
+            JwtTokenOptions options = StubJwtOptionsFactory.CreateDefault();
+
+            JwtUserTokenManager<sbyte> managerSByte = new(
+                refreshTokenStoreSByte.Object,
+                accessTokenRevocationStoreSByte.Object,
+                options);
+
+            SymmetricSecurityKey key = new(Encoding.UTF8.GetBytes(options.SigningKey));
+            SigningCredentials creds = new(key, SecurityAlgorithms.HmacSha256);
+
+            ClaimsIdentity identity = new("Identity.Application");
+            identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, "999999"));
+            identity.AddClaim(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("N")));
+
+            JwtSecurityToken tokenWithOverflow = new(
+                issuer: options.Issuer,
+                audience: options.Audience,
+                claims: identity.Claims,
+                notBefore: DateTime.UtcNow,
+                expires: DateTime.UtcNow.AddMinutes(options.ExpirationMinutes),
+                signingCredentials: creds);
+
+            string token = new JwtSecurityTokenHandler().WriteToken(tokenWithOverflow);
+
+            await managerSByte.RevokeAccessTokenAsync(token, TestContext.Current.CancellationToken);
+
+            accessTokenRevocationStoreSByte.Verify(
+                store => store.RevokeAsync(
+                    It.IsAny<string>(),
+                    It.IsAny<sbyte>(),
+                    It.IsAny<DateTime>(),
+                    It.IsAny<CancellationToken>()),
+                Times.Never);
+        }
+
+        [Fact]
+        public async Task GetExpirationAsync_ThrowsSecurityTokenMalformedException_ForMalformedToken()
+        {
+            await Assert.ThrowsAsync<SecurityTokenMalformedException>(async () =>
+                await _manager.GetExpirationAsync("not-a-valid-jwt-token"));
+        }
+
+        [Fact]
+        public async Task IsAccessTokenRevokedAsync_ThrowsSecurityTokenMalformedException_ForMalformedToken()
+        {
+            await Assert.ThrowsAsync<SecurityTokenMalformedException>(async () =>
+                await _manager.IsAccessTokenRevokedAsync("not-a-valid-jwt-token", TestContext.Current.CancellationToken));
+        }
+
+        [Fact]
+        public async Task RevokeAccessTokenAsync_HandlesInvalidCastException_ForNonConvertibleType()
+        {
+            Mock<IRefreshTokenStore<double>> refreshTokenStoreDouble = new();
+            Mock<IAccessTokenRevocationStore<double>> accessTokenRevocationStoreDouble = new();
+            JwtTokenOptions options = StubJwtOptionsFactory.CreateDefault();
+
+            JwtUserTokenManager<double> managerDouble = new(
+                refreshTokenStoreDouble.Object,
+                accessTokenRevocationStoreDouble.Object,
+                options);
+
+            SymmetricSecurityKey key = new(Encoding.UTF8.GetBytes(options.SigningKey));
+            SigningCredentials creds = new(key, SecurityAlgorithms.HmacSha256);
+
+            ClaimsIdentity identity = new("Identity.Application");
+            identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, "not-a-number"));
+            identity.AddClaim(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("N")));
+
+            JwtSecurityToken tokenWithInvalidDouble = new(
+                issuer: options.Issuer,
+                audience: options.Audience,
+                claims: identity.Claims,
+                notBefore: DateTime.UtcNow,
+                expires: DateTime.UtcNow.AddMinutes(options.ExpirationMinutes),
+                signingCredentials: creds);
+
+            string token = new JwtSecurityTokenHandler().WriteToken(tokenWithInvalidDouble);
+
+            await managerDouble.RevokeAccessTokenAsync(token, TestContext.Current.CancellationToken);
+
+            accessTokenRevocationStoreDouble.Verify(
+                store => store.RevokeAsync(
+                    It.IsAny<string>(),
+                    It.IsAny<double>(),
+                    It.IsAny<DateTime>(),
+                    It.IsAny<CancellationToken>()),
+                Times.Never);
+        }
+
+        [Fact]
+        public async Task RevokeAccessTokenAsync_HandlesWhitespaceJti()
+        {
+            JwtTokenOptions options = StubJwtOptionsFactory.CreateDefault();
+            SymmetricSecurityKey key = new(Encoding.UTF8.GetBytes(options.SigningKey));
+            SigningCredentials creds = new(key, SecurityAlgorithms.HmacSha256);
+
+            ClaimsIdentity identity = new("Identity.Application");
+            identity.AddClaim(new Claim(ClaimTypes.Name, "StubUser"));
+            identity.AddClaim(new Claim(JwtRegisteredClaimNames.Jti, "   "));
+
+            JwtSecurityToken tokenWithWhitespaceJti = new(
+                issuer: options.Issuer,
+                audience: options.Audience,
+                claims: identity.Claims,
+                notBefore: DateTime.UtcNow,
+                expires: DateTime.UtcNow.AddMinutes(options.ExpirationMinutes),
+                signingCredentials: creds);
+
+            string token = new JwtSecurityTokenHandler().WriteToken(tokenWithWhitespaceJti);
+
+            await _manager.RevokeAccessTokenAsync(token, TestContext.Current.CancellationToken);
+
+            _accessTokenRevocationStore.Verify(
+                store => store.RevokeAsync(
+                    It.IsAny<string>(),
+                    It.IsAny<Guid>(),
+                    It.IsAny<DateTime>(),
+                    It.IsAny<CancellationToken>()),
+                Times.Never);
+        }
+
+        [Fact]
+        public async Task RevokeAccessTokenAsync_HandlesWhitespaceSubjectClaim()
+        {
+            JwtTokenOptions options = StubJwtOptionsFactory.CreateDefault();
+            SymmetricSecurityKey key = new(Encoding.UTF8.GetBytes(options.SigningKey));
+            SigningCredentials creds = new(key, SecurityAlgorithms.HmacSha256);
+
+            ClaimsIdentity identity = new("Identity.Application");
+            identity.AddClaim(new Claim(ClaimTypes.Name, "StubUser"));
+            identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, "   "));
+            identity.AddClaim(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("N")));
+
+            JwtSecurityToken tokenWithWhitespaceSub = new(
+                issuer: options.Issuer,
+                audience: options.Audience,
+                claims: identity.Claims,
+                notBefore: DateTime.UtcNow,
+                expires: DateTime.UtcNow.AddMinutes(options.ExpirationMinutes),
+                signingCredentials: creds);
+
+            string token = new JwtSecurityTokenHandler().WriteToken(tokenWithWhitespaceSub);
+
+            _accessTokenRevocationStore
+                .Setup(store => store.RevokeAsync(
+                    It.IsAny<string>(),
+                    It.IsAny<Guid>(),
+                    It.IsAny<DateTime>(),
+                    It.IsAny<CancellationToken>()))
+                .Returns(Task.CompletedTask);
+
+            await _manager.RevokeAccessTokenAsync(token, TestContext.Current.CancellationToken);
+
+            _accessTokenRevocationStore.Verify(
+                store => store.RevokeAsync(
+                    It.IsAny<string>(),
+                    It.Is<Guid>(g => g == default),
+                    It.IsAny<DateTime>(),
+                    It.IsAny<CancellationToken>()),
+                Times.Once);
+        }
+
+        [Fact]
+        public async Task IsAccessTokenRevokedAsync_ReturnsFalse_WhenTokenHasWhitespaceJti()
+        {
+            JwtTokenOptions options = StubJwtOptionsFactory.CreateDefault();
+            SymmetricSecurityKey key = new(Encoding.UTF8.GetBytes(options.SigningKey));
+            SigningCredentials creds = new(key, SecurityAlgorithms.HmacSha256);
+
+            ClaimsIdentity identity = new("Identity.Application");
+            identity.AddClaim(new Claim(ClaimTypes.Name, "StubUser"));
+            identity.AddClaim(new Claim(JwtRegisteredClaimNames.Jti, "   "));
+
+            JwtSecurityToken tokenWithWhitespaceJti = new(
+                issuer: options.Issuer,
+                audience: options.Audience,
+                claims: identity.Claims,
+                notBefore: DateTime.UtcNow,
+                expires: DateTime.UtcNow.AddMinutes(options.ExpirationMinutes),
+                signingCredentials: creds);
+
+            string token = new JwtSecurityTokenHandler().WriteToken(tokenWithWhitespaceJti);
+
+            bool isRevoked = await _manager.IsAccessTokenRevokedAsync(token, TestContext.Current.CancellationToken);
+
+            Assert.False(isRevoked);
+        }
+
+        [Fact]
+        public async Task ValidateTokenAsync_ReturnsNull_ForTokenWithInvalidIssuer()
+        {
+            JwtTokenOptions options = StubJwtOptionsFactory.CreateDefault();
+            SymmetricSecurityKey key = new(Encoding.UTF8.GetBytes(options.SigningKey));
+            SigningCredentials creds = new(key, SecurityAlgorithms.HmacSha256);
+
+            ClaimsIdentity identity = new("Identity.Application");
+            identity.AddClaim(new Claim(ClaimTypes.Name, "StubUser"));
+            identity.AddClaim(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("N")));
+
+            JwtSecurityToken tokenWithWrongIssuer = new(
+                issuer: "wrong-issuer",
+                audience: options.Audience,
+                claims: identity.Claims,
+                notBefore: DateTime.UtcNow,
+                expires: DateTime.UtcNow.AddMinutes(options.ExpirationMinutes),
+                signingCredentials: creds);
+
+            string token = new JwtSecurityTokenHandler().WriteToken(tokenWithWrongIssuer);
+
+            ClaimsPrincipal? principal = await _manager.ValidateTokenAsync(token);
+
+            Assert.Null(principal);
+        }
+
+        [Fact]
+        public async Task ValidateTokenAsync_ReturnsNull_ForTokenWithInvalidAudience()
+        {
+            JwtTokenOptions options = StubJwtOptionsFactory.CreateDefault();
+            SymmetricSecurityKey key = new(Encoding.UTF8.GetBytes(options.SigningKey));
+            SigningCredentials creds = new(key, SecurityAlgorithms.HmacSha256);
+
+            ClaimsIdentity identity = new("Identity.Application");
+            identity.AddClaim(new Claim(ClaimTypes.Name, "StubUser"));
+            identity.AddClaim(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("N")));
+
+            JwtSecurityToken tokenWithWrongAudience = new(
+                issuer: options.Issuer,
+                audience: "wrong-audience",
+                claims: identity.Claims,
+                notBefore: DateTime.UtcNow,
+                expires: DateTime.UtcNow.AddMinutes(options.ExpirationMinutes),
+                signingCredentials: creds);
+
+            string token = new JwtSecurityTokenHandler().WriteToken(tokenWithWrongAudience);
+
+            ClaimsPrincipal? principal = await _manager.ValidateTokenAsync(token);
+
+            Assert.Null(principal);
         }
     }
 }
