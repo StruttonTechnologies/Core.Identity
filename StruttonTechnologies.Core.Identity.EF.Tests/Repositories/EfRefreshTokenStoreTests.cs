@@ -280,6 +280,13 @@ namespace StruttonTechnologies.Core.Identity.EF.Tests.Repositories
                 new EfRefreshTokenStore<Guid>(null!));
         }
 
+        [Fact]
+        public async Task RevokeAllAsync_ThrowsArgumentNullException_WhenUserIdIsNull()
+        {
+            await Assert.ThrowsAsync<ArgumentNullException>(async () =>
+                await _store.RevokeAllAsync(default!, CancellationToken.None));
+        }
+
         public void Dispose()
         {
             _context?.Dispose();
