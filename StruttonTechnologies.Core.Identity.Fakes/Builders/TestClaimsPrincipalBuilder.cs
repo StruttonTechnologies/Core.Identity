@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Security.Claims;
 
 namespace StruttonTechnologies.Core.Identity.Fakes.Builders
 {
@@ -6,6 +7,7 @@ namespace StruttonTechnologies.Core.Identity.Fakes.Builders
     /// Builder for creating test-safe <see cref="ClaimsPrincipal"/> instances.
     /// Used to simulate authenticated users in token and authorization tests.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public static class TestClaimsPrincipalBuilder
     {
         /// <summary>

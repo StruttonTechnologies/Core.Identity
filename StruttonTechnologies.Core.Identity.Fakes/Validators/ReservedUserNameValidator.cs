@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.Diagnostics.CodeAnalysis;
+
+using Microsoft.AspNetCore.Identity;
 
 using StruttonTechnologies.Core.Identity.Stub.Entities;
 
@@ -7,6 +9,7 @@ namespace StruttonTechnologies.Core.Identity.Fakes.Validators
     /// <summary>
     /// Validates that the username is not part of a reserved list (e.g., 'admin', 'root').
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public class ReservedUserNameValidator : IUserValidator<StubUser>
     {
         private readonly HashSet<string> _reservedNames;

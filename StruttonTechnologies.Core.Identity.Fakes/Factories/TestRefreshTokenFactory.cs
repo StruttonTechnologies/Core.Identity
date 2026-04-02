@@ -1,4 +1,6 @@
-﻿using StruttonTechnologies.Core.Identity.Stub.Models;
+﻿using System.Diagnostics.CodeAnalysis;
+
+using StruttonTechnologies.Core.Identity.Stub.Models;
 
 namespace StruttonTechnologies.Core.Identity.Fakes.Factories
 {
@@ -6,6 +8,7 @@ namespace StruttonTechnologies.Core.Identity.Fakes.Factories
     /// Factory for creating test-safe instances of <see cref="StubRefreshToken"/>.
     /// Lives in Fakes for test-only usage, but uses Stub model for realistic shape.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public static class FakeRefreshTokenFactory
     {
         /// <summary>

@@ -1,4 +1,6 @@
-﻿using StruttonTechnologies.Core.Identity.Domain.Models;
+﻿using System.Diagnostics.CodeAnalysis;
+
+using StruttonTechnologies.Core.Identity.Domain.Models;
 
 namespace StruttonTechnologies.Core.Identity.Fakes.Factories
 {
@@ -6,6 +8,7 @@ namespace StruttonTechnologies.Core.Identity.Fakes.Factories
     /// Factory for creating test-safe <see cref="JwtTokenOptions"/> instances.
     /// Used to configure token generation logic in unit and integration tests.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public static class JwtTokenOptionsFactory
     {
         /// <summary>

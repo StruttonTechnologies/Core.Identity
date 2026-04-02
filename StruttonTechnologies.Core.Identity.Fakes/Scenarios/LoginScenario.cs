@@ -1,3 +1,5 @@
+﻿using System.Diagnostics.CodeAnalysis;
+
 using StruttonTechnologies.Core.Identity.Domain.Contracts.JwtToken;
 using StruttonTechnologies.Core.Identity.Fakes.Factories;
 using StruttonTechnologies.Core.Identity.Stub.Entities;
@@ -8,6 +10,7 @@ namespace StruttonTechnologies.Core.Identity.Fakes.Scenarios
     /// Fluent builder for composing identity login test scenarios.
     /// Wires up user, roles, and tokens for expressive, modular test setup.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public class LoginScenario
     {
         public StubUser User { get; private set; } = default!;

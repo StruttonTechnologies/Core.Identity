@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.Diagnostics.CodeAnalysis;
+
+using Microsoft.AspNetCore.Identity;
 
 namespace StruttonTechnologies.Core.Identity.Fakes.Validators
 {
@@ -7,6 +9,7 @@ namespace StruttonTechnologies.Core.Identity.Fakes.Validators
     /// Implements to simulate failure in ASP.NET Identity pipelines.
     /// </summary>
     /// <typeparam name="TUser">The user type being validated.</typeparam>
+    [ExcludeFromCodeCoverage]
     public class AlwaysFailUserValidator<TUser> : IUserValidator<TUser>
         where TUser : IdentityUser<Guid>
     {

@@ -1,4 +1,6 @@
-﻿using StruttonTechnologies.Core.Identity.Stub.Entities;
+﻿using System.Diagnostics.CodeAnalysis;
+
+using StruttonTechnologies.Core.Identity.Stub.Entities;
 
 namespace StruttonTechnologies.Core.Identity.Fakes.Factories
 {
@@ -6,6 +8,7 @@ namespace StruttonTechnologies.Core.Identity.Fakes.Factories
     /// Factory for creating test-safe <see cref="StubUser"/> instances.
     /// Provides default configurations and targeted overrides for identity-related tests.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public static class TestAppUserIdentityFactory
     {
         /// <summary>

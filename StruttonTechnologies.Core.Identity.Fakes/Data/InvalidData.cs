@@ -1,8 +1,11 @@
-﻿namespace StruttonTechnologies.Core.Identity.Fakes.Data
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace StruttonTechnologies.Core.Identity.Fakes.Data
 {
     /// <summary>
     /// Provides invalid test data for identity-related scenarios.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public static class InvalidData
     {
         /// <summary>
