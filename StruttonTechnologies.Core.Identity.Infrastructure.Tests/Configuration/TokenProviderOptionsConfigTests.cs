@@ -17,5 +17,27 @@ namespace StruttonTechnologies.Core.Identity.Infrastructure.Tests.Configuration
 
             Assert.Equal(24, options.TokenLifespanHours);
         }
+
+        [Fact]
+        public void TokenLifespanHours_CanBeSet()
+        {
+            TokenProviderOptionsConfig options = new()
+            {
+                TokenLifespanHours = 48
+            };
+
+            Assert.Equal(48, options.TokenLifespanHours);
+        }
+
+        [Fact]
+        public void TokenLifespanHours_CanBeRetrieved()
+        {
+            TokenProviderOptionsConfig options = new();
+            options.TokenLifespanHours = 72;
+
+            int result = options.TokenLifespanHours;
+
+            Assert.Equal(72, result);
+        }
     }
 }

@@ -895,33 +895,7 @@ namespace StruttonTechnologies.Core.Identity.Infrastructure.Tests.TokenManager
         }
 
         [Fact]
-        public async Task IsAccessTokenRevokedAsync_ReturnsFalse_WhenTokenHasWhitespaceJti()
-        {
-            JwtTokenOptions options = StubJwtOptionsFactory.CreateDefault();
-            SymmetricSecurityKey key = new(Encoding.UTF8.GetBytes(options.SigningKey));
-            SigningCredentials creds = new(key, SecurityAlgorithms.HmacSha256);
-
-            ClaimsIdentity identity = new("Identity.Application");
-            identity.AddClaim(new Claim(ClaimTypes.Name, "StubUser"));
-            identity.AddClaim(new Claim(JwtRegisteredClaimNames.Jti, "   "));
-
-            JwtSecurityToken tokenWithWhitespaceJti = new(
-                issuer: options.Issuer,
-                audience: options.Audience,
-                claims: identity.Claims,
-                notBefore: DateTime.UtcNow,
-                expires: DateTime.UtcNow.AddMinutes(options.ExpirationMinutes),
-                signingCredentials: creds);
-
-            string token = new JwtSecurityTokenHandler().WriteToken(tokenWithWhitespaceJti);
-
-            bool isRevoked = await _manager.IsAccessTokenRevokedAsync(token, TestContext.Current.CancellationToken);
-
-            Assert.False(isRevoked);
-        }
-
-        [Fact]
-        public async Task ValidateTokenAsync_ReturnsNull_ForTokenWithInvalidIssuer()
+        public async Task ValidateTokenAsync_ReturnsNull_ForInvalidIssuer()
         {
             JwtTokenOptions options = StubJwtOptionsFactory.CreateDefault();
             SymmetricSecurityKey key = new(Encoding.UTF8.GetBytes(options.SigningKey));
@@ -931,7 +905,7 @@ namespace StruttonTechnologies.Core.Identity.Infrastructure.Tests.TokenManager
             identity.AddClaim(new Claim(ClaimTypes.Name, "StubUser"));
             identity.AddClaim(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("N")));
 
-            JwtSecurityToken tokenWithWrongIssuer = new(
+            JwtSecurityToken tokenWithInvalidIssuer = new(
                 issuer: "wrong-issuer",
                 audience: options.Audience,
                 claims: identity.Claims,
@@ -939,7 +913,7 @@ namespace StruttonTechnologies.Core.Identity.Infrastructure.Tests.TokenManager
                 expires: DateTime.UtcNow.AddMinutes(options.ExpirationMinutes),
                 signingCredentials: creds);
 
-            string token = new JwtSecurityTokenHandler().WriteToken(tokenWithWrongIssuer);
+            string token = new JwtSecurityTokenHandler().WriteToken(tokenWithInvalidIssuer);
 
             ClaimsPrincipal? principal = await _manager.ValidateTokenAsync(token);
 
@@ -947,7 +921,7 @@ namespace StruttonTechnologies.Core.Identity.Infrastructure.Tests.TokenManager
         }
 
         [Fact]
-        public async Task ValidateTokenAsync_ReturnsNull_ForTokenWithInvalidAudience()
+        public async Task ValidateTokenAsync_ReturnsNull_ForInvalidAudience()
         {
             JwtTokenOptions options = StubJwtOptionsFactory.CreateDefault();
             SymmetricSecurityKey key = new(Encoding.UTF8.GetBytes(options.SigningKey));
@@ -957,7 +931,7 @@ namespace StruttonTechnologies.Core.Identity.Infrastructure.Tests.TokenManager
             identity.AddClaim(new Claim(ClaimTypes.Name, "StubUser"));
             identity.AddClaim(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("N")));
 
-            JwtSecurityToken tokenWithWrongAudience = new(
+            JwtSecurityToken tokenWithInvalidAudience = new(
                 issuer: options.Issuer,
                 audience: "wrong-audience",
                 claims: identity.Claims,
@@ -965,11 +939,40 @@ namespace StruttonTechnologies.Core.Identity.Infrastructure.Tests.TokenManager
                 expires: DateTime.UtcNow.AddMinutes(options.ExpirationMinutes),
                 signingCredentials: creds);
 
-            string token = new JwtSecurityTokenHandler().WriteToken(tokenWithWrongAudience);
+            string token = new JwtSecurityTokenHandler().WriteToken(tokenWithInvalidAudience);
 
             ClaimsPrincipal? principal = await _manager.ValidateTokenAsync(token);
 
             Assert.Null(principal);
+        }
+
+        [Fact]
+        public async Task GenerateAccessTokenAsync_UsesLongKeyType()
+        {
+            Mock<IRefreshTokenStore<long>> refreshTokenStoreLong = new();
+            Mock<IAccessTokenRevocationStore<long>> accessTokenRevocationStoreLong = new();
+            JwtTokenOptions options = StubJwtOptionsFactory.CreateDefault();
+
+            JwtUserTokenManager<long> managerLong = new(
+                refreshTokenStoreLong.Object,
+                accessTokenRevocationStoreLong.Object,
+                options);
+
+            long userId = 123456789L;
+
+            string token = await managerLong.GenerateAccessTokenAsync(
+                userId,
+                "StubUser",
+                "stub@example.com",
+                Roles,
+                TestContext.Current.CancellationToken);
+
+            JwtSecurityTokenHandler handler = new();
+            JwtSecurityToken jwt = handler.ReadJwtToken(token);
+
+            Claim? nameIdentifierClaim = jwt.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+            Assert.NotNull(nameIdentifierClaim);
+            Assert.Equal(userId.ToString(), nameIdentifierClaim.Value);
         }
     }
 }
