@@ -1,5 +1,8 @@
-﻿namespace StruttonTechnologies.Core.Identity.Mocks.Extensions
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace StruttonTechnologies.Core.Identity.Mocks.Extensions
 {
+    [ExcludeFromCodeCoverage]
     internal class ClaimsPrincipalExtensions
     {
     }

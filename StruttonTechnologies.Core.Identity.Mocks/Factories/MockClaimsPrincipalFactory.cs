@@ -2,6 +2,7 @@
 // Copyright (c) Strutton Technologies. All rights reserved.
 // </copyright>
 
+using System.Diagnostics.CodeAnalysis;
 using System.Security.Claims;
 
 using Microsoft.AspNetCore.Identity;
@@ -16,6 +17,7 @@ namespace StruttonTechnologies.Core.Identity.Mocks.Factories
     /// Factory for creating a mocked <see cref="IUserClaimsPrincipalFactory{IdentityUser}"/>.
     /// Produces <see cref="ClaimsPrincipal"/> objects based on KnownUsers and KnownRoles.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public static class MockClaimsPrincipalFactory
     {
         /// <summary>

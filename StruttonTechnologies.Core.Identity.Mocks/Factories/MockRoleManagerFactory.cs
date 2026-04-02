@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.Diagnostics.CodeAnalysis;
+
+using Microsoft.AspNetCore.Identity;
 
 using Moq;
 
@@ -10,6 +12,7 @@ namespace StruttonTechnologies.Core.Identity.Mocks.Factories
     /// Provides a factory for creating mocked RoleManager instances
     /// preconfigured with KnownRoles from Test.Data.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public static class MockRoleManagerFactory
     {
         public static Mock<RoleManager<IdentityRole>> Create()

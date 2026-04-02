@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.Diagnostics.CodeAnalysis;
+
+using Microsoft.AspNetCore.Identity;
 
 using Moq;
 
@@ -7,6 +9,7 @@ using StruttonTechnologies.Core.Identity.Orchestration.UserManager;
 
 namespace StruttonTechnologies.Core.Identity.Mocks.Factories
 {
+    [ExcludeFromCodeCoverage]
     public class MockAuthenticationFactory<TUser, TKey>
         where TUser : IdentityUser<TKey>, new()
         where TKey : IEquatable<TKey>

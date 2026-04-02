@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Security.Claims;
 
 using Moq;
 
@@ -7,6 +8,7 @@ using StruttonTechnologies.Core.Identity.Test.Data;
 
 namespace StruttonTechnologies.Core.Identity.Mocks.Factories
 {
+    [ExcludeFromCodeCoverage]
     public static class RevocableTokenManagerFactory
     {
         public static IRevocableTokenManager Create()

@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Security.Claims;
 
 using Microsoft.AspNetCore.Identity;
 
@@ -13,6 +14,7 @@ namespace StruttonTechnologies.Core.Identity.Mocks.Factories
     /// Factory for creating mocked <see cref="UserManager{TUser}"/> instances
     /// preconfigured with <see cref="StubUser"/>.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public static class MockUserManagerFactory
     {
         public static Mock<UserManager<StubUser>> Create(StubUser? user = null)

@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System.Diagnostics.CodeAnalysis;
+
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 
 using Moq;
 
 namespace StruttonTechnologies.Core.Identity.Mocks.Factories
 {
+    [ExcludeFromCodeCoverage]
     public static class MockSignInManagerFactory
     {
         public static Mock<SignInManager<TUser>> Create<TUser>(Mock<UserManager<TUser>> userManagerMock)

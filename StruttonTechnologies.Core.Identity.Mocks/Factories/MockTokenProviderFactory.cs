@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.Diagnostics.CodeAnalysis;
+
+using Microsoft.AspNetCore.Identity;
 
 using Moq;
 
@@ -8,6 +10,7 @@ namespace StruttonTechnologies.Core.Identity.Mocks.Factories
     /// Factory for creating a mocked IUserTwoFactorTokenProvider.
     /// Used for Identity flows like password reset, email confirmation, 2FA.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public static class MockTokenProviderFactory
     {
         public static Mock<IUserTwoFactorTokenProvider<IdentityUser>> Create()

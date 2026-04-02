@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Security.Claims;
 
 using Moq;
 
@@ -11,6 +12,7 @@ namespace StruttonTechnologies.Core.Identity.Mocks.Factories
     /// Factory for creating a mocked ITokenOrchestration.
     /// Used for orchestration-level JWT scenarios.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public static class MockTokenServiceFactory
     {
         public static Mock<ITokenOrchestration<TKey>> Create<TKey>()
