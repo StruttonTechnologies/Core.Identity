@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- Package identity -->
+    <PackageId>StruttonTechnologies.Core.Identity.Composition</PackageId>
+    <Description>Composition root for StruttonTechnologies.Core.Identity service registration.</Description>
+    <Title>StruttonTechnologies.Core.Identity Composition Root</Title>
+    <PackageTags>core,identity,composition,DI,dependency-injection,strutton,StruttonTechnologies</PackageTags>
+
+    <!-- Versioning -->
+    <VersionPrefix>1.0.0</VersionPrefix>
+    <VersionSuffix>alpha</VersionSuffix>
+
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\StruttonTechnologies.Core.Identity.API\StruttonTechnologies.Core.Identity.API.csproj" />
+    <ProjectReference Include="..\StruttonTechnologies.Core.Identity.Coordinator\StruttonTechnologies.Core.Identity.Coordinator.csproj" />
+    <ProjectReference Include="..\StruttonTechnologies.Core.Identity.EF\StruttonTechnologies.Core.Identity.EF.csproj" />
+    <ProjectReference Include="..\StruttonTechnologies.Core.Identity.JwtTokenManager\StruttonTechnologies.Core.Identity.JwtTokenManager.csproj" />
+    <ProjectReference Include="..\StruttonTechnologies.Core.Identity.Orchestration\StruttonTechnologies.Core.Identity.Orchestration.csproj" />
+  </ItemGroup>
+
+</Project>

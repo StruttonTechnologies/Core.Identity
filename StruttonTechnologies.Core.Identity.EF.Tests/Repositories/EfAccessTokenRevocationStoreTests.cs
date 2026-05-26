@@ -4,14 +4,14 @@ using Microsoft.EntityFrameworkCore;
 
 using StruttonTechnologies.Core.Identity.EF.Repositories;
 
+using DomainAccessTokenRevocation = StruttonTechnologies.Core.Identity.Domain.Entities.AccessTokenRevocation<System.Guid>;
 using DomainIdentityRole = StruttonTechnologies.Core.Identity.Domain.Entities.IdentityRole<System.Guid>;
 using DomainIdentityUser = StruttonTechnologies.Core.Identity.Domain.Entities.IdentityUser<System.Guid>;
-using DomainAccessTokenRevocation = StruttonTechnologies.Core.Identity.Domain.Entities.AccessTokenRevocation<System.Guid>;
 
 namespace StruttonTechnologies.Core.Identity.EF.Tests.Repositories
 {
     [ExcludeFromCodeCoverage]
-    public class EfAccessTokenRevocationStoreTests : IDisposable
+    public sealed class EfAccessTokenRevocationStoreTests : IDisposable
     {
         private readonly CoreIdentityDbContext<Guid, DomainIdentityUser, DomainIdentityRole> _context;
         private readonly EfAccessTokenRevocationStore<Guid> _store;
@@ -37,7 +37,7 @@ namespace StruttonTechnologies.Core.Identity.EF.Tests.Repositories
             await _store.RevokeAsync(jti, userId, expiresAt, CancellationToken.None);
 
             DomainAccessTokenRevocation? revocation = await _context.AccessTokenRevocations
-                .FirstOrDefaultAsync(r => r.Jti == jti);
+                .FirstOrDefaultAsync(r => r.Jti == jti, TestContext.Current.CancellationToken);
 
             Assert.NotNull(revocation);
             Assert.Equal(jti, revocation.Jti);
@@ -56,7 +56,7 @@ namespace StruttonTechnologies.Core.Identity.EF.Tests.Repositories
             await _store.RevokeAsync(jti, userId, expiresAt, CancellationToken.None);
             await _store.RevokeAsync(jti, userId, expiresAt, CancellationToken.None);
 
-            int count = await _context.AccessTokenRevocations.CountAsync(r => r.Jti == jti);
+            int count = await _context.AccessTokenRevocations.CountAsync(r => r.Jti == jti, TestContext.Current.CancellationToken);
             Assert.Equal(1, count);
         }
 
@@ -141,6 +141,7 @@ namespace StruttonTechnologies.Core.Identity.EF.Tests.Repositories
         public void Dispose()
         {
             _context?.Dispose();
+            GC.SuppressFinalize(this);
         }
     }
 }

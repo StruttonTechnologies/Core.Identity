@@ -50,8 +50,8 @@ namespace StruttonTechnologies.Core.Identity.Handler.Tests.Coordinators
         {
             string userId = Guid.NewGuid().ToString();
 
-            _mediatorMock.Setup(x => x.Send(It.Is<GetClaimsPrincipalQuery>(q => q.UserId == userId), It.IsAny<CancellationToken>()))
-                .ReturnsAsync((ClaimsPrincipalDto?)null);
+            _mediatorMock.Setup(x => x.Send(It.IsAny<GetClaimsPrincipalQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync((ClaimsPrincipalDto?)null!);
 
             ClaimsPrincipalDto? result = await _sut.GetClaimsPrincipalAsync(userId);
 

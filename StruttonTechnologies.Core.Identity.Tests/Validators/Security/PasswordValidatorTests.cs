@@ -24,7 +24,7 @@ namespace StruttonTechnologies.Core.Identity.Tests.Validators.Security
             ReadOnlyCollection<string> errors = PasswordValidator.Validate(password);
 
             Assert.NotEmpty(errors);
-            Assert.Contains(errors, e => e.Contains("empty or whitespace"));
+            Assert.Contains(errors, e => e.Contains("empty or whitespace", StringComparison.Ordinal));
         }
 
         [Fact]
@@ -35,7 +35,7 @@ namespace StruttonTechnologies.Core.Identity.Tests.Validators.Security
             ReadOnlyCollection<string> errors = PasswordValidator.Validate(password);
 
             Assert.NotEmpty(errors);
-            Assert.Contains(errors, e => e.Contains("empty or whitespace"));
+            Assert.Contains(errors, e => e.Contains("empty or whitespace", StringComparison.Ordinal));
         }
 
         [Fact]
@@ -46,7 +46,7 @@ namespace StruttonTechnologies.Core.Identity.Tests.Validators.Security
             ReadOnlyCollection<string> errors = PasswordValidator.Validate(password);
 
             Assert.NotEmpty(errors);
-            Assert.Contains(errors, e => e.Contains("empty or whitespace"));
+            Assert.Contains(errors, e => e.Contains("empty or whitespace", StringComparison.Ordinal));
         }
 
         [Theory]
@@ -58,7 +58,7 @@ namespace StruttonTechnologies.Core.Identity.Tests.Validators.Security
             ReadOnlyCollection<string> errors = PasswordValidator.Validate(password);
 
             Assert.NotEmpty(errors);
-            Assert.Contains(errors, e => e.Contains("at least 10 characters"));
+            Assert.Contains(errors, e => e.Contains("at least 10 characters", StringComparison.Ordinal));
         }
 
         [Fact]
@@ -70,7 +70,7 @@ namespace StruttonTechnologies.Core.Identity.Tests.Validators.Security
 
             if (errors.Count > 0)
             {
-                Assert.DoesNotContain(errors, e => e.Contains("at least 10 characters"));
+                Assert.DoesNotContain(errors, e => e.Contains("at least 10 characters", StringComparison.Ordinal));
             }
         }
 
@@ -82,7 +82,7 @@ namespace StruttonTechnologies.Core.Identity.Tests.Validators.Security
             ReadOnlyCollection<string> errors = PasswordValidator.Validate(password);
 
             Assert.NotEmpty(errors);
-            Assert.Contains(errors, e => e.Contains("too common") || e.Contains("easily guessed"));
+            Assert.Contains(errors, e => e.Contains("too common", StringComparison.Ordinal) || e.Contains("easily guessed", StringComparison.Ordinal));
         }
 
         [Fact]
@@ -113,7 +113,7 @@ namespace StruttonTechnologies.Core.Identity.Tests.Validators.Security
             ReadOnlyCollection<string> errors = PasswordValidator.Validate(password);
 
             Assert.NotEmpty(errors);
-            Assert.Contains(errors, e => e.Contains("too common") || e.Contains("easily guessed"));
+            Assert.Contains(errors, e => e.Contains("too common", StringComparison.Ordinal) || e.Contains("easily guessed", StringComparison.Ordinal));
         }
 
         [Fact]
@@ -125,7 +125,7 @@ namespace StruttonTechnologies.Core.Identity.Tests.Validators.Security
 
             if (errors.Count > 0)
             {
-                Assert.DoesNotContain(errors, e => e.Contains("at least 10 characters"));
+                Assert.DoesNotContain(errors, e => e.Contains("at least 10 characters", StringComparison.Ordinal));
             }
         }
 
@@ -138,7 +138,7 @@ namespace StruttonTechnologies.Core.Identity.Tests.Validators.Security
 
             if (errors.Count > 0)
             {
-                Assert.DoesNotContain(errors, e => e.Contains("special character"));
+                Assert.DoesNotContain(errors, e => e.Contains("special character", StringComparison.Ordinal));
             }
         }
 
@@ -151,7 +151,7 @@ namespace StruttonTechnologies.Core.Identity.Tests.Validators.Security
 
             if (errors.Count > 0)
             {
-                Assert.DoesNotContain(errors, e => e.Contains("number") || e.Contains("digit"));
+                Assert.DoesNotContain(errors, e => e.Contains("number", StringComparison.Ordinal) || e.Contains("digit", StringComparison.Ordinal));
             }
         }
 
@@ -164,7 +164,7 @@ namespace StruttonTechnologies.Core.Identity.Tests.Validators.Security
 
             if (errors.Count > 0)
             {
-                Assert.DoesNotContain(errors, e => e.Contains("uppercase"));
+                Assert.DoesNotContain(errors, e => e.Contains("uppercase", StringComparison.Ordinal));
             }
         }
     }

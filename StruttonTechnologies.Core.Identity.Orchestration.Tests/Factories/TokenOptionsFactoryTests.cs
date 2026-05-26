@@ -52,7 +52,7 @@ namespace StruttonTechnologies.Core.Identity.Orchestration.Tests.Factories
             TokenOptionsFactory factory = new(config);
 
             var ex = Assert.Throws<InvalidOperationException>(() => factory.Create(60));
-            Assert.Contains("Jwt:Issuer", ex.Message);
+            Assert.Contains("Jwt:Issuer", ex.Message, StringComparison.Ordinal);
         }
 
         [Fact]
@@ -71,7 +71,7 @@ namespace StruttonTechnologies.Core.Identity.Orchestration.Tests.Factories
             TokenOptionsFactory factory = new(config);
 
             var ex = Assert.Throws<InvalidOperationException>(() => factory.Create(60));
-            Assert.Contains("Jwt:Audience", ex.Message);
+            Assert.Contains("Jwt:Audience", ex.Message, StringComparison.Ordinal);
         }
 
         [Fact]
@@ -90,7 +90,7 @@ namespace StruttonTechnologies.Core.Identity.Orchestration.Tests.Factories
             TokenOptionsFactory factory = new(config);
 
             var ex = Assert.Throws<InvalidOperationException>(() => factory.Create(60));
-            Assert.Contains("Jwt:Key", ex.Message);
+            Assert.Contains("Jwt:Key", ex.Message, StringComparison.Ordinal);
         }
 
         [Fact]

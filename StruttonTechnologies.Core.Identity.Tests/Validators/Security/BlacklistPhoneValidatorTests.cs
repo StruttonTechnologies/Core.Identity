@@ -93,13 +93,13 @@ namespace StruttonTechnologies.Core.Identity.Tests.Validators.Security
 
         [Theory]
         [InlineData("+10000000000")]
-        [InlineData("+10000000000")]
-        [InlineData("+10000000000")]
         public async Task ValidateAsync_IsCaseInsensitive(string blacklistedNumber)
         {
+            ArgumentNullException.ThrowIfNull(blacklistedNumber);
+
             IdentityUser<Guid> user = new IdentityUser<Guid>
             {
-                PhoneNumber = blacklistedNumber.ToLowerInvariant()
+                PhoneNumber = blacklistedNumber.ToUpperInvariant()
             };
 
             IdentityResult result = await _validator.ValidateAsync(_mockUserManager.Object, user);
@@ -119,7 +119,7 @@ namespace StruttonTechnologies.Core.Identity.Tests.Validators.Security
         {
             Mock<IUserStore<IdentityUser<Guid>>> storeMock = new Mock<IUserStore<IdentityUser<Guid>>>();
             return new Mock<UserManager<IdentityUser<Guid>>>(
-                storeMock.Object, null, null, null, null, null, null, null, null);
+                storeMock.Object, null!, null!, null!, null!, null!, null!, null!, null!);
         }
     }
 }

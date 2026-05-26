@@ -20,7 +20,7 @@ namespace StruttonTechnologies.Core.Identity.EF.Repositories
         public async Task SaveAsync(RefreshToken<TKey> token, CancellationToken cancellationToken = default)
         {
             ArgumentNullException.ThrowIfNull(token);
-            _context.RefreshTokens.Add(token);
+            _ = _context.RefreshTokens.Add(token);
             await _context.SaveChangesAsync(cancellationToken);
         }
 

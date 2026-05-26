@@ -49,7 +49,8 @@ namespace StruttonTechnologies.Core.Identity.JwtTokenManager
             // The coverage tool reports 50% branch coverage (2/4) because it conservatively assumes ToString()
             // could return null, but this is impossible given the generic constraint.
             [ExcludeFromCodeCoverage]
-            static string GetUserIdString<T>(T? userId) where T : IEquatable<T>
+            static string GetUserIdString<T>(T? userId)
+                where T : IEquatable<T>
             {
                 return userId?.ToString() ?? string.Empty;
             }

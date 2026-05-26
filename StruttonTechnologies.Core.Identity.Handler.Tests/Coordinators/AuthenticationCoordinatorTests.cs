@@ -39,7 +39,8 @@ namespace StruttonTechnologies.Core.Identity.Handler.Tests.Coordinators
             result.Should().NotBeNull();
             result.Should().BeSameAs(expectedResult);
             result.Success.Should().BeTrue();
-            _mediatorMock.Verify(x => x.Send(
+            _mediatorMock.Verify(
+                x => x.Send(
                 It.Is<RegisterUserCommand>(c => c.Email == email && c.Password == password && c.DisplayName == displayName),
                 It.IsAny<CancellationToken>()), Times.Once);
         }
@@ -65,9 +66,11 @@ namespace StruttonTechnologies.Core.Identity.Handler.Tests.Coordinators
             result.Should().NotBeNull();
             result.Success.Should().BeFalse();
             result.FailureReason.Should().NotBeNullOrEmpty();
-            _mediatorMock.Verify(x => x.Send(
-                It.Is<RegisterUserCommand>(c => c.Email == email && c.Password == password && c.DisplayName == displayName),
-                It.IsAny<CancellationToken>()), Times.Once);
+            _mediatorMock.Verify(
+                x => x.Send(
+                    It.Is<RegisterUserCommand>(c => c.Email == email && c.Password == password && c.DisplayName == displayName),
+                    It.IsAny<CancellationToken>()),
+                Times.Once);
         }
 
         [Fact]
@@ -91,9 +94,11 @@ namespace StruttonTechnologies.Core.Identity.Handler.Tests.Coordinators
             result.Should().BeSameAs(expectedResult);
             result.IsSuccess.Should().BeTrue();
             result.Token.Should().Be("jwt-token");
-            _mediatorMock.Verify(x => x.Send(
-                It.Is<AuthenticateUserCommand>(c => c.Email == email && c.Password == password),
-                It.IsAny<CancellationToken>()), Times.Once);
+            _mediatorMock.Verify(
+                x => x.Send(
+                    It.Is<AuthenticateUserCommand>(c => c.Email == email && c.Password == password),
+                    It.IsAny<CancellationToken>()),
+                Times.Once);
         }
 
         [Fact]
@@ -117,9 +122,11 @@ namespace StruttonTechnologies.Core.Identity.Handler.Tests.Coordinators
             result.Should().NotBeNull();
             result.IsSuccess.Should().BeFalse();
             result.IsFailure.Should().BeTrue();
-            _mediatorMock.Verify(x => x.Send(
-                It.Is<AuthenticateUserCommand>(c => c.Email == email && c.Password == password),
-                It.IsAny<CancellationToken>()), Times.Once);
+            _mediatorMock.Verify(
+                x => x.Send(
+                    It.Is<AuthenticateUserCommand>(c => c.Email == email && c.Password == password),
+                    It.IsAny<CancellationToken>()),
+                Times.Once);
         }
 
         [Fact]
@@ -141,9 +148,11 @@ namespace StruttonTechnologies.Core.Identity.Handler.Tests.Coordinators
             result.Should().NotBeNull();
             result.Should().BeSameAs(expectedResult);
             result.Success.Should().BeTrue();
-            _mediatorMock.Verify(x => x.Send(
-                It.Is<SignOutCommand>(c => c.Token == token),
-                It.IsAny<CancellationToken>()), Times.Once);
+            _mediatorMock.Verify(
+                x => x.Send(
+                    It.Is<SignOutCommand>(c => c.Token == token),
+                    It.IsAny<CancellationToken>()),
+                Times.Once);
         }
 
         [Fact]
@@ -164,9 +173,11 @@ namespace StruttonTechnologies.Core.Identity.Handler.Tests.Coordinators
 
             result.Should().NotBeNull();
             result.Success.Should().BeFalse();
-            _mediatorMock.Verify(x => x.Send(
-                It.Is<SignOutCommand>(c => c.Token == token),
-                It.IsAny<CancellationToken>()), Times.Once);
+            _mediatorMock.Verify(
+                x => x.Send(
+                    It.Is<SignOutCommand>(c => c.Token == token),
+                    It.IsAny<CancellationToken>()),
+                Times.Once);
         }
     }
 }

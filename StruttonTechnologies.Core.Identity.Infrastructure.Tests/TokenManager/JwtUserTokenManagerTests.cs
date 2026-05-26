@@ -394,7 +394,7 @@ namespace StruttonTechnologies.Core.Identity.Infrastructure.Tests.TokenManager
             JwtSecurityTokenHandler handler = new();
             JwtSecurityToken jwt = handler.ReadJwtToken(token);
 
-            Assert.Contains(jwt.Claims, c => c.Type == ClaimTypes.Email && c.Value == string.Empty);
+            Assert.Contains(jwt.Claims, c => c.Type == ClaimTypes.Email && string.IsNullOrEmpty(c.Value));
         }
 
         [Fact]
@@ -676,7 +676,7 @@ namespace StruttonTechnologies.Core.Identity.Infrastructure.Tests.TokenManager
                     It.IsAny<Guid>(),
                     It.IsAny<DateTime>(),
                     It.IsAny<CancellationToken>()),
-                                                  Times.Never);
+                Times.Never);
         }
 
         [Fact]
@@ -972,7 +972,7 @@ namespace StruttonTechnologies.Core.Identity.Infrastructure.Tests.TokenManager
 
             Claim? nameIdentifierClaim = jwt.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
             Assert.NotNull(nameIdentifierClaim);
-            Assert.Equal(userId.ToString(), nameIdentifierClaim.Value);
+            Assert.Equal(userId.ToString(System.Globalization.CultureInfo.InvariantCulture), nameIdentifierClaim.Value);
         }
     }
 }

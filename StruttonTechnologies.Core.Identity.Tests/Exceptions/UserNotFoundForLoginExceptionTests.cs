@@ -24,9 +24,9 @@ namespace StruttonTechnologies.Core.Identity.Tests.Exceptions
             UserNotFoundForLoginException exception = new UserNotFoundForLoginException(userName);
 
             Assert.Equal(userName, exception.UserName);
-            Assert.Contains(userName, exception.Message);
-            Assert.Contains("No user found", exception.Message);
-            Assert.Contains("Registration required", exception.Message);
+            Assert.Contains(userName, exception.Message, StringComparison.Ordinal);
+            Assert.Contains("No user found", exception.Message, StringComparison.Ordinal);
+            Assert.Contains("Registration required", exception.Message, StringComparison.Ordinal);
         }
 
         [Fact]

@@ -45,9 +45,9 @@ namespace StruttonTechnologies.Core.Identity.Tests.Exceptions
 
             UserNotFoundException exception = new UserNotFoundException(userId);
 
-            Assert.Contains(userId.ToString(), exception.Message);
-            Assert.Contains("not found", exception.Message);
-            Assert.Contains("store", exception.Message);
+            Assert.Contains(userId.ToString(), exception.Message, StringComparison.Ordinal);
+            Assert.Contains("not found", exception.Message, StringComparison.Ordinal);
+            Assert.Contains("store", exception.Message, StringComparison.Ordinal);
         }
 
         [Fact]
@@ -57,8 +57,8 @@ namespace StruttonTechnologies.Core.Identity.Tests.Exceptions
 
             UserNotFoundException exception = new UserNotFoundException(userId);
 
-            Assert.Contains(userId.ToString(), exception.Message);
-            Assert.Contains("not found", exception.Message);
+            Assert.Contains(userId.ToString(System.Globalization.CultureInfo.InvariantCulture), exception.Message, StringComparison.Ordinal);
+            Assert.Contains("not found", exception.Message, StringComparison.Ordinal);
         }
 
         [Fact]
@@ -68,7 +68,7 @@ namespace StruttonTechnologies.Core.Identity.Tests.Exceptions
 
             UserNotFoundException exception = new UserNotFoundException(userId);
 
-            Assert.Contains(userId, exception.Message);
+            Assert.Contains(userId, exception.Message, StringComparison.Ordinal);
         }
 
         [Fact]

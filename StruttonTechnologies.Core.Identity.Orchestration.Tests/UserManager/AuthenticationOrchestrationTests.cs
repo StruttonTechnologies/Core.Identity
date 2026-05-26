@@ -213,7 +213,8 @@ namespace StruttonTechnologies.Core.Identity.Orchestration.Tests.UserManager
             Assert.Equal(expectedToken, result.Token);
             Assert.Null(result.FailureReason);
 
-            _userManager.Verify(m => m.CreateAsync(
+            _userManager.Verify(
+                m => m.CreateAsync(
                 It.Is<TestUser>(u => u.UserName == email && u.Email == email),
                 password), Times.Once);
         }
@@ -235,8 +236,8 @@ namespace StruttonTechnologies.Core.Identity.Orchestration.Tests.UserManager
 
             Assert.False(result.IsSuccess);
             Assert.True(result.IsFailure);
-            Assert.Contains("Password too weak", result.FailureReason);
-            Assert.Contains("Password requires digit", result.FailureReason);
+            Assert.Contains("Password too weak", result.FailureReason, StringComparison.Ordinal);
+            Assert.Contains("Password requires digit", result.FailureReason, StringComparison.Ordinal);
             Assert.Equal(string.Empty, result.Token);
         }
 
@@ -311,14 +312,14 @@ namespace StruttonTechnologies.Core.Identity.Orchestration.Tests.UserManager
             var store = new Mock<IUserStore<TestUser>>();
             return new Mock<UserManager<TestUser>>(
                 store.Object,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null);
+                null!,
+                null!,
+                null!,
+                null!,
+                null!,
+                null!,
+                null!,
+                null!);
         }
 
         private static Mock<SignInManager<TestUser>> CreateMockSignInManager(Mock<UserManager<TestUser>> userManager)
@@ -329,14 +330,10 @@ namespace StruttonTechnologies.Core.Identity.Orchestration.Tests.UserManager
                 userManager.Object,
                 contextAccessor.Object,
                 claimsFactory.Object,
-                null,
-                null,
-                null,
-                null);
+                null!,
+                null!,
+                null!,
+                null!);
         }
-    }
-
-    public class TestUser : IdentityUser<Guid>
-    {
     }
 }

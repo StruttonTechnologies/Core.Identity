@@ -79,13 +79,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 		Directory.Build.props = Directory.Build.props
 		Directory.Packages.props = Directory.Packages.props
-		Directoryh.Build.targets = Directoryh.Build.targets
-		README.md = README.md
 		stylecop.json = stylecop.json
 		C:\Users\sstru\OneDrive\Documents\test analyzer.xml = C:\Users\sstru\OneDrive\Documents\test analyzer.xml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Orchestration", "Orchestration", "{C4241D37-A4D0-4C10-B82C-6B8A480EDF3B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Composition", "Composition", "{695160D2-49E1-4571-9F03-7313FA51E816}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StruttonTechnologies.Core.Identity.Composition", "StruttonTechnologies.Core.Identity.Composition\StruttonTechnologies.Core.Identity.Composition.csproj", "{6933CE33-0650-4E13-8E7F-2944A9ACD83D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -185,6 +187,10 @@ Global
 		{732E797F-780A-4D46-976A-97FA4F76C9E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{732E797F-780A-4D46-976A-97FA4F76C9E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{732E797F-780A-4D46-976A-97FA4F76C9E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6933CE33-0650-4E13-8E7F-2944A9ACD83D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6933CE33-0650-4E13-8E7F-2944A9ACD83D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6933CE33-0650-4E13-8E7F-2944A9ACD83D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6933CE33-0650-4E13-8E7F-2944A9ACD83D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -223,6 +229,8 @@ Global
 		{49B6653E-EC78-48C9-8F00-5DB69ECF0740} = {FC4E5325-470D-420D-AFBD-F61877E60FA4}
 		{732E797F-780A-4D46-976A-97FA4F76C9E9} = {5A05A583-4CCE-498A-B3A9-AF370EC14DAF}
 		{C4241D37-A4D0-4C10-B82C-6B8A480EDF3B} = {804AC4B1-D0E3-41A8-816D-49D2CE032A49}
+		{695160D2-49E1-4571-9F03-7313FA51E816} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{6933CE33-0650-4E13-8E7F-2944A9ACD83D} = {695160D2-49E1-4571-9F03-7313FA51E816}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5A6B4083-2ADD-4A37-A3C5-3E0CD991968F}

@@ -14,7 +14,7 @@ namespace StruttonTechnologies.Core.Identity.EF.Tests.SqlServer
     /// Contains test scenarios for <see cref="SqlServerRefreshTokenStore{TKey}"/>.
     /// </summary>
     [ExcludeFromCodeCoverage]
-    public class SqlServerRefreshTokenStoreTests : IDisposable
+    public sealed class SqlServerRefreshTokenStoreTests : IDisposable
     {
         private readonly CoreIdentityDbContext<Guid, DomainIdentityUser, DomainIdentityRole> _context;
         private readonly SqlServerRefreshTokenStore<Guid> _store;
@@ -46,7 +46,7 @@ namespace StruttonTechnologies.Core.Identity.EF.Tests.SqlServer
             await _store.SaveAsync(token, CancellationToken.None);
 
             DomainRefreshToken? savedToken = await _context.RefreshTokens
-                .FirstOrDefaultAsync(t => t.Token == token.Token);
+                .FirstOrDefaultAsync(t => t.Token == token.Token, TestContext.Current.CancellationToken);
 
             Assert.NotNull(savedToken);
             Assert.Equal(token.Token, savedToken.Token);
@@ -98,7 +98,7 @@ namespace StruttonTechnologies.Core.Identity.EF.Tests.SqlServer
             };
 
             _context.RefreshTokens.Add(token);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(TestContext.Current.CancellationToken);
 
             DomainRefreshToken? retrievedToken = await _store.GetAsync(token.Token, CancellationToken.None);
 
@@ -122,7 +122,7 @@ namespace StruttonTechnologies.Core.Identity.EF.Tests.SqlServer
             await _store.RevokeAsync(token.Token, CancellationToken.None);
 
             DomainRefreshToken? revokedToken = await _context.RefreshTokens
-                .FirstOrDefaultAsync(t => t.Token == token.Token);
+                .FirstOrDefaultAsync(t => t.Token == token.Token, TestContext.Current.CancellationToken);
 
             Assert.NotNull(revokedToken);
             Assert.True(revokedToken.IsRevoked);
@@ -167,7 +167,7 @@ namespace StruttonTechnologies.Core.Identity.EF.Tests.SqlServer
 
             List<DomainRefreshToken> tokens = await _context.RefreshTokens
                 .Where(t => t.UserId == userId)
-                .ToListAsync();
+                .ToListAsync(TestContext.Current.CancellationToken);
 
             Assert.All(tokens, t => Assert.True(t.IsRevoked));
             Assert.All(tokens, t => Assert.NotNull(t.RevokedAt));
@@ -205,9 +205,9 @@ namespace StruttonTechnologies.Core.Identity.EF.Tests.SqlServer
             await _store.RevokeAllAsync(userId1, CancellationToken.None);
 
             DomainRefreshToken? user1Token = await _context.RefreshTokens
-                .FirstOrDefaultAsync(t => t.UserId == userId1);
+                .FirstOrDefaultAsync(t => t.UserId == userId1, TestContext.Current.CancellationToken);
             DomainRefreshToken? user2Token = await _context.RefreshTokens
-                .FirstOrDefaultAsync(t => t.UserId == userId2);
+                .FirstOrDefaultAsync(t => t.UserId == userId2, TestContext.Current.CancellationToken);
 
             Assert.NotNull(user1Token);
             Assert.True(user1Token.IsRevoked);
@@ -249,7 +249,7 @@ namespace StruttonTechnologies.Core.Identity.EF.Tests.SqlServer
             await _store.RevokeAllAsync(userId, CancellationToken.None);
 
             DomainRefreshToken? token = await _context.RefreshTokens
-                .FirstOrDefaultAsync(t => t.Token == alreadyRevokedToken.Token);
+                .FirstOrDefaultAsync(t => t.Token == alreadyRevokedToken.Token, TestContext.Current.CancellationToken);
 
             Assert.NotNull(token);
             Assert.Equal(originalRevokedAt, token.RevokedAt);
@@ -268,8 +268,8 @@ namespace StruttonTechnologies.Core.Identity.EF.Tests.SqlServer
                 IsRevoked = false
             };
 
-            CancellationTokenSource cts = new();
-            cts.Cancel();
+            using CancellationTokenSource cts = new();
+            await cts.CancelAsync();
 
             await Assert.ThrowsAsync<TaskCanceledException>(async () =>
                 await _store.SaveAsync(token, cts.Token));
@@ -278,8 +278,8 @@ namespace StruttonTechnologies.Core.Identity.EF.Tests.SqlServer
         [Fact]
         public async Task GetAsync_WithCancellationToken_CancelsOperation()
         {
-            CancellationTokenSource cts = new();
-            cts.Cancel();
+            using CancellationTokenSource cts = new();
+            await cts.CancelAsync();
 
             await Assert.ThrowsAsync<OperationCanceledException>(async () =>
                 await _store.GetAsync("test-token", cts.Token));
@@ -288,8 +288,8 @@ namespace StruttonTechnologies.Core.Identity.EF.Tests.SqlServer
         [Fact]
         public async Task RevokeAsync_WithCancellationToken_CancelsOperation()
         {
-            CancellationTokenSource cts = new();
-            cts.Cancel();
+            using CancellationTokenSource cts = new();
+            await cts.CancelAsync();
 
             await Assert.ThrowsAsync<OperationCanceledException>(async () =>
                 await _store.RevokeAsync("test-token", cts.Token));
@@ -298,8 +298,8 @@ namespace StruttonTechnologies.Core.Identity.EF.Tests.SqlServer
         [Fact]
         public async Task RevokeAllAsync_WithCancellationToken_CancelsOperation()
         {
-            CancellationTokenSource cts = new();
-            cts.Cancel();
+            using CancellationTokenSource cts = new();
+            await cts.CancelAsync();
 
             await Assert.ThrowsAsync<OperationCanceledException>(async () =>
                 await _store.RevokeAllAsync(Guid.NewGuid(), cts.Token));
@@ -308,6 +308,7 @@ namespace StruttonTechnologies.Core.Identity.EF.Tests.SqlServer
         public void Dispose()
         {
             _context?.Dispose();
+            GC.SuppressFinalize(this);
         }
     }
 }

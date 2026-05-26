@@ -24,8 +24,8 @@ namespace StruttonTechnologies.Core.Identity.Tests.Exceptions
             UserNameNotAvailableException exception = new UserNameNotAvailableException(userName);
 
             Assert.NotNull(exception);
-            Assert.Contains(userName, exception.Message);
-            Assert.Contains("exists", exception.Message);
+            Assert.Contains(userName, exception.Message, StringComparison.Ordinal);
+            Assert.Contains("exists", exception.Message, StringComparison.Ordinal);
         }
 
         [Fact]
@@ -49,7 +49,7 @@ namespace StruttonTechnologies.Core.Identity.Tests.Exceptions
             UserNameNotAvailableException exception = Assert.Throws<UserNameNotAvailableException>(() =>
                 UserNameNotAvailableException.ThrowIfExists(user, userName));
 
-            Assert.Contains(userName, exception.Message);
+            Assert.Contains(userName, exception.Message, StringComparison.Ordinal);
         }
 
         [Fact]

@@ -147,7 +147,9 @@ namespace StruttonTechnologies.Core.Identity.Tests.Data
         {
             string[] usernames = KnownReservedUsernames.All;
 
+#pragma warning disable CA1308 // ToLowerInvariant is appropriate here for testing lowercase values
             Assert.All(usernames, username => Assert.Equal(username.ToLowerInvariant(), username));
+#pragma warning restore CA1308
         }
     }
 }
