@@ -1,4 +1,4 @@
-﻿using StruttonTechnologies.Core.Identity.Domain.Contracts.JwtToken;
+using StruttonTechnologies.Core.Identity.Domain.Contracts.JwtToken;
 using StruttonTechnologies.Core.Identity.Domain.Entities;
 
 namespace StruttonTechnologies.Core.Identity.EF.Repositories
@@ -6,13 +6,19 @@ namespace StruttonTechnologies.Core.Identity.EF.Repositories
     /// <summary>
     /// Provides Entity Framework-backed operations for storing, retrieving, and revoking refresh tokens.
     /// </summary>
+    /// <typeparam name="TContext">The Core Identity DbContext type.</typeparam>
+    /// <typeparam name="TUser">The identity user type.</typeparam>
+    /// <typeparam name="TRole">The identity role type.</typeparam>
     /// <typeparam name="TKey">The type of the user's unique identifier.</typeparam>
-    public class EfRefreshTokenStore<TKey> : IRefreshTokenStore<TKey>
+    public class EfRefreshTokenStore<TContext, TUser, TRole, TKey> : IRefreshTokenStore<TKey>
+        where TContext : CoreIdentityDbContext<TKey, TUser, TRole>
+        where TUser : IdentityUser<TKey>
+        where TRole : Microsoft.AspNetCore.Identity.IdentityRole<TKey>
         where TKey : IEquatable<TKey>
     {
-        private readonly CoreIdentityDbContext<TKey, IdentityUser<TKey>, Microsoft.AspNetCore.Identity.IdentityRole<TKey>> _context;
+        private readonly TContext _context;
 
-        public EfRefreshTokenStore(CoreIdentityDbContext<TKey, IdentityUser<TKey>, Microsoft.AspNetCore.Identity.IdentityRole<TKey>> context)
+        public EfRefreshTokenStore(TContext context)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
@@ -20,20 +26,22 @@ namespace StruttonTechnologies.Core.Identity.EF.Repositories
         public async Task SaveAsync(RefreshToken<TKey> token, CancellationToken cancellationToken = default)
         {
             ArgumentNullException.ThrowIfNull(token);
-            _ = _context.RefreshTokens.Add(token);
+            _context.RefreshTokens.Add(token);
             await _context.SaveChangesAsync(cancellationToken);
         }
 
         public async Task<RefreshToken<TKey>?> GetAsync(string token, CancellationToken cancellationToken = default)
         {
-            ArgumentNullException.ThrowIfNull(token);
+            ArgumentException.ThrowIfNullOrWhiteSpace(token);
+
             return await _context.RefreshTokens
                 .FirstOrDefaultAsync(t => t.Token == token && !t.IsRevoked, cancellationToken);
         }
 
         public async Task RevokeAsync(string token, CancellationToken cancellationToken = default)
         {
-            ArgumentNullException.ThrowIfNull(token);
+            ArgumentException.ThrowIfNullOrWhiteSpace(token);
+
             RefreshToken<TKey>? existing = await _context.RefreshTokens
                 .FirstOrDefaultAsync(t => t.Token == token, cancellationToken);
 

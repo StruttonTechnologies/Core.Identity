@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 
 using StruttonTechnologies.Core.Identity.Domain.Contracts.JwtToken;
 using StruttonTechnologies.Core.Identity.EF.Repositories;
@@ -29,23 +29,24 @@ namespace StruttonTechnologies.Core.Identity.EF
             where TRole : Domain.Entities.IdentityRole<TKey>
             where TKey : IEquatable<TKey>
         {
-            // Register DbContext
+            ArgumentNullException.ThrowIfNull(optionsAction);
+
             services.AddDbContext<TContext>(optionsAction);
 
-            // Register token stores
-            services.AddScoped<IRefreshTokenStore<TKey>, EfRefreshTokenStore<TKey>>();
+            services.AddScoped<IRefreshTokenStore<TKey>, EfRefreshTokenStore<TContext, TUser, TRole, TKey>>();
+            services.AddScoped<IAccessTokenRevocationStore<TKey>, EfAccessTokenRevocationStore<TContext, TUser, TRole, TKey>>();
 
             return services;
         }
 
         /// <summary>
-        /// Adds Core Identity Entity Framework services with value type key support for AccessTokenRevocationStore.
-        /// This overload supports AccessTokenRevocation which requires a struct key type.
+        /// Adds Core Identity Entity Framework services with access token revocation support.
+        /// This overload is retained for callers that explicitly choose the revocation-named API.
         /// </summary>
         /// <typeparam name="TContext">The DbContext type derived from CoreIdentityDbContext.</typeparam>
         /// <typeparam name="TUser">The type of user entity.</typeparam>
         /// <typeparam name="TRole">The type of role entity.</typeparam>
-        /// <typeparam name="TKey">The type of the user identifier (must be a value type).</typeparam>
+        /// <typeparam name="TKey">The type of the user identifier.</typeparam>
         /// <param name="services">The service collection to add services to.</param>
         /// <param name="optionsAction">Action to configure the DbContext options.</param>
         /// <returns>The service collection for chaining.</returns>
@@ -55,16 +56,9 @@ namespace StruttonTechnologies.Core.Identity.EF
             where TContext : CoreIdentityDbContext<TKey, TUser, TRole>
             where TUser : Domain.Entities.IdentityUser<TKey>
             where TRole : Domain.Entities.IdentityRole<TKey>
-            where TKey : struct, IEquatable<TKey>
+            where TKey : IEquatable<TKey>
         {
-            // Register DbContext
-            services.AddDbContext<TContext>(optionsAction);
-
-            // Register token stores
-            services.AddScoped<IRefreshTokenStore<TKey>, EfRefreshTokenStore<TKey>>();
-            services.AddScoped<IAccessTokenRevocationStore<TKey>, EfAccessTokenRevocationStore<TKey>>();
-
-            return services;
+            return services.AddCoreIdentityEntityFramework<TContext, TUser, TRole, TKey>(optionsAction);
         }
 
         /// <summary>
@@ -87,8 +81,7 @@ namespace StruttonTechnologies.Core.Identity.EF
         }
 
         /// <summary>
-        /// Adds Core Identity Entity Framework services with SQL Server optimizations.
-        /// Uses SqlServerRefreshTokenStore for better performance on SQL Server.
+        /// Adds Core Identity Entity Framework services with SQL Server optimized refresh token storage.
         /// </summary>
         /// <typeparam name="TContext">The DbContext type derived from CoreIdentityDbContext.</typeparam>
         /// <typeparam name="TUser">The type of user entity.</typeparam>
@@ -105,23 +98,24 @@ namespace StruttonTechnologies.Core.Identity.EF
             where TRole : Domain.Entities.IdentityRole<TKey>
             where TKey : IEquatable<TKey>
         {
-            // Register DbContext
+            ArgumentNullException.ThrowIfNull(optionsAction);
+
             services.AddDbContext<TContext>(optionsAction);
 
-            // Register SQL Server optimized token stores
-            services.AddScoped<IRefreshTokenStore<TKey>, SqlServerRefreshTokenStore<TKey>>();
+            services.AddScoped<IRefreshTokenStore<TKey>, SqlServerRefreshTokenStore<TContext, TUser, TRole, TKey>>();
+            services.AddScoped<IAccessTokenRevocationStore<TKey>, EfAccessTokenRevocationStore<TContext, TUser, TRole, TKey>>();
 
             return services;
         }
 
         /// <summary>
-        /// Adds Core Identity Entity Framework services with SQL Server optimizations and AccessTokenRevocation support.
-        /// Requires TKey to be a value type for AccessTokenRevocationStore.
+        /// Adds Core Identity Entity Framework services with SQL Server optimized refresh token storage and access token revocation support.
+        /// This overload is retained for callers that explicitly choose the revocation-named API.
         /// </summary>
         /// <typeparam name="TContext">The DbContext type derived from CoreIdentityDbContext.</typeparam>
         /// <typeparam name="TUser">The type of user entity.</typeparam>
         /// <typeparam name="TRole">The type of role entity.</typeparam>
-        /// <typeparam name="TKey">The type of the user identifier (must be a value type).</typeparam>
+        /// <typeparam name="TKey">The type of the user identifier.</typeparam>
         /// <param name="services">The service collection to add services to.</param>
         /// <param name="optionsAction">Action to configure the DbContext options.</param>
         /// <returns>The service collection for chaining.</returns>
@@ -131,16 +125,9 @@ namespace StruttonTechnologies.Core.Identity.EF
             where TContext : CoreIdentityDbContext<TKey, TUser, TRole>
             where TUser : Domain.Entities.IdentityUser<TKey>
             where TRole : Domain.Entities.IdentityRole<TKey>
-            where TKey : struct, IEquatable<TKey>
+            where TKey : IEquatable<TKey>
         {
-            // Register DbContext
-            services.AddDbContext<TContext>(optionsAction);
-
-            // Register SQL Server optimized token stores
-            services.AddScoped<IRefreshTokenStore<TKey>, SqlServerRefreshTokenStore<TKey>>();
-            services.AddScoped<IAccessTokenRevocationStore<TKey>, EfAccessTokenRevocationStore<TKey>>();
-
-            return services;
+            return services.AddCoreIdentityEntityFrameworkSqlServer<TContext, TUser, TRole, TKey>(optionsAction);
         }
     }
 }

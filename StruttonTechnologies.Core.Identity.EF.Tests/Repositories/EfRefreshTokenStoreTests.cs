@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 using StruttonTechnologies.Core.Identity.EF.Repositories;
 
@@ -10,11 +8,10 @@ using DomainRefreshToken = StruttonTechnologies.Core.Identity.Domain.Entities.Re
 
 namespace StruttonTechnologies.Core.Identity.EF.Tests.Repositories
 {
-    [ExcludeFromCodeCoverage]
     public sealed class EfRefreshTokenStoreTests : IDisposable
     {
         private readonly CoreIdentityDbContext<Guid, DomainIdentityUser, DomainIdentityRole> _context;
-        private readonly EfRefreshTokenStore<Guid> _store;
+        private readonly EfRefreshTokenStore<CoreIdentityDbContext<Guid, DomainIdentityUser, DomainIdentityRole>, DomainIdentityUser, DomainIdentityRole, Guid> _store;
 
         public EfRefreshTokenStoreTests()
         {
@@ -24,7 +21,7 @@ namespace StruttonTechnologies.Core.Identity.EF.Tests.Repositories
                     .Options;
 
             _context = new CoreIdentityDbContext<Guid, DomainIdentityUser, DomainIdentityRole>(options);
-            _store = new EfRefreshTokenStore<Guid>(_context);
+            _store = new EfRefreshTokenStore<CoreIdentityDbContext<Guid, DomainIdentityUser, DomainIdentityRole>, DomainIdentityUser, DomainIdentityRole, Guid>(_context);
         }
 
         [Fact]
@@ -277,7 +274,11 @@ namespace StruttonTechnologies.Core.Identity.EF.Tests.Repositories
         public void Constructor_ThrowsArgumentNullException_WhenContextIsNull()
         {
             Assert.Throws<ArgumentNullException>(() =>
-                new EfRefreshTokenStore<Guid>(null!));
+                new EfRefreshTokenStore<
+                    CoreIdentityDbContext<Guid, DomainIdentityUser, DomainIdentityRole>,
+                    DomainIdentityUser,
+                    DomainIdentityRole,
+                    Guid>(null!));
         }
 
         [Fact]

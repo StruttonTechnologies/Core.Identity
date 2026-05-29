@@ -11,11 +11,6 @@
 		<VersionSuffix>alpha</VersionSuffix>
 	</PropertyGroup>
 
-  <ItemGroup>
-	  <Compile Remove="Authorization\Coordinator\**" />
-	  <EmbeddedResource Remove="Authorization\Coordinator\**" />
-	  <None Remove="Authorization\Coordinator\**" />
-	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="MediatR" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity.UI" />

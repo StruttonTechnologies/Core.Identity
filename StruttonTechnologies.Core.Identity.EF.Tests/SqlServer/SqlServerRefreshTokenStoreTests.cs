@@ -11,13 +11,13 @@ using DomainRefreshToken = StruttonTechnologies.Core.Identity.Domain.Entities.Re
 namespace StruttonTechnologies.Core.Identity.EF.Tests.SqlServer
 {
     /// <summary>
-    /// Contains test scenarios for <see cref="SqlServerRefreshTokenStore{TKey}"/>.
+    /// Contains test scenarios for <see cref="SqlServerRefreshTokenStore{TContext, TUser, TRole, TKey}"/>.
     /// </summary>
     [ExcludeFromCodeCoverage]
     public sealed class SqlServerRefreshTokenStoreTests : IDisposable
     {
         private readonly CoreIdentityDbContext<Guid, DomainIdentityUser, DomainIdentityRole> _context;
-        private readonly SqlServerRefreshTokenStore<Guid> _store;
+        private readonly SqlServerRefreshTokenStore<CoreIdentityDbContext<Guid, DomainIdentityUser, DomainIdentityRole>, DomainIdentityUser, DomainIdentityRole, Guid> _store;
 
         public SqlServerRefreshTokenStoreTests()
         {
@@ -27,7 +27,7 @@ namespace StruttonTechnologies.Core.Identity.EF.Tests.SqlServer
                     .Options;
 
             _context = new CoreIdentityDbContext<Guid, DomainIdentityUser, DomainIdentityRole>(options);
-            _store = new SqlServerRefreshTokenStore<Guid>(_context);
+            _store = new SqlServerRefreshTokenStore<CoreIdentityDbContext<Guid, DomainIdentityUser, DomainIdentityRole>, DomainIdentityUser, DomainIdentityRole, Guid>(_context);
         }
 
         [Fact]

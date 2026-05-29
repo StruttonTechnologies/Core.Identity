@@ -14,7 +14,7 @@ namespace StruttonTechnologies.Core.Identity.EF.Tests.Repositories
     public sealed class EfAccessTokenRevocationStoreTests : IDisposable
     {
         private readonly CoreIdentityDbContext<Guid, DomainIdentityUser, DomainIdentityRole> _context;
-        private readonly EfAccessTokenRevocationStore<Guid> _store;
+        private readonly EfAccessTokenRevocationStore<CoreIdentityDbContext<Guid, DomainIdentityUser, DomainIdentityRole>, DomainIdentityUser, DomainIdentityRole, Guid> _store;
 
         public EfAccessTokenRevocationStoreTests()
         {
@@ -24,7 +24,7 @@ namespace StruttonTechnologies.Core.Identity.EF.Tests.Repositories
                     .Options;
 
             _context = new CoreIdentityDbContext<Guid, DomainIdentityUser, DomainIdentityRole>(options);
-            _store = new EfAccessTokenRevocationStore<Guid>(_context);
+            _store = new EfAccessTokenRevocationStore<CoreIdentityDbContext<Guid, DomainIdentityUser, DomainIdentityRole>, DomainIdentityUser, DomainIdentityRole, Guid>(_context);
         }
 
         [Fact]
@@ -135,7 +135,11 @@ namespace StruttonTechnologies.Core.Identity.EF.Tests.Repositories
         public void Constructor_ThrowsArgumentNullException_WhenContextIsNull()
         {
             Assert.Throws<ArgumentNullException>(() =>
-                new EfAccessTokenRevocationStore<Guid>(null!));
+                new EfAccessTokenRevocationStore<
+                    CoreIdentityDbContext<Guid, DomainIdentityUser, DomainIdentityRole>,
+                    DomainIdentityUser,
+                    DomainIdentityRole,
+                    Guid>(null!));
         }
 
         public void Dispose()

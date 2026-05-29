@@ -10,6 +10,7 @@
     <PackageVersion Include="StruttonTechnologies.Core.ToolKit.Validation" Version="1.0.0-alpha" />
     <PackageVersion Include="StruttonTechnologies.Core.API.Controllers" Version="1.0.0-alpha" />
     <!-- Identity / ASP.NET -->
+    <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.8" />
     <PackageVersion Include="Microsoft.AspNetCore.Identity" Version="2.3.1" />
     <PackageVersion Include="Microsoft.AspNetCore.Identity.UI" Version="10.0.8" />
     <PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.8" />

@@ -29,12 +29,12 @@ namespace StruttonTechnologies.Core.Identity.JwtTokenManager
             // Configure JWT token options
             services.Configure<JwtTokenOptions>(configuration.GetSection("JwtTokenOptions"));
 
-            // Create and register JwtTokenOptions as a singleton for direct injection
-            JwtTokenOptions? tokenOptions = configuration.GetSection("JwtTokenOptions").Get<JwtTokenOptions>();
-            if (tokenOptions != null)
-            {
-                services.AddSingleton(tokenOptions);
-            }
+            // Create and register JwtTokenOptions as a singleton for direct injection.
+            // The token manager depends on JwtTokenOptions directly, while orchestration
+            // uses IOptions<JwtTokenOptions>. Registering both shapes keeps both consumers valid.
+            JwtTokenOptions tokenOptions = configuration.GetSection("JwtTokenOptions").Get<JwtTokenOptions>()
+                ?? new JwtTokenOptions();
+            services.AddSingleton(tokenOptions);
 
             // Register JWT user token manager
             services.AddScoped<IJwtUserTokenManager<TKey>, JwtUserTokenManager<TKey>>();

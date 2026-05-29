@@ -1,4 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using StruttonTechnologies.Core.Identity.Domain.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -14,7 +19,7 @@ namespace StruttonTechnologies.Core.Identity.Composition
     /// Composition root for Core Identity services.
     /// Provides a single entry point for registering all identity-related services.
     /// </summary>
-    public static class ServiceCollectionExtensions
+    public static class CoreIdentityCompositionExtensions
     {
         /// <summary>
         /// Adds all Core Identity services to the service collection.
@@ -37,31 +42,28 @@ namespace StruttonTechnologies.Core.Identity.Composition
             where TRole : Domain.Entities.IdentityRole<TKey>, new()
             where TKey : IEquatable<TKey>
         {
-            // Add API layer (controllers)
+            ArgumentNullException.ThrowIfNull(configuration);
+            ArgumentNullException.ThrowIfNull(dbOptionsAction);
+
             services.AddCoreIdentityApi();
-
-            // Add Coordinator layer (MediatR handlers and coordinators)
-            services.AddCoreIdentityCoordinator();
-
-            // Add Orchestration layer (business logic)
+            services.AddCoreAspNetIdentity<TContext, TUser, TRole, TKey>();
+            services.AddCoreJwtAuthentication(configuration);
+            services.AddCoreIdentityCoordinator<TUser, TKey>();
             services.AddCoreIdentityOrchestration<TUser, TKey>(configuration);
-
-            // Add Entity Framework layer (data access)
             services.AddCoreIdentityEntityFramework<TContext, TUser, TRole, TKey>(dbOptionsAction);
-
-            // Add JWT Token Manager
             services.AddCoreIdentityJwtTokenManager<TKey>(configuration);
 
             return services;
         }
 
         /// <summary>
-        /// Adds all Core Identity services with AccessTokenRevocation support (requires value type key).
+        /// Adds all Core Identity services with AccessTokenRevocation support.
+        /// This overload is retained for callers that explicitly choose the revocation-named API.
         /// </summary>
         /// <typeparam name="TContext">The DbContext type derived from CoreIdentityDbContext.</typeparam>
         /// <typeparam name="TUser">The type of user entity.</typeparam>
         /// <typeparam name="TRole">The type of role entity.</typeparam>
-        /// <typeparam name="TKey">The type of the user identifier (must be a value type).</typeparam>
+        /// <typeparam name="TKey">The type of the user identifier.</typeparam>
         /// <param name="services">The service collection to add services to.</param>
         /// <param name="configuration">The configuration containing connection strings and JWT options.</param>
         /// <param name="dbOptionsAction">Action to configure the DbContext options.</param>
@@ -73,24 +75,9 @@ namespace StruttonTechnologies.Core.Identity.Composition
             where TContext : CoreIdentityDbContext<TKey, TUser, TRole>
             where TUser : Domain.Entities.IdentityUser<TKey>, new()
             where TRole : Domain.Entities.IdentityRole<TKey>, new()
-            where TKey : struct, IEquatable<TKey>
+            where TKey : IEquatable<TKey>
         {
-            // Add API layer (controllers)
-            services.AddCoreIdentityApi();
-
-            // Add Coordinator layer (MediatR handlers and coordinators)
-            services.AddCoreIdentityCoordinator();
-
-            // Add Orchestration layer (business logic)
-            services.AddCoreIdentityOrchestration<TUser, TKey>(configuration);
-
-            // Add Entity Framework layer with revocation support
-            services.AddCoreIdentityEntityFrameworkWithRevocation<TContext, TUser, TRole, TKey>(dbOptionsAction);
-
-            // Add JWT Token Manager
-            services.AddCoreIdentityJwtTokenManager<TKey>(configuration);
-
-            return services;
+            return services.AddCoreIdentity<TContext, TUser, TRole, TKey>(configuration, dbOptionsAction);
         }
 
         /// <summary>
@@ -117,8 +104,7 @@ namespace StruttonTechnologies.Core.Identity.Composition
         }
 
         /// <summary>
-        /// Adds all Core Identity services with SQL Server optimizations.
-        /// Uses SqlServerRefreshTokenStore for better performance.
+        /// Adds all Core Identity services with SQL Server optimized refresh token storage.
         /// </summary>
         /// <typeparam name="TContext">The DbContext type derived from CoreIdentityDbContext.</typeparam>
         /// <typeparam name="TUser">The type of user entity.</typeparam>
@@ -137,32 +123,28 @@ namespace StruttonTechnologies.Core.Identity.Composition
             where TRole : Domain.Entities.IdentityRole<TKey>, new()
             where TKey : IEquatable<TKey>
         {
-            // Add API layer (controllers)
+            ArgumentNullException.ThrowIfNull(configuration);
+            ArgumentNullException.ThrowIfNull(dbOptionsAction);
+
             services.AddCoreIdentityApi();
-
-            // Add Coordinator layer (MediatR handlers and coordinators)
-            services.AddCoreIdentityCoordinator();
-
-            // Add Orchestration layer (business logic)
+            services.AddCoreAspNetIdentity<TContext, TUser, TRole, TKey>();
+            services.AddCoreJwtAuthentication(configuration);
+            services.AddCoreIdentityCoordinator<TUser, TKey>();
             services.AddCoreIdentityOrchestration<TUser, TKey>(configuration);
-
-            // Add Entity Framework layer with SQL Server optimizations
             services.AddCoreIdentityEntityFrameworkSqlServer<TContext, TUser, TRole, TKey>(dbOptionsAction);
-
-            // Add JWT Token Manager
             services.AddCoreIdentityJwtTokenManager<TKey>(configuration);
 
             return services;
         }
 
         /// <summary>
-        /// Adds all Core Identity services with SQL Server optimizations and AccessTokenRevocation support.
-        /// Requires TKey to be a value type for AccessTokenRevocationStore.
+        /// Adds all Core Identity services with SQL Server optimized refresh token storage and AccessTokenRevocation support.
+        /// This overload is retained for callers that explicitly choose the revocation-named API.
         /// </summary>
         /// <typeparam name="TContext">The DbContext type derived from CoreIdentityDbContext.</typeparam>
         /// <typeparam name="TUser">The type of user entity.</typeparam>
         /// <typeparam name="TRole">The type of role entity.</typeparam>
-        /// <typeparam name="TKey">The type of the user identifier (must be a value type).</typeparam>
+        /// <typeparam name="TKey">The type of the user identifier.</typeparam>
         /// <param name="services">The service collection to add services to.</param>
         /// <param name="configuration">The configuration containing connection strings and JWT options.</param>
         /// <param name="dbOptionsAction">Action to configure the DbContext options.</param>
@@ -174,28 +156,13 @@ namespace StruttonTechnologies.Core.Identity.Composition
             where TContext : CoreIdentityDbContext<TKey, TUser, TRole>
             where TUser : Domain.Entities.IdentityUser<TKey>, new()
             where TRole : Domain.Entities.IdentityRole<TKey>, new()
-            where TKey : struct, IEquatable<TKey>
+            where TKey : IEquatable<TKey>
         {
-            // Add API layer (controllers)
-            services.AddCoreIdentityApi();
-
-            // Add Coordinator layer (MediatR handlers and coordinators)
-            services.AddCoreIdentityCoordinator();
-
-            // Add Orchestration layer (business logic)
-            services.AddCoreIdentityOrchestration<TUser, TKey>(configuration);
-
-            // Add Entity Framework layer with SQL Server optimizations and revocation
-            services.AddCoreIdentityEntityFrameworkSqlServerWithRevocation<TContext, TUser, TRole, TKey>(dbOptionsAction);
-
-            // Add JWT Token Manager
-            services.AddCoreIdentityJwtTokenManager<TKey>(configuration);
-
-            return services;
+            return services.AddCoreIdentitySqlServer<TContext, TUser, TRole, TKey>(configuration, dbOptionsAction);
         }
 
         /// <summary>
-        /// Adds all Core Identity services with SQL Server optimizations and default string key type.
+        /// Adds all Core Identity services with SQL Server optimized refresh token storage and default string key type.
         /// </summary>
         /// <typeparam name="TContext">The DbContext type derived from CoreIdentityDbContext.</typeparam>
         /// <typeparam name="TUser">The type of user entity.</typeparam>
@@ -215,6 +182,52 @@ namespace StruttonTechnologies.Core.Identity.Composition
             return services.AddCoreIdentitySqlServer<TContext, TUser, TRole, string>(
                 configuration,
                 dbOptionsAction);
+        }
+
+
+        private static IServiceCollection AddCoreJwtAuthentication(
+            this IServiceCollection services,
+            IConfiguration configuration)
+        {
+            JwtTokenOptions tokenOptions = configuration.GetSection("JwtTokenOptions").Get<JwtTokenOptions>()
+                ?? new JwtTokenOptions();
+
+            services
+                .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = !string.IsNullOrWhiteSpace(tokenOptions.Issuer),
+                        ValidateAudience = !string.IsNullOrWhiteSpace(tokenOptions.Audience),
+                        ValidateIssuerSigningKey = !string.IsNullOrWhiteSpace(tokenOptions.SigningKey),
+                        ValidateLifetime = true,
+                        ValidIssuer = tokenOptions.Issuer,
+                        ValidAudience = tokenOptions.Audience,
+                        IssuerSigningKey = string.IsNullOrWhiteSpace(tokenOptions.SigningKey)
+                            ? null
+                            : new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenOptions.SigningKey)),
+                    };
+                });
+
+            services.AddAuthorization();
+
+            return services;
+        }
+        private static IServiceCollection AddCoreAspNetIdentity<TContext, TUser, TRole, TKey>(this IServiceCollection services)
+            where TContext : CoreIdentityDbContext<TKey, TUser, TRole>
+            where TUser : Domain.Entities.IdentityUser<TKey>, new()
+            where TRole : Domain.Entities.IdentityRole<TKey>, new()
+            where TKey : IEquatable<TKey>
+        {
+            services
+                .AddIdentityCore<TUser>()
+                .AddRoles<TRole>()
+                .AddEntityFrameworkStores<TContext>()
+                .AddSignInManager()
+                .AddDefaultTokenProviders();
+
+            return services;
         }
     }
 }

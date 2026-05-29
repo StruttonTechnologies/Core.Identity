@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
+
+using StruttonTechnologies.Core.Identity.API.Controllers;
 
 namespace StruttonTechnologies.Core.Identity.API
 {
@@ -8,15 +10,16 @@ namespace StruttonTechnologies.Core.Identity.API
     public static class ServiceCollectionExtensions
     {
         /// <summary>
-        /// Adds Core Identity API controllers and services to the service collection.
+        /// Adds Core Identity API controllers to the service collection and exposes this assembly as an MVC application part.
         /// </summary>
         /// <param name="services">The service collection to add services to.</param>
         /// <returns>The service collection for chaining.</returns>
         public static IServiceCollection AddCoreIdentityApi(this IServiceCollection services)
         {
-            // Register controllers (if using AddControllersWithViews or AddControllers at app level, this is automatic)
-            // The API project provides controllers but doesn't register additional services
-            // Controllers are discovered and registered by the hosting application
+            services
+                .AddControllers()
+                .AddApplicationPart(typeof(AuthenticationController).Assembly);
+
             return services;
         }
     }

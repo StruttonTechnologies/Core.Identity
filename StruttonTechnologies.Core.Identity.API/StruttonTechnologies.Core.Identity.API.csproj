@@ -23,4 +23,8 @@
 		<ProjectReference Include="..\StruttonTechnologies.Core.Identity.Coordinator.Contracts\StruttonTechnologies.Core.Identity.Coordinator.Contracts.csproj" />
 		<ProjectReference Include="..\StruttonTechnologies.Core.Identity.Dtos\StruttonTechnologies.Core.Identity.Dtos.csproj" />
 	</ItemGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
 </Project>
