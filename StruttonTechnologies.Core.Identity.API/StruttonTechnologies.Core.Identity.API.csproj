@@ -10,7 +10,7 @@
 		<VersionSuffix>alpha</VersionSuffix>
 
 		<!-- Packing -->
-		<IsPackable>false</IsPackable>
+		<IsPackable>true</IsPackable>
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="Newtonsoft.Json" />

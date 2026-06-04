@@ -1,4 +1,4 @@
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 
 using StruttonTechnologies.Core.Identity.Domain.Contracts.JwtToken;
 using StruttonTechnologies.Core.Identity.EF.Repositories;
@@ -22,16 +22,12 @@ namespace StruttonTechnologies.Core.Identity.EF
         /// <param name="optionsAction">Action to configure the DbContext options.</param>
         /// <returns>The service collection for chaining.</returns>
         public static IServiceCollection AddCoreIdentityEntityFramework<TContext, TUser, TRole, TKey>(
-            this IServiceCollection services,
-            Action<DbContextOptionsBuilder> optionsAction)
+            this IServiceCollection services)
             where TContext : CoreIdentityDbContext<TKey, TUser, TRole>
             where TUser : Domain.Entities.IdentityUser<TKey>
             where TRole : Domain.Entities.IdentityRole<TKey>
             where TKey : IEquatable<TKey>
         {
-            ArgumentNullException.ThrowIfNull(optionsAction);
-
-            services.AddDbContext<TContext>(optionsAction);
 
             services.AddScoped<IRefreshTokenStore<TKey>, EfRefreshTokenStore<TContext, TUser, TRole, TKey>>();
             services.AddScoped<IAccessTokenRevocationStore<TKey>, EfAccessTokenRevocationStore<TContext, TUser, TRole, TKey>>();
@@ -58,7 +54,7 @@ namespace StruttonTechnologies.Core.Identity.EF
             where TRole : Domain.Entities.IdentityRole<TKey>
             where TKey : IEquatable<TKey>
         {
-            return services.AddCoreIdentityEntityFramework<TContext, TUser, TRole, TKey>(optionsAction);
+            return services.AddCoreIdentityEntityFramework<TContext, TUser, TRole, TKey>();
         }
 
         /// <summary>
@@ -77,7 +73,7 @@ namespace StruttonTechnologies.Core.Identity.EF
             where TUser : Domain.Entities.IdentityUser<string>
             where TRole : Domain.Entities.IdentityRole<string>
         {
-            return services.AddCoreIdentityEntityFramework<TContext, TUser, TRole, string>(optionsAction);
+            return services.AddCoreIdentityEntityFramework<TContext, TUser, TRole, string>();
         }
 
         /// <summary>
