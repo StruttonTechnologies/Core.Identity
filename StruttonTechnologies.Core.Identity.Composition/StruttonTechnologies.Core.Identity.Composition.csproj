@@ -22,10 +22,11 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
     <PackageReference Include="Microsoft.Extensions.Identity.Core" />
+    <PackageReference Include="StruttonTechnologies.Core.Identity.API" />
+    <PackageReference Include="StruttonTechnologies.Core.Identity.Coordinator.Contracts" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\StruttonTechnologies.Core.Identity.API\StruttonTechnologies.Core.Identity.API.csproj" />
     <ProjectReference Include="..\StruttonTechnologies.Core.Identity.Coordinator\StruttonTechnologies.Core.Identity.Coordinator.csproj" />
     <ProjectReference Include="..\StruttonTechnologies.Core.Identity.EF\StruttonTechnologies.Core.Identity.EF.csproj" />
     <ProjectReference Include="..\StruttonTechnologies.Core.Identity.JwtTokenManager\StruttonTechnologies.Core.Identity.JwtTokenManager.csproj" />
