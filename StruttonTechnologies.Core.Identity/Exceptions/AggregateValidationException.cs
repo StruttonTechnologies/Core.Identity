@@ -1,4 +1,4 @@
-﻿namespace StruttonTechnologies.Core.Identity;
+﻿namespace StruttonTechnologies.Core.Identity.Exceptions;
 
 public class AggregateValidationException : Exception
 {

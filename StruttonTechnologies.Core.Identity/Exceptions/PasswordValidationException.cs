@@ -1,5 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 
+using StruttonTechnologies.Core.Identity.Validators.Security;
+
 namespace StruttonTechnologies.Core.Identity.Exceptions;
 
 /// <summary>

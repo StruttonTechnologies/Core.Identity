@@ -2,7 +2,7 @@
 
 using StruttonTechnologies.Core.Identity.Data;
 
-namespace StruttonTechnologies.Core.Identity;
+namespace StruttonTechnologies.Core.Identity.Validators.Security;
 
 /// <summary>
 /// Provides validation logic for passwords based on organizational rules.
