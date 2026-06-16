@@ -2,21 +2,25 @@ using System.Security.Claims;
 
 using StruttonTechnologies.Core.Identity.Dtos.Authentication;
 
-namespace StruttonTechnologies.Core.Identity.Orchestration.JwtTokens.Mapping
+namespace StruttonTechnologies.Core.Identity.Orchestration.JwtTokens.Mapping;
+
+public static class JwtSecurityTokenExtensions
 {
-    public static class JwtSecurityTokenExtensions
+    public static TokenResponseDto ToTokenResponseDto(
+        this ClaimsPrincipal principal,
+        string accessToken,
+        string refreshToken,
+        DateTime accessTokenExpiresAtUtc,
+        DateTime refreshTokenExpiresAtUtc)
     {
-        public static TokenResponseDto ToTokenResponseDto(this ClaimsPrincipal principal, string token, DateTime expiresAt)
-        {
-            ArgumentNullException.ThrowIfNull(principal);
+        ArgumentNullException.ThrowIfNull(principal);
+        ArgumentException.ThrowIfNullOrWhiteSpace(accessToken);
+        ArgumentException.ThrowIfNullOrWhiteSpace(refreshToken);
 
-            ClaimsIdentity identity = principal.Identity as ClaimsIdentity
-                ?? throw new InvalidOperationException("ClaimsPrincipal must have a ClaimsIdentity.");
-
-            string userId = identity.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                ?? throw new InvalidOperationException("UserId claim is missing.");
-
-            return new TokenResponseDto(userId, token, expiresAt);
-        }
+        return new TokenResponseDto(
+            accessToken,
+            refreshToken,
+            accessTokenExpiresAtUtc,
+            refreshTokenExpiresAtUtc);
     }
 }
