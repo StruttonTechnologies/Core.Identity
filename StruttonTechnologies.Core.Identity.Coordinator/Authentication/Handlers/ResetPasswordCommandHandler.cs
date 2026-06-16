@@ -1,40 +1,41 @@
-﻿using StruttonTechnologies.Core.Identity.Coordinator.Contracts.Authentication.Commands;
+using StruttonTechnologies.Core.Identity.Coordinator.Contracts.Authentication.Commands;
+using StruttonTechnologies.Core.Identity.Dtos.Authentication;
 
-namespace StruttonTechnologies.Core.Identity.Coordinator.Authentication.Handlers
+namespace StruttonTechnologies.Core.Identity.Coordinator.Authentication.Handlers;
+
+/// <summary>
+/// MediatR handler that processes password reset requests for users.
+/// </summary>
+public class ResetPasswordCommandHandler<TUser, TKey>
+    : IRequestHandler<ResetPasswordCommand, ResetPasswordResultDto>
+    where TUser : IdentityUser<TKey>, new()
+    where TKey : IEquatable<TKey>
 {
-    /// <summary>
-    /// MediatR handler that processes password reset requests for users.
-    /// </summary>
-    /// <typeparam name="TUser">The type representing a user in the system, must inherit from <see cref="IdentityUser{TKey}"/>.</typeparam>
-    /// <typeparam name="TKey">The type used for user keys, must implement <see cref="IEquatable{TKey}"/>.</typeparam>
-    public class ResetPasswordCommandHandler<TUser, TKey>
-        : IRequestHandler<ResetPasswordCommand, IdentityResult>
-        where TUser : IdentityUser<TKey>, new()
-        where TKey : IEquatable<TKey>
+    private readonly UserManager<TUser> _userManager;
+
+    public ResetPasswordCommandHandler(UserManager<TUser> userManager)
     {
-        private readonly UserManager<TUser> _userManager;
+        _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
+    }
 
-        public ResetPasswordCommandHandler(UserManager<TUser> userManager)
+    public async Task<ResetPasswordResultDto> Handle(ResetPasswordCommand request, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+
+        if (!string.IsNullOrEmpty(request.ConfirmPassword) && request.NewPassword != request.ConfirmPassword)
         {
-            _userManager = userManager
-                ?? throw new ArgumentNullException(nameof(userManager));
+            return ResetPasswordResultDto.Failure("Password confirmation does not match.");
         }
 
-        public async Task<IdentityResult> Handle(
-            ResetPasswordCommand request,
-            CancellationToken cancellationToken)
+        TUser? user = await _userManager.FindByIdAsync(request.UserId);
+        if (user is null)
         {
-            ArgumentNullException.ThrowIfNull(request);
-
-            TUser? user = await _userManager.FindByIdAsync(request.UserId);
-
-            if (user == null)
-            {
-                return IdentityResult.Failed(
-                    new IdentityError { Description = $"User with ID '{request.UserId}' not found." });
-            }
-
-            return await _userManager.ResetPasswordAsync(user, request.Token, request.NewPassword);
+            return ResetPasswordResultDto.Failure($"User with ID '{request.UserId}' was not found.");
         }
+
+        IdentityResult result = await _userManager.ResetPasswordAsync(user, request.Token, request.NewPassword);
+        return result.Succeeded
+            ? ResetPasswordResultDto.SuccessResult()
+            : ResetPasswordResultDto.Failure(string.Join("; ", result.Errors.Select(e => e.Description)));
     }
 }

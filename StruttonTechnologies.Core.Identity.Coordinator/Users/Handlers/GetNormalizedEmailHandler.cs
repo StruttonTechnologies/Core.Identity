@@ -1,28 +1,27 @@
 ﻿using StruttonTechnologies.Core.Identity.Coordinator.Contracts.Users.Queries;
 using StruttonTechnologies.Core.ToolKit.GuardKit;
 
-namespace StruttonTechnologies.Core.Identity.Coordinator.Users.Handlers
+namespace StruttonTechnologies.Core.Identity.Coordinator.Users.Handlers;
+
+public class GetNormalizedEmailHandler<TUser> : IRequestHandler<GetNormalizedEmailQuery, string?>
+    where TUser : class
 {
-    public class GetNormalizedEmailHandler<TUser> : IRequestHandler<GetNormalizedEmailQuery, string?>
-        where TUser : class
+    private readonly UserManager<TUser> _userManager;
+
+    public GetNormalizedEmailHandler(UserManager<TUser> userManager)
     {
-        private readonly UserManager<TUser> _userManager;
+        _userManager = userManager;
+    }
 
-        public GetNormalizedEmailHandler(UserManager<TUser> userManager)
-        {
-            _userManager = userManager;
-        }
+    public async Task<string?> Handle(
+        GetNormalizedEmailQuery request,
+        CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(request);
 
-        public async Task<string?> Handle(
-            GetNormalizedEmailQuery request,
-            CancellationToken cancellationToken)
-        {
-            ArgumentNullException.ThrowIfNull(request);
-
-            return await Guard.IsNull(await _userManager.FindByIdAsync(request.UserId))
-                .ReturnAsync(
-                    matchedReturn: null,
-                    notMatchedFactory: user => _userManager.GetEmailAsync(user));
-        }
+        return await Guard.IsNull(await _userManager.FindByIdAsync(request.UserId))
+            .ReturnAsync(
+                matchedReturn: null,
+                notMatchedFactory: user => _userManager.GetEmailAsync(user));
     }
 }

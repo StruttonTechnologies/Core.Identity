@@ -1,6 +1,5 @@
-﻿namespace StruttonTechnologies.Core.Identity.Coordinator.Users.Handlers
+﻿namespace StruttonTechnologies.Core.Identity.Coordinator.Users.Handlers;
+
+internal class UnlockUserCommandHandler
 {
-    internal class UnlockUserCommandHandler
-    {
-    }
 }

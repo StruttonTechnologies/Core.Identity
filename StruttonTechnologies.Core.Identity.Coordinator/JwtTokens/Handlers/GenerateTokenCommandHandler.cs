@@ -1,71 +1,48 @@
-﻿using System.Security.Claims;
-
 using StruttonTechnologies.Core.Identity.Coordinator.Contracts.JwtTokens.Commands;
 using StruttonTechnologies.Core.Identity.Domain.Contracts.JwtToken;
 using StruttonTechnologies.Core.Identity.Dtos.Authentication;
 
-namespace StruttonTechnologies.Core.Identity.Coordinator.JwtTokens.Handlers
+namespace StruttonTechnologies.Core.Identity.Coordinator.JwtTokens.Handlers;
+
+/// <summary>
+/// MediatR handler that processes requests to generate JWT access and refresh tokens for a user.
+/// </summary>
+internal class GenerateTokenCommandHandler<TUser, TKey>
+    : IRequestHandler<GenerateTokenCommand, TokenResponseDto>
+    where TUser : IdentityUser<TKey>, new()
+    where TKey : IEquatable<TKey>
 {
-    /// <summary>
-    /// MediatR handler that processes requests to generate JWT access and refresh tokens for a user.
-    /// </summary>
-    /// <typeparam name="TUser">The type representing a user in the system, must inherit from <see cref="IdentityUser{TKey}"/>.</typeparam>
-    /// <typeparam name="TKey">The type used for user keys, must implement <see cref="IEquatable{TKey}"/>.</typeparam>
-    internal class GenerateTokenCommandHandler<TUser, TKey>
-        : IRequestHandler<GenerateTokenCommand, TokenResponseDto>
-        where TUser : IdentityUser<TKey>, new()
-        where TKey : IEquatable<TKey>
+    private readonly UserManager<TUser> _userManager;
+    private readonly IJwtUserTokenManager<TKey> _tokenManager;
+
+    public GenerateTokenCommandHandler(UserManager<TUser> userManager, IJwtUserTokenManager<TKey> tokenManager)
     {
-        private readonly UserManager<TUser> _userManager;
-        private readonly IJwtUserTokenManager<TKey> _tokenManager;
+        _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
+        _tokenManager = tokenManager ?? throw new ArgumentNullException(nameof(tokenManager));
+    }
 
-        public GenerateTokenCommandHandler(
-            UserManager<TUser> userManager,
-            IJwtUserTokenManager<TKey> tokenManager)
+    public async Task<TokenResponseDto> Handle(GenerateTokenCommand request, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+
+        TUser? user = await _userManager.FindByIdAsync(request.UserId);
+        if (user is null)
         {
-            _userManager = userManager
-                ?? throw new ArgumentNullException(nameof(userManager));
-            _tokenManager = tokenManager
-                ?? throw new ArgumentNullException(nameof(tokenManager));
+            throw new InvalidOperationException($"User with ID '{request.UserId}' not found.");
         }
 
-        public async Task<TokenResponseDto> Handle(
-            GenerateTokenCommand request,
-            CancellationToken cancellationToken)
-        {
-            ArgumentNullException.ThrowIfNull(request);
+        IList<string> roles = await _userManager.GetRolesAsync(user);
+        string userName = await _userManager.GetUserNameAsync(user) ?? string.Empty;
+        string email = await _userManager.GetEmailAsync(user) ?? string.Empty;
 
-            TUser? user = await _userManager.FindByIdAsync(request.UserId);
+        string accessToken = await _tokenManager.GenerateAccessTokenAsync(user.Id, userName, email, roles, cancellationToken);
+        string refreshToken = await _tokenManager.GenerateRefreshTokenAsync(user.Id, userName, cancellationToken);
+        DateTime? accessTokenExpiresAtUtc = await _tokenManager.GetExpirationAsync(accessToken);
 
-            if (user == null)
-            {
-                throw new InvalidOperationException($"User with ID '{request.UserId}' not found.");
-            }
-
-            IList<Claim> userClaims = await _userManager.GetClaimsAsync(user);
-            IList<string> roles = await _userManager.GetRolesAsync(user);
-
-            string? userName = await _userManager.GetUserNameAsync(user);
-            string? email = await _userManager.GetEmailAsync(user);
-
-            string accessToken = await _tokenManager.GenerateAccessTokenAsync(
-                user.Id,
-                userName ?? string.Empty,
-                email ?? string.Empty,
-                roles,
-                cancellationToken);
-
-            string refreshToken = await _tokenManager.GenerateRefreshTokenAsync(
-                user.Id,
-                userName ?? string.Empty,
-                cancellationToken);
-
-            DateTime? expiresAt = await _tokenManager.GetExpirationAsync(accessToken);
-
-            return new TokenResponseDto(
-                accessToken,
-                refreshToken,
-                expiresAt ?? DateTime.UtcNow.AddMinutes(60));
-        }
+        return new TokenResponseDto(
+            accessToken,
+            refreshToken,
+            accessTokenExpiresAtUtc ?? DateTime.UtcNow.AddMinutes(15),
+            DateTime.UtcNow.AddDays(7));
     }
 }

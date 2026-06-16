@@ -1,14 +1,16 @@
-using StruttonTechnologies.Core.Identity.Coordinator.Contracts.JwtTokens.Commands;
+using StruttonTechnologies.Core.Identity.Coordinator.Contracts.Authentication.Commands;
 using StruttonTechnologies.Core.Identity.Domain.Contracts.JwtToken;
 using StruttonTechnologies.Core.Identity.Dtos.Authentication;
 
-namespace StruttonTechnologies.Core.Identity.Coordinator.JwtTokens.Handlers;
+namespace StruttonTechnologies.Core.Identity.Coordinator.Authentication.Handlers;
 
 /// <summary>
-/// MediatR handler that processes requests to refresh JWT tokens using a refresh token.
+/// Handles refresh-token exchange for the authentication API surface.
 /// </summary>
-internal class RefreshTokenCommandHandler<TUser, TKey>
-    : IRequestHandler<RefreshTokenCommand, RefreshTokenResultDto>
+/// <typeparam name="TUser">The identity user type.</typeparam>
+/// <typeparam name="TKey">The identity key type.</typeparam>
+public sealed class RefreshAuthenticationTokenCommandHandler<TUser, TKey>
+    : IRequestHandler<RefreshAuthenticationTokenCommand, RefreshTokenResultDto>
     where TUser : IdentityUser<TKey>, new()
     where TKey : IEquatable<TKey>
 {
@@ -16,7 +18,7 @@ internal class RefreshTokenCommandHandler<TUser, TKey>
     private readonly IJwtUserTokenManager<TKey> _tokenManager;
     private readonly IRefreshTokenStore<TKey> _refreshTokenStore;
 
-    public RefreshTokenCommandHandler(
+    public RefreshAuthenticationTokenCommandHandler(
         UserManager<TUser> userManager,
         IJwtUserTokenManager<TKey> tokenManager,
         IRefreshTokenStore<TKey> refreshTokenStore)
@@ -26,11 +28,16 @@ internal class RefreshTokenCommandHandler<TUser, TKey>
         _refreshTokenStore = refreshTokenStore ?? throw new ArgumentNullException(nameof(refreshTokenStore));
     }
 
-    public async Task<RefreshTokenResultDto> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
+    public async Task<RefreshTokenResultDto> Handle(
+        RefreshAuthenticationTokenCommand request,
+        CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(request);
 
-        Domain.Entities.RefreshToken<TKey>? refreshToken = await _refreshTokenStore.GetAsync(request.RefreshToken, cancellationToken);
+        Domain.Entities.RefreshToken<TKey>? refreshToken = await _refreshTokenStore.GetAsync(
+            request.RefreshToken,
+            cancellationToken);
+
         if (refreshToken is null || !refreshToken.IsActive)
         {
             return RefreshTokenResultDto.Failure("Invalid or expired refresh token.");
@@ -46,13 +53,25 @@ internal class RefreshTokenCommandHandler<TUser, TKey>
         string userName = await _userManager.GetUserNameAsync(user) ?? refreshToken.Username;
         string email = await _userManager.GetEmailAsync(user) ?? string.Empty;
 
-        string accessToken = await _tokenManager.GenerateAccessTokenAsync(user.Id, userName, email, roles, cancellationToken);
-        string newRefreshToken = await _tokenManager.GenerateRefreshTokenAsync(user.Id, userName, cancellationToken);
+        string accessToken = await _tokenManager.GenerateAccessTokenAsync(
+            user.Id,
+            userName,
+            email,
+            roles,
+            cancellationToken);
+
+        string newRefreshToken = await _tokenManager.GenerateRefreshTokenAsync(
+            user.Id,
+            userName,
+            cancellationToken);
 
         await _refreshTokenStore.RevokeAsync(request.RefreshToken, cancellationToken);
 
         DateTime? accessTokenExpiresAtUtc = await _tokenManager.GetExpirationAsync(accessToken);
 
-        return RefreshTokenResultDto.SuccessResult(accessToken, newRefreshToken, accessTokenExpiresAtUtc);
+        return RefreshTokenResultDto.SuccessResult(
+            accessToken,
+            newRefreshToken,
+            accessTokenExpiresAtUtc);
     }
 }

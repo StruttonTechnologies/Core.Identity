@@ -1,37 +1,36 @@
-﻿using StruttonTechnologies.Core.Identity.Coordinator.Contracts.Authentication.Commands;
+using StruttonTechnologies.Core.Identity.Coordinator.Contracts.Authentication.Commands;
+using StruttonTechnologies.Core.Identity.Dtos.Authentication;
 
-namespace StruttonTechnologies.Core.Identity.Coordinator.Authentication.Handlers
+namespace StruttonTechnologies.Core.Identity.Coordinator.Authentication.Handlers;
+
+/// <summary>
+/// MediatR handler that processes email confirmation requests for users.
+/// </summary>
+public class ConfirmEmailCommandHandler<TUser, TKey>
+    : IRequestHandler<ConfirmEmailCommand, ConfirmEmailResultDto>
+    where TUser : IdentityUser<TKey>, new()
+    where TKey : IEquatable<TKey>
 {
-    /// <summary>
-    /// MediatR handler that processes email confirmation requests for users.
-    /// </summary>
-    /// <typeparam name="TUser">The type representing a user in the system, must inherit from <see cref="IdentityUser{TKey}"/>.</typeparam>
-    /// <typeparam name="TKey">The type used for user keys, must implement <see cref="IEquatable{TKey}"/>.</typeparam>
-    public class ConfirmEmailCommandHandler<TUser, TKey>
-        : IRequestHandler<ConfirmEmailCommand, IdentityResult>
-        where TUser : IdentityUser<TKey>, new()
-        where TKey : IEquatable<TKey>
+    private readonly UserManager<TUser> _userManager;
+
+    public ConfirmEmailCommandHandler(UserManager<TUser> userManager)
     {
-        private readonly UserManager<TUser> _userManager;
+        _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
+    }
 
-        public ConfirmEmailCommandHandler(UserManager<TUser> userManager)
+    public async Task<ConfirmEmailResultDto> Handle(ConfirmEmailCommand request, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+
+        TUser? user = await _userManager.FindByIdAsync(request.UserId);
+        if (user is null)
         {
-            _userManager = userManager
-                ?? throw new ArgumentNullException(nameof(userManager));
+            return ConfirmEmailResultDto.Failure($"User with ID '{request.UserId}' was not found.");
         }
 
-        public async Task<IdentityResult> Handle(
-            ConfirmEmailCommand request,
-            CancellationToken cancellationToken)
-        {
-            ArgumentNullException.ThrowIfNull(request);
-
-            TUser? user = await _userManager.FindByIdAsync(request.UserId);
-
-            return user == null
-                ? IdentityResult.Failed(
-                    new IdentityError { Description = $"User with ID '{request.UserId}' not found." })
-                : await _userManager.ConfirmEmailAsync(user, request.Token);
-        }
+        IdentityResult result = await _userManager.ConfirmEmailAsync(user, request.Token);
+        return result.Succeeded
+            ? ConfirmEmailResultDto.SuccessResult()
+            : ConfirmEmailResultDto.Failure(string.Join("; ", result.Errors.Select(e => e.Description)));
     }
 }
