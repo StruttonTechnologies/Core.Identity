@@ -1,0 +1,21 @@
+<Solution>
+  <Folder Name="/Libraries/">
+    <Project Path="StruttonTechnologies.Core.Identity.Composition/StruttonTechnologies.Core.Identity.Composition.csproj" />
+    <Project Path="StruttonTechnologies.Core.Identity.Coordinator/StruttonTechnologies.Core.Identity.Coordinator.csproj" />
+    <Project Path="StruttonTechnologies.Core.Identity.Data/StruttonTechnologies.Core.Identity.Data.csproj" />
+    <Project Path="StruttonTechnologies.Core.Identity.EF/StruttonTechnologies.Core.Identity.EF.csproj" />
+    <Project Path="StruttonTechnologies.Core.Identity.JwtTokenManager/StruttonTechnologies.Core.Identity.JwtTokenManager.csproj" />
+    <Project Path="StruttonTechnologies.Core.Identity.Orchestration/StruttonTechnologies.Core.Identity.Orchestration.csproj" />
+    <Project Path="StruttonTechnologies.Core.Identity/StruttonTechnologies.Core.Identity.csproj" />
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Build.targets" />
+    <File Path="Directory.Packages.props" />
+    <File Path="stylecop.json" />
+  </Folder>
+  <Folder Name="/Testing/">
+    <Project Path="Tests/StruttonTechnologies.Core.Identity.Tests/StruttonTechnologies.Core.Identity.Tests.csproj" />
+  </Folder>
+</Solution>
