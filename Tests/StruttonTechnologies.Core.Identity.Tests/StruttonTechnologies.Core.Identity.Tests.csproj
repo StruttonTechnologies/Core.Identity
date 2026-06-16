@@ -1,0 +1,50 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="**\bin\**" />
+    <Compile Remove="**\obj\**" />
+    <EmbeddedResource Remove="**\bin\**" />
+    <EmbeddedResource Remove="**\obj\**" />
+    <None Remove="**\bin\**" />
+    <None Remove="**\obj\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="coverlet.collector">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="FluentAssertions" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" />
+    <PackageReference Include="Microsoft.Extensions.Logging" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="Moq" />
+    <PackageReference Include="StruttonTechnologies.Core.Identity.Fakes" />
+    <PackageReference Include="StruttonTechnologies.Core.Identity.Mocks" />
+    <PackageReference Include="StruttonTechnologies.Core.Identity.Stub" />
+    <PackageReference Include="StruttonTechnologies.Core.Identity.Test.Data" />
+    <PackageReference Include="StruttonTechnologies.Core.ToolKit.GuardKit" />
+    <PackageReference Include="StruttonTechnologies.Core.ToolKit.TestingKit" />
+    <PackageReference Include="StruttonTechnologies.Core.ToolKit.Validation" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" />
+    <PackageReference Include="xunit.runner.visualstudio">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="xunit.v3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\StruttonTechnologies.Core.Identity\StruttonTechnologies.Core.Identity.csproj" />
+    <ProjectReference Include="..\..\StruttonTechnologies.Core.Identity.Coordinator\StruttonTechnologies.Core.Identity.Coordinator.csproj" />
+    <ProjectReference Include="..\..\StruttonTechnologies.Core.Identity.EF\StruttonTechnologies.Core.Identity.EF.csproj" />
+    <ProjectReference Include="..\..\StruttonTechnologies.Core.Identity.JwtTokenManager\StruttonTechnologies.Core.Identity.JwtTokenManager.csproj" />
+    <ProjectReference Include="..\..\StruttonTechnologies.Core.Identity.Orchestration\StruttonTechnologies.Core.Identity.Orchestration.csproj" />
+  </ItemGroup>
+</Project>
