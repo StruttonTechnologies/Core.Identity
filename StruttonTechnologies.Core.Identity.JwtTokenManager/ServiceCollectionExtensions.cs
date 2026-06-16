@@ -4,55 +4,54 @@ using Microsoft.Extensions.DependencyInjection;
 using StruttonTechnologies.Core.Identity.Domain.Contracts.JwtToken;
 using StruttonTechnologies.Core.Identity.Domain.Models;
 
-namespace StruttonTechnologies.Core.Identity.JwtTokenManager
+namespace StruttonTechnologies.Core.Identity.JwtTokenManager;
+
+/// <summary>
+/// Extension methods for configuring JWT Token Manager services.
+/// </summary>
+public static class ServiceCollectionExtensions
 {
     /// <summary>
-    /// Extension methods for configuring JWT Token Manager services.
+    /// Adds JWT Token Manager services to the service collection.
+    /// Registers the JWT token provider and configuration.
     /// </summary>
-    public static class ServiceCollectionExtensions
+    /// <typeparam name="TKey">The type of the user identifier.</typeparam>
+    /// <param name="services">The service collection to add services to.</param>
+    /// <param name="configuration">The configuration containing JWT token options.</param>
+    /// <returns>The service collection for chaining.</returns>
+    public static IServiceCollection AddCoreIdentityJwtTokenManager<TKey>(
+        this IServiceCollection services,
+        IConfiguration configuration)
+        where TKey : IEquatable<TKey>
     {
-        /// <summary>
-        /// Adds JWT Token Manager services to the service collection.
-        /// Registers the JWT token provider and configuration.
-        /// </summary>
-        /// <typeparam name="TKey">The type of the user identifier.</typeparam>
-        /// <param name="services">The service collection to add services to.</param>
-        /// <param name="configuration">The configuration containing JWT token options.</param>
-        /// <returns>The service collection for chaining.</returns>
-        public static IServiceCollection AddCoreIdentityJwtTokenManager<TKey>(
-            this IServiceCollection services,
-            IConfiguration configuration)
-            where TKey : IEquatable<TKey>
-        {
-            ArgumentNullException.ThrowIfNull(configuration);
+        ArgumentNullException.ThrowIfNull(configuration);
 
-            // Configure JWT token options
-            services.Configure<JwtTokenOptions>(configuration.GetSection("JwtTokenOptions"));
+        // Configure JWT token options
+        services.Configure<JwtTokenOptions>(configuration.GetSection("JwtTokenOptions"));
 
-            // Create and register JwtTokenOptions as a singleton for direct injection.
-            // The token manager depends on JwtTokenOptions directly, while orchestration
-            // uses IOptions<JwtTokenOptions>. Registering both shapes keeps both consumers valid.
-            JwtTokenOptions tokenOptions = configuration.GetSection("JwtTokenOptions").Get<JwtTokenOptions>()
-                ?? new JwtTokenOptions();
-            services.AddSingleton(tokenOptions);
+        // Create and register JwtTokenOptions as a singleton for direct injection.
+        // The token manager depends on JwtTokenOptions directly, while orchestration
+        // uses IOptions<JwtTokenOptions>. Registering both shapes keeps both consumers valid.
+        JwtTokenOptions tokenOptions = configuration.GetSection("JwtTokenOptions").Get<JwtTokenOptions>()
+            ?? new JwtTokenOptions();
+        services.AddSingleton(tokenOptions);
 
-            // Register JWT user token manager
-            services.AddScoped<IJwtUserTokenManager<TKey>, JwtUserTokenManager<TKey>>();
+        // Register JWT user token manager
+        services.AddScoped<IJwtUserTokenManager<TKey>, JwtUserTokenManager<TKey>>();
 
-            return services;
-        }
+        return services;
+    }
 
-        /// <summary>
-        /// Adds JWT Token Manager services with default string key type.
-        /// </summary>
-        /// <param name="services">The service collection to add services to.</param>
-        /// <param name="configuration">The configuration containing JWT token options.</param>
-        /// <returns>The service collection for chaining.</returns>
-        public static IServiceCollection AddCoreIdentityJwtTokenManager(
-            this IServiceCollection services,
-            IConfiguration configuration)
-        {
-            return services.AddCoreIdentityJwtTokenManager<string>(configuration);
-        }
+    /// <summary>
+    /// Adds JWT Token Manager services with default string key type.
+    /// </summary>
+    /// <param name="services">The service collection to add services to.</param>
+    /// <param name="configuration">The configuration containing JWT token options.</param>
+    /// <returns>The service collection for chaining.</returns>
+    public static IServiceCollection AddCoreIdentityJwtTokenManager(
+        this IServiceCollection services,
+        IConfiguration configuration)
+    {
+        return services.AddCoreIdentityJwtTokenManager<string>(configuration);
     }
 }
