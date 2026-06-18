@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Http;
 
 using StruttonTechnologies.Core.Identity.Dtos.Authentication;
 using StruttonTechnologies.Core.Identity.Orchestration.Contracts.JwtToken;
@@ -31,7 +29,7 @@ public class AuthenticationOrchestrationTests
     [Fact]
     public void Constructor_ThrowsArgumentNullException_WhenUserManagerIsNull()
     {
-        var ex = Assert.Throws<ArgumentNullException>(() =>
+        ArgumentNullException ex = Assert.Throws<ArgumentNullException>(() =>
             new AuthenticationOrchestration<TestUser, Guid>(
                 null!,
                 _signInManager.Object,
@@ -43,7 +41,7 @@ public class AuthenticationOrchestrationTests
     [Fact]
     public void Constructor_ThrowsArgumentNullException_WhenSignInManagerIsNull()
     {
-        var ex = Assert.Throws<ArgumentNullException>(() =>
+        ArgumentNullException ex = Assert.Throws<ArgumentNullException>(() =>
             new AuthenticationOrchestration<TestUser, Guid>(
                 _userManager.Object,
                 null!,
@@ -55,7 +53,7 @@ public class AuthenticationOrchestrationTests
     [Fact]
     public void Constructor_ThrowsArgumentNullException_WhenTokenOrchestrationIsNull()
     {
-        var ex = Assert.Throws<ArgumentNullException>(() =>
+        ArgumentNullException ex = Assert.Throws<ArgumentNullException>(() =>
             new AuthenticationOrchestration<TestUser, Guid>(
                 _userManager.Object,
                 _signInManager.Object,
@@ -71,12 +69,10 @@ public class AuthenticationOrchestrationTests
         string password = "ValidPassword123!";
         string expectedAccessToken = "generated-access-token";
         string expectedRefreshToken = "generated-refresh-token";
-        TestUser user = new() { Id = Guid.NewGuid(), Email = email, UserName = email };
-        ClaimsPrincipal principal = new(new ClaimsIdentity(new[]
-        {
-            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new Claim(ClaimTypes.Name, email)
-        }));
+
+        TestUser user = CreateUser(email);
+
+        ClaimsPrincipal principal = CreatePrincipal(user.Id, email);
 
         _userManager
             .Setup(m => m.FindByEmailAsync(email))
@@ -98,7 +94,10 @@ public class AuthenticationOrchestrationTests
             .Setup(t => t.GenerateRefreshTokenAsync(user.Id, email, It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedRefreshToken);
 
-        AuthenticationResultDto result = await _orchestration.AuthenticateAsync(email, password, TestContext.Current.CancellationToken);
+        AuthenticationResultDto result = await _orchestration.AuthenticateAsync(
+            email,
+            password,
+            TestContext.Current.CancellationToken);
 
         Assert.True(result.IsSuccess);
         Assert.Equal(expectedAccessToken, result.AccessToken);
@@ -116,7 +115,10 @@ public class AuthenticationOrchestrationTests
             .Setup(m => m.FindByEmailAsync(email))
             .ReturnsAsync((TestUser?)null);
 
-        AuthenticationResultDto result = await _orchestration.AuthenticateAsync(email, password, TestContext.Current.CancellationToken);
+        AuthenticationResultDto result = await _orchestration.AuthenticateAsync(
+            email,
+            password,
+            TestContext.Current.CancellationToken);
 
         Assert.False(result.IsSuccess);
         Assert.True(result.IsFailure);
@@ -130,7 +132,7 @@ public class AuthenticationOrchestrationTests
     {
         string email = "test@example.com";
         string password = "WrongPassword";
-        TestUser user = new() { Id = Guid.NewGuid(), Email = email, UserName = email };
+        TestUser user = CreateUser(email);
 
         _userManager
             .Setup(m => m.FindByEmailAsync(email))
@@ -140,7 +142,10 @@ public class AuthenticationOrchestrationTests
             .Setup(m => m.CheckPasswordSignInAsync(user, password, true))
             .ReturnsAsync(SignInResult.Failed);
 
-        AuthenticationResultDto result = await _orchestration.AuthenticateAsync(email, password, TestContext.Current.CancellationToken);
+        AuthenticationResultDto result = await _orchestration.AuthenticateAsync(
+            email,
+            password,
+            TestContext.Current.CancellationToken);
 
         Assert.False(result.IsSuccess);
         Assert.True(result.IsFailure);
@@ -154,7 +159,7 @@ public class AuthenticationOrchestrationTests
     {
         string email = "test@example.com";
         string password = "Password123!";
-        TestUser user = new() { Id = Guid.NewGuid(), Email = email, UserName = email };
+        TestUser user = CreateUser(email);
 
         _userManager
             .Setup(m => m.FindByEmailAsync(email))
@@ -164,7 +169,10 @@ public class AuthenticationOrchestrationTests
             .Setup(m => m.CheckPasswordSignInAsync(user, password, true))
             .ReturnsAsync(SignInResult.LockedOut);
 
-        AuthenticationResultDto result = await _orchestration.AuthenticateAsync(email, password, TestContext.Current.CancellationToken);
+        AuthenticationResultDto result = await _orchestration.AuthenticateAsync(
+            email,
+            password,
+            TestContext.Current.CancellationToken);
 
         Assert.False(result.IsSuccess);
         Assert.True(result.IsFailure);
@@ -176,7 +184,7 @@ public class AuthenticationOrchestrationTests
     {
         string email = "test@example.com";
         string password = "Password123!";
-        TestUser user = new() { Id = Guid.NewGuid(), Email = email, UserName = email };
+        TestUser user = CreateUser(email);
 
         _userManager
             .Setup(m => m.FindByEmailAsync(email))
@@ -186,7 +194,10 @@ public class AuthenticationOrchestrationTests
             .Setup(m => m.CheckPasswordSignInAsync(user, password, true))
             .ReturnsAsync(SignInResult.TwoFactorRequired);
 
-        AuthenticationResultDto result = await _orchestration.AuthenticateAsync(email, password, TestContext.Current.CancellationToken);
+        AuthenticationResultDto result = await _orchestration.AuthenticateAsync(
+            email,
+            password,
+            TestContext.Current.CancellationToken);
 
         Assert.False(result.IsSuccess);
         Assert.Equal("Invalid credentials", result.FailureReason);
@@ -199,10 +210,11 @@ public class AuthenticationOrchestrationTests
         string password = "ValidPassword123!";
         string expectedAccessToken = "generated-access-token";
         string expectedRefreshToken = "generated-refresh-token";
-        ClaimsPrincipal principal = new(new ClaimsIdentity(new[]
-        {
+
+        ClaimsPrincipal principal = new(new ClaimsIdentity(
+        [
             new Claim(ClaimTypes.Name, email)
-        }));
+        ]));
 
         _userManager
             .Setup(m => m.CreateAsync(It.IsAny<TestUser>(), password))
@@ -220,7 +232,10 @@ public class AuthenticationOrchestrationTests
             .Setup(t => t.GenerateRefreshTokenAsync(It.IsAny<Guid>(), email, It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedRefreshToken);
 
-        AuthenticationResultDto result = await _orchestration.RegisterAsync(email, password, TestContext.Current.CancellationToken);
+        AuthenticationResultDto result = await _orchestration.RegisterAsync(
+            email,
+            password,
+            TestContext.Current.CancellationToken);
 
         Assert.True(result.IsSuccess);
         Assert.Equal(expectedAccessToken, result.AccessToken);
@@ -229,8 +244,9 @@ public class AuthenticationOrchestrationTests
 
         _userManager.Verify(
             m => m.CreateAsync(
-            It.Is<TestUser>(u => u.UserName == email && u.Email == email),
-            password), Times.Once);
+                It.Is<TestUser>(u => u.UserName == email && u.Email == email),
+                password),
+            Times.Once);
     }
 
     [Fact]
@@ -238,6 +254,7 @@ public class AuthenticationOrchestrationTests
     {
         string email = "newuser@example.com";
         string password = "WeakPassword";
+
         IdentityResult failedResult = IdentityResult.Failed(
             new IdentityError { Description = "Password too weak" },
             new IdentityError { Description = "Password requires digit" });
@@ -246,7 +263,10 @@ public class AuthenticationOrchestrationTests
             .Setup(m => m.CreateAsync(It.IsAny<TestUser>(), password))
             .ReturnsAsync(failedResult);
 
-        AuthenticationResultDto result = await _orchestration.RegisterAsync(email, password, TestContext.Current.CancellationToken);
+        AuthenticationResultDto result = await _orchestration.RegisterAsync(
+            email,
+            password,
+            TestContext.Current.CancellationToken);
 
         Assert.False(result.IsSuccess);
         Assert.True(result.IsFailure);
@@ -265,7 +285,7 @@ public class AuthenticationOrchestrationTests
 
         _userManager
             .Setup(m => m.CreateAsync(It.IsAny<TestUser>(), password))
-            .Callback<TestUser, string>((user, pwd) => capturedUser = user)
+            .Callback<TestUser, string>((user, _) => capturedUser = user)
             .ReturnsAsync(IdentityResult.Success);
 
         _signInManager
@@ -280,7 +300,10 @@ public class AuthenticationOrchestrationTests
             .Setup(t => t.GenerateRefreshTokenAsync(It.IsAny<Guid>(), email, It.IsAny<CancellationToken>()))
             .ReturnsAsync("refresh-token");
 
-        await _orchestration.RegisterAsync(email, password, TestContext.Current.CancellationToken);
+        await _orchestration.RegisterAsync(
+            email,
+            password,
+            TestContext.Current.CancellationToken);
 
         Assert.NotNull(capturedUser);
         Assert.Equal(email, capturedUser.Email);
@@ -300,14 +323,19 @@ public class AuthenticationOrchestrationTests
             .Setup(t => t.RevokeAccessTokenAsync(accessToken, It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
 
-        await _orchestration.SignOutAsync(accessToken, TestContext.Current.CancellationToken);
+        await _orchestration.SignOutAsync(
+            accessToken,
+            TestContext.Current.CancellationToken);
 
         _signInManager.Verify(m => m.SignOutAsync(), Times.Once);
-        _tokenOrchestration.Verify(t => t.RevokeAccessTokenAsync(accessToken, It.IsAny<CancellationToken>()), Times.Once);
+
+        _tokenOrchestration.Verify(
+            t => t.RevokeAccessTokenAsync(accessToken, It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
-    public async Task SignOutAsync_RevokesToken_EvenIfSignOutFails()
+    public async Task SignOutAsync_DoesNotRevokeToken_WhenSignOutFails()
     {
         string accessToken = "valid-jwt-token";
 
@@ -320,15 +348,42 @@ public class AuthenticationOrchestrationTests
             .Returns(Task.CompletedTask);
 
         await Assert.ThrowsAsync<InvalidOperationException>(async () =>
-            await _orchestration.SignOutAsync(accessToken, TestContext.Current.CancellationToken));
+            await _orchestration.SignOutAsync(
+                accessToken,
+                TestContext.Current.CancellationToken));
 
         _signInManager.Verify(m => m.SignOutAsync(), Times.Once);
-        _tokenOrchestration.Verify(t => t.RevokeAccessTokenAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
+
+        _tokenOrchestration.Verify(
+            t => t.RevokeAccessTokenAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()),
+            Times.Never);
+    }
+
+    private static TestUser CreateUser(string email)
+    {
+        return new TestUser
+        {
+            Id = Guid.NewGuid(),
+            Email = email,
+            UserName = email
+        };
+    }
+
+    private static ClaimsPrincipal CreatePrincipal(Guid userId, string email)
+    {
+        ClaimsIdentity identity = new(
+        [
+            new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
+            new Claim(ClaimTypes.Name, email)
+        ]);
+
+        return new ClaimsPrincipal(identity);
     }
 
     private static Mock<UserManager<TestUser>> CreateMockUserManager()
     {
-        var store = new Mock<IUserStore<TestUser>>();
+        Mock<IUserStore<TestUser>> store = new();
+
         return new Mock<UserManager<TestUser>>(
             store.Object,
             null!,
@@ -341,10 +396,12 @@ public class AuthenticationOrchestrationTests
             null!);
     }
 
-    private static Mock<SignInManager<TestUser>> CreateMockSignInManager(Mock<UserManager<TestUser>> userManager)
+    private static Mock<SignInManager<TestUser>> CreateMockSignInManager(
+        Mock<UserManager<TestUser>> userManager)
     {
-        var contextAccessor = new Mock<Microsoft.AspNetCore.Http.IHttpContextAccessor>();
-        var claimsFactory = new Mock<IUserClaimsPrincipalFactory<TestUser>>();
+        Mock<IHttpContextAccessor> contextAccessor = new();
+        Mock<IUserClaimsPrincipalFactory<TestUser>> claimsFactory = new();
+
         return new Mock<SignInManager<TestUser>>(
             userManager.Object,
             contextAccessor.Object,
@@ -354,4 +411,8 @@ public class AuthenticationOrchestrationTests
             null!,
             null!);
     }
+}
+
+public sealed class TestUser : IdentityUser<Guid>
+{
 }

@@ -1,7 +1,6 @@
-using StruttonTechnologies.Core.Identity.Coordinator.Contracts.Authentication.Commands;
+﻿using StruttonTechnologies.Core.Identity.Coordinator.Contracts.Authentication.Commands;
 using StruttonTechnologies.Core.Identity.Domain.Contracts.JwtToken;
 using StruttonTechnologies.Core.Identity.Dtos.Authentication;
-using StruttonTechnologies.Core.Identity.Orchestration.Contracts.JwtToken;
 
 namespace StruttonTechnologies.Core.Identity.Coordinator.Authentication.Handlers;
 

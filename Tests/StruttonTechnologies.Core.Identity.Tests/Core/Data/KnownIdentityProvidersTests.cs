@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-using StruttonTechnologies.Core.Identity.Data;
+﻿using StruttonTechnologies.Core.Identity.Data;
 
 namespace StruttonTechnologies.Core.Identity.Tests.Core.Data;
 

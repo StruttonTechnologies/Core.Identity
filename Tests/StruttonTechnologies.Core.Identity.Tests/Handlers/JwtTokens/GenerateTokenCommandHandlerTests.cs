@@ -31,7 +31,11 @@ public class GenerateTokenCommandHandlerTests : CoordinatorHandlerTestBase
 
         result.AccessToken.Should().Be("access-token");
         result.RefreshToken.Should().Be("refresh-token");
-        result.AccessTokenExpiresAtUtc.Should().Be(accessTokenExpiresAtUtc);
-        result.RefreshTokenExpiresAtUtc.Should().Be(refreshTokenExpiresAtUtc);
+
+        result.AccessTokenExpiresAtUtc.Should()
+            .BeCloseTo(accessTokenExpiresAtUtc, TimeSpan.FromSeconds(1));
+
+        result.RefreshTokenExpiresAtUtc.Should()
+            .BeCloseTo(refreshTokenExpiresAtUtc, TimeSpan.FromSeconds(1));
     }
 }

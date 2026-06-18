@@ -1,4 +1,4 @@
-using StruttonTechnologies.Core.Identity.Coordinator.Contracts.Authentication.Commands;
+﻿using StruttonTechnologies.Core.Identity.Coordinator.Contracts.Authentication.Commands;
 using StruttonTechnologies.Core.Identity.Dtos.Authentication;
 
 namespace StruttonTechnologies.Core.Identity.Coordinator.Authentication.Handlers;

@@ -19,7 +19,6 @@ public static class ServiceCollectionExtensions
     /// <typeparam name="TRole">The type of role entity.</typeparam>
     /// <typeparam name="TKey">The type of the user identifier.</typeparam>
     /// <param name="services">The service collection to add services to.</param>
-    /// <param name="optionsAction">Action to configure the DbContext options.</param>
     /// <returns>The service collection for chaining.</returns>
     public static IServiceCollection AddCoreIdentityEntityFramework<TContext, TUser, TRole, TKey>(
         this IServiceCollection services)
@@ -28,7 +27,6 @@ public static class ServiceCollectionExtensions
         where TRole : Domain.Entities.IdentityRole<TKey>
         where TKey : IEquatable<TKey>
     {
-
         services.AddScoped<IRefreshTokenStore<TKey>, EfRefreshTokenStore<TContext, TUser, TRole, TKey>>();
         services.AddScoped<IAccessTokenRevocationStore<TKey>, EfAccessTokenRevocationStore<TContext, TUser, TRole, TKey>>();
 

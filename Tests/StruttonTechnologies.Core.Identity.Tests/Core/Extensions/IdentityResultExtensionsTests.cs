@@ -1,8 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-using Microsoft.AspNetCore.Identity;
-
-using StruttonTechnologies.Core.Identity.Extensions;
+﻿using StruttonTechnologies.Core.Identity.Extensions;
 
 namespace StruttonTechnologies.Core.Identity.Tests.Core.Extensions;
 

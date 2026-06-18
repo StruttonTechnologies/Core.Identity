@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-using StruttonTechnologies.Core.Identity.Exceptions;
+﻿using StruttonTechnologies.Core.Identity.Exceptions;
 
 namespace StruttonTechnologies.Core.Identity.Tests.Core.Exceptions;
 

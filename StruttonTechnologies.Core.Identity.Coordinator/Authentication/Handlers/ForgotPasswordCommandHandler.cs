@@ -1,4 +1,4 @@
-using StruttonTechnologies.Core.Identity.Coordinator.Contracts.Authentication.Commands;
+﻿using StruttonTechnologies.Core.Identity.Coordinator.Contracts.Authentication.Commands;
 using StruttonTechnologies.Core.Identity.Dtos.Authentication;
 
 namespace StruttonTechnologies.Core.Identity.Coordinator.Authentication.Handlers;
@@ -6,6 +6,8 @@ namespace StruttonTechnologies.Core.Identity.Coordinator.Authentication.Handlers
 /// <summary>
 /// MediatR handler that processes forgot-password requests and generates password-reset tokens.
 /// </summary>
+/// <typeparam name="TUser">The type of user entity that inherits from IdentityUser.</typeparam>
+/// <typeparam name="TKey">The type used for the user's primary key.</typeparam>
 public class ForgotPasswordCommandHandler<TUser, TKey>
     : IRequestHandler<ForgotPasswordCommand, ForgotPasswordResultDto>
     where TUser : IdentityUser<TKey>, new()

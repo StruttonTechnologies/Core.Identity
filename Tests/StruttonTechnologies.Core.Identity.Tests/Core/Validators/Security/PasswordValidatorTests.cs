@@ -1,5 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using System.Diagnostics.CodeAnalysis;
 
 using StruttonTechnologies.Core.Identity.Validators.Security;
 

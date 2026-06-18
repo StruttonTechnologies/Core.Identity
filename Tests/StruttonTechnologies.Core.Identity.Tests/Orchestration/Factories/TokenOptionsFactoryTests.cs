@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 
 using StruttonTechnologies.Core.Identity.Domain.Models;
 using StruttonTechnologies.Core.Identity.Orchestration.JwtTokens.Factories;

@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-
-using StruttonTechnologies.Core.Identity.EF;
+﻿using StruttonTechnologies.Core.Identity.EF;
 using StruttonTechnologies.Core.Identity.EF.Repositories;
 
 using DomainIdentityRole = Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>;

@@ -1,4 +1,5 @@
 ﻿using StruttonTechnologies.Core.Identity.Coordinator.Contracts.Authentication.Commands;
+using StruttonTechnologies.Core.Identity.Dtos.Authentication;
 using StruttonTechnologies.Core.Identity.Tests.Handlers.Base;
 using StruttonTechnologies.Core.Identity.Tests.Handlers.Utilities;
 
@@ -11,31 +12,46 @@ public class ChangePasswordCommandHandlerTests : CoordinatorHandlerTestBase
     public async Task Handle_WhenUserExists_ChangesPassword()
     {
         ChangePasswordCommand request = new(TestUser.Id.ToString(), "old-pass", "new-pass");
-        IdentityResult expected = IdentityResult.Success;
 
-        UserManagerMock.Setup(x => x.FindByIdAsync(request.UserId)).ReturnsAsync(TestUser);
-        UserManagerMock.Setup(x => x.ChangePasswordAsync(TestUser, request.CurrentPassword, request.NewPassword)).ReturnsAsync(expected);
+        UserManagerMock
+            .Setup(x => x.FindByIdAsync(request.UserId))
+            .ReturnsAsync(TestUser);
 
-        object sut = InternalHandlerFactory.Create("StruttonTechnologies.Core.Identity.Coordinator.Authentication.Handlers.ChangePasswordCommandHandler`2", UserManagerMock.Object);
+        UserManagerMock
+            .Setup(x => x.ChangePasswordAsync(TestUser, request.CurrentPassword, request.NewPassword))
+            .ReturnsAsync(IdentityResult.Success);
 
-        IdentityResult result = await InternalHandlerFactory.InvokeHandleAsync<IdentityResult>(sut, request);
+        object sut = InternalHandlerFactory.Create(
+            "StruttonTechnologies.Core.Identity.Coordinator.Authentication.Handlers.ChangePasswordCommandHandler`2",
+            UserManagerMock.Object);
 
-        result.Should().BeSameAs(expected);
+        ChangePasswordResultDto result =
+            await InternalHandlerFactory.InvokeHandleAsync<ChangePasswordResultDto>(sut, request);
+
+        result.IsSuccess.Should().BeTrue();
+        result.FailureReason.Should().BeNull();
+
         UserManagerMock.Verify(x => x.FindByIdAsync(request.UserId), Times.Once);
         UserManagerMock.Verify(x => x.ChangePasswordAsync(TestUser, request.CurrentPassword, request.NewPassword), Times.Once);
     }
 
     [Fact]
-    public async Task Handle_WhenUserDoesNotExist_ReturnsFailedIdentityResult()
+    public async Task Handle_WhenUserDoesNotExist_ReturnsFailedResult()
     {
         ChangePasswordCommand request = new(Guid.NewGuid().ToString(), "old-pass", "new-pass");
-        UserManagerMock.Setup(x => x.FindByIdAsync(request.UserId)).ReturnsAsync((Stub.Entities.StubUser?)null);
 
-        object sut = InternalHandlerFactory.Create("StruttonTechnologies.Core.Identity.Coordinator.Authentication.Handlers.ChangePasswordCommandHandler`2", UserManagerMock.Object);
+        UserManagerMock
+            .Setup(x => x.FindByIdAsync(request.UserId))
+            .ReturnsAsync((Stub.Entities.StubUser?)null);
 
-        IdentityResult result = await InternalHandlerFactory.InvokeHandleAsync<IdentityResult>(sut, request);
+        object sut = InternalHandlerFactory.Create(
+            "StruttonTechnologies.Core.Identity.Coordinator.Authentication.Handlers.ChangePasswordCommandHandler`2",
+            UserManagerMock.Object);
 
-        result.Succeeded.Should().BeFalse();
-        result.Errors.Should().ContainSingle(x => x.Description.Contains(request.UserId, StringComparison.Ordinal));
+        ChangePasswordResultDto result =
+            await InternalHandlerFactory.InvokeHandleAsync<ChangePasswordResultDto>(sut, request);
+
+        result.IsSuccess.Should().BeFalse();
+        result.FailureReason.Should().Contain(request.UserId);
     }
 }

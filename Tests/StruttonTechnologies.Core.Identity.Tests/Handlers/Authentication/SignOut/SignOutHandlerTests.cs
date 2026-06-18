@@ -31,12 +31,24 @@ public class SignOutHandlerTests : CoordinatorHandlerTestBase
     }
 
     [Fact]
-    public async Task Handle_WhenTokenIsWhitespace_ThrowsArgumentException()
+    public async Task Handle_WhenTokensAreMissing_DoesNotRevokeTokensAndReturnsFailure()
     {
+        SignOutCommand request = new(
+            AccessToken: null,
+            RefreshToken: " ");
+
         SignOutHandler<Guid> sut = new(TokenOrchestrationMock.Object);
 
-        Func<Task> act = async () => await sut.Handle(new SignOutCommand(null, " "), CancellationToken.None);
+        SignOutResultDto result = await sut.Handle(request, CancellationToken.None);
 
-        await act.Should().ThrowAsync<ArgumentException>();
+        result.Success.Should().BeFalse();
+
+        TokenOrchestrationMock.Verify(
+            x => x.RevokeAccessTokenAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()),
+            Times.Never);
+
+        TokenOrchestrationMock.Verify(
+            x => x.RevokeRefreshTokenAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()),
+            Times.Never);
     }
 }

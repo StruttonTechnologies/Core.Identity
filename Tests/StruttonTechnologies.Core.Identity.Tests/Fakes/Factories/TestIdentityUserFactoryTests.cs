@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-using StruttonTechnologies.Core.Identity.Fakes.Factories;
+﻿using StruttonTechnologies.Core.Identity.Fakes.Factories;
 using StruttonTechnologies.Core.Identity.Stub.Entities;
 
 namespace StruttonTechnologies.Core.Identity.Tests.Fakes.Factories;

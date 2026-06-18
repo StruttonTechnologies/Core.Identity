@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-using StruttonTechnologies.Core.Identity.JwtTokenManager.Configuration;
+﻿using StruttonTechnologies.Core.Identity.JwtTokenManager.Configuration;
 
 namespace StruttonTechnologies.Core.Identity.Tests.Infrastructure.Configuration;
 

@@ -1,8 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-using Microsoft.EntityFrameworkCore;
-
-using StruttonTechnologies.Core.Identity.EF;
+﻿using StruttonTechnologies.Core.Identity.EF;
 using StruttonTechnologies.Core.Identity.EF.Repositories;
 
 using DomainAccessTokenRevocation = StruttonTechnologies.Core.Identity.Domain.Entities.AccessTokenRevocation<System.Guid>;

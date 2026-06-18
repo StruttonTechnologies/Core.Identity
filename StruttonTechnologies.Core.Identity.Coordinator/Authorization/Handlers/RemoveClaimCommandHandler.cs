@@ -1,4 +1,4 @@
-using System.Security.Claims;
+﻿using System.Security.Claims;
 
 using StruttonTechnologies.Core.Identity.Coordinator.Contracts.Authorization.Commands;
 

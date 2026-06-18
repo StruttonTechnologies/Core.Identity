@@ -1,10 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-using Microsoft.AspNetCore.Identity;
-
-using Moq;
-
-using StruttonTechnologies.Core.Identity.Validators.Security;
+﻿using StruttonTechnologies.Core.Identity.Validators.Security;
 
 namespace StruttonTechnologies.Core.Identity.Tests.Core.Validators.Security;
 

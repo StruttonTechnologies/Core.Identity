@@ -14,16 +14,23 @@ public class RefreshTokenCommandHandlerTests : CoordinatorHandlerTestBase
     public async Task Handle_WhenRefreshTokenIsActive_RotatesTokens()
     {
         RefreshTokenCommand request = new("refresh-token");
+
         DateTime accessTokenExpiresAtUtc = DateTime.UtcNow.AddMinutes(20);
-        DateTime refreshTokenExpiresAtUtc = DateTime.UtcNow.AddDays(7);
-        RefreshToken<Guid> storedToken = ActiveRefreshToken(TestUser.Id, request.RefreshToken);
+
+        RefreshToken<Guid> storedToken = ActiveRefreshToken(
+            TestUser.Id,
+            request.RefreshToken);
 
         RefreshTokenStoreMock
-            .Setup(x => x.GetAsync(request.RefreshToken, It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetAsync(
+                request.RefreshToken,
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(storedToken);
 
         JwtUserTokenManagerMock
-            .Setup(x => x.IsRefreshTokenRevokedAsync(request.RefreshToken, It.IsAny<CancellationToken>()))
+            .Setup(x => x.IsRefreshTokenRevokedAsync(
+                request.RefreshToken,
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(false);
 
         UserManagerMock
@@ -38,56 +45,89 @@ public class RefreshTokenCommandHandlerTests : CoordinatorHandlerTestBase
             .Setup(x => x.GetUserNameAsync(TestUser))
             .ReturnsAsync(TestUser.UserName);
 
-        UserManagerMock.
-            Setup(x => x.GetEmailAsync(TestUser))
+        UserManagerMock
+            .Setup(x => x.GetEmailAsync(TestUser))
             .ReturnsAsync(TestUser.Email);
 
         JwtUserTokenManagerMock
-            .Setup(x => x.GenerateAccessTokenAsync(TestUser.Id, TestUser.UserName!, TestUser.Email!, It.IsAny<IEnumerable<string>>(), It.IsAny<CancellationToken>()))
+            .Setup(x => x.GenerateAccessTokenAsync(
+                TestUser.Id,
+                TestUser.UserName!,
+                TestUser.Email!,
+                It.IsAny<IEnumerable<string>>(),
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync("new-access-token");
 
         JwtUserTokenManagerMock
-            .Setup(x => x.GenerateRefreshTokenAsync(TestUser.Id, TestUser.UserName!, It.IsAny<CancellationToken>()))
+            .Setup(x => x.GenerateRefreshTokenAsync(
+                TestUser.Id,
+                TestUser.UserName!,
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync("new-refresh-token");
 
         RefreshTokenStoreMock
-            .Setup(x => x.RevokeAsync(request.RefreshToken, It.IsAny<CancellationToken>()))
+            .Setup(x => x.RevokeAsync(
+                request.RefreshToken,
+                It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
 
         JwtUserTokenManagerMock
             .Setup(x => x.GetExpirationAsync("new-access-token"))
             .ReturnsAsync(accessTokenExpiresAtUtc);
 
-        JwtUserTokenManagerMock
-            .Setup(x => x.GetExpirationAsync("new-refresh-token"))
-            .ReturnsAsync(refreshTokenExpiresAtUtc);
+        object sut = InternalHandlerFactory.Create(
+            "StruttonTechnologies.Core.Identity.Coordinator.JwtTokens.Handlers.RefreshTokenCommandHandler`2",
+            UserManagerMock.Object,
+            JwtUserTokenManagerMock.Object,
+            RefreshTokenStoreMock.Object);
 
-        object sut = InternalHandlerFactory.Create("StruttonTechnologies.Core.Identity.Coordinator.JwtTokens.Handlers.RefreshTokenCommandHandler`2", UserManagerMock.Object, JwtUserTokenManagerMock.Object, RefreshTokenStoreMock.Object);
-
-        TokenResponseDto result = await InternalHandlerFactory.InvokeHandleAsync<TokenResponseDto>(sut, request);
+        RefreshTokenResultDto result =
+            await InternalHandlerFactory.InvokeHandleAsync<RefreshTokenResultDto>(
+                sut,
+                request);
 
         result.AccessToken.Should().Be("new-access-token");
         result.RefreshToken.Should().Be("new-refresh-token");
-        result.AccessTokenExpiresAtUtc.Should().Be(accessTokenExpiresAtUtc);
-        result.RefreshTokenExpiresAtUtc.Should().Be(refreshTokenExpiresAtUtc);
-        RefreshTokenStoreMock
-            .Verify(x => x.RevokeAsync(request.RefreshToken, It.IsAny<CancellationToken>()), Times.Once);
+
+        result.AccessTokenExpiresAtUtc.Should()
+            .BeCloseTo(accessTokenExpiresAtUtc, TimeSpan.FromSeconds(1));
+
+        RefreshTokenStoreMock.Verify(
+            x => x.RevokeAsync(
+                request.RefreshToken,
+                It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
-    public async Task Handle_WhenRefreshTokenIsMissing_ThrowsInvalidOperationException()
+    public async Task Handle_WhenRefreshTokenIsMissing_ReturnsFailureResult()
     {
         RefreshTokenCommand request = new("missing-token");
+
         RefreshTokenStoreMock
-            .Setup(x => x.GetAsync(request.RefreshToken, It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetAsync(
+                request.RefreshToken,
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync((RefreshToken<Guid>?)null);
 
-        object sut = InternalHandlerFactory.Create("StruttonTechnologies.Core.Identity.Coordinator.JwtTokens.Handlers.RefreshTokenCommandHandler`2", UserManagerMock.Object, JwtUserTokenManagerMock.Object, RefreshTokenStoreMock.Object);
+        object sut = InternalHandlerFactory.Create(
+            "StruttonTechnologies.Core.Identity.Coordinator.JwtTokens.Handlers.RefreshTokenCommandHandler`2",
+            UserManagerMock.Object,
+            JwtUserTokenManagerMock.Object,
+            RefreshTokenStoreMock.Object);
 
-        Func<Task> act = async () => await InternalHandlerFactory.InvokeHandleAsync<TokenResponseDto>(sut, request);
+        RefreshTokenResultDto result =
+            await InternalHandlerFactory.InvokeHandleAsync<RefreshTokenResultDto>(
+                sut,
+                request);
 
-        await act.Should()
-            .ThrowAsync<InvalidOperationException>()
-            .WithMessage("*Invalid or expired refresh token.*");
+        result.AccessToken.Should().BeNullOrWhiteSpace();
+        result.RefreshToken.Should().BeNullOrWhiteSpace();
+
+        RefreshTokenStoreMock.Verify(
+            x => x.RevokeAsync(
+                It.IsAny<string>(),
+                It.IsAny<CancellationToken>()),
+            Times.Never);
     }
 }

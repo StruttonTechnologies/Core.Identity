@@ -1,4 +1,4 @@
-using StruttonTechnologies.Core.Identity.Coordinator.Contracts.Authentication.Commands;
+﻿using StruttonTechnologies.Core.Identity.Coordinator.Contracts.Authentication.Commands;
 using StruttonTechnologies.Core.Identity.Dtos.Authentication;
 
 namespace StruttonTechnologies.Core.Identity.Coordinator.Authentication.Handlers;
@@ -6,6 +6,8 @@ namespace StruttonTechnologies.Core.Identity.Coordinator.Authentication.Handlers
 /// <summary>
 /// MediatR handler that processes password change requests for authenticated users.
 /// </summary>
+/// <typeparam name="TUser">The type of the user.</typeparam>
+/// <typeparam name="TKey">The type of the user's key.</typeparam>
 public class ChangePasswordCommandHandler<TUser, TKey>
     : IRequestHandler<ChangePasswordCommand, ChangePasswordResultDto>
     where TUser : IdentityUser<TKey>, new()

@@ -1,7 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Security.Claims;
-
-using StruttonTechnologies.Core.Identity.Fakes.Builders;
+﻿using StruttonTechnologies.Core.Identity.Fakes.Builders;
 
 namespace StruttonTechnologies.Core.Identity.Tests.Fakes.Builders;
 

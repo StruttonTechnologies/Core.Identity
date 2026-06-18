@@ -1,4 +1,6 @@
-﻿using StruttonTechnologies.Core.Identity.Coordinator.Contracts.ExternalLogins.Commands;
+﻿using StruttonTechnologies.Core.Identity.Coordinator.Authentication.Handlers;
+using StruttonTechnologies.Core.Identity.Coordinator.Contracts.ExternalLogins.Commands;
+using StruttonTechnologies.Core.Identity.Dtos.Authentication;
 using StruttonTechnologies.Core.Identity.Orchestration.Contracts.ExternalLogins;
 using StruttonTechnologies.Core.Identity.Stub.Entities;
 using StruttonTechnologies.Core.Identity.Tests.Handlers.Base;
@@ -9,7 +11,7 @@ namespace StruttonTechnologies.Core.Identity.Tests.Handlers.Authentication.Exter
 public class ExternalLoginCommandHandlerTests : CoordinatorHandlerTestBase
 {
     [Fact]
-    public async Task Handle_WhenValidatorReturnsIdentity_IssuesAccessToken()
+    public async Task Handle_WhenValidatorReturnsIdentity_IssuesAccessAndRefreshTokens()
     {
         ExternalLoginCommand request = new("Google", "provider-token");
 
@@ -30,7 +32,7 @@ public class ExternalLoginCommandHandlerTests : CoordinatorHandlerTestBase
             .Setup(x => x.GetLoginsAsync(TestUser))
             .ReturnsAsync(new List<UserLoginInfo>
             {
-                new UserLoginInfo("Google", "provider-key", "Google")
+            new("Google", "provider-key", "Google"),
             });
 
         UserManagerMock
@@ -42,22 +44,45 @@ public class ExternalLoginCommandHandlerTests : CoordinatorHandlerTestBase
             .ReturnsAsync(TestUser.Email);
 
         TokenOrchestrationMock
-            .Setup(x => x.GenerateTokenAsync(It.IsAny<ClaimsPrincipal>(), It.IsAny<CancellationToken>()))
+            .Setup(x => x.GenerateTokenAsync(
+                It.IsAny<ClaimsPrincipal>(),
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync("access-token");
+
+        TokenOrchestrationMock
+            .Setup(x => x.GenerateRefreshTokenAsync(
+                TestUser.Id,
+                "Stub User",
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync("refresh-token");
 
         TokenOrchestrationMock
             .Setup(x => x.GetExpirationTime())
             .Returns(DateTime.UtcNow.AddMinutes(60));
 
-        var sut = new Coordinator.Authentication.Handlers.ExternalLoginCommandHandler<StubUser, Guid>(
-            UserManagerMock.Object,
-            ExternalLoginIdentityValidatorMock.Object,
-            TokenOrchestrationMock.Object);
+        ExternalLoginCommandHandler<StubUser, Guid> sut =
+            new(
+                UserManagerMock.Object,
+                ExternalLoginIdentityValidatorMock.Object,
+                TokenOrchestrationMock.Object);
 
-        var result = await sut.Handle(request, CancellationToken.None);
+        TokenResponseDto result = await sut.Handle(request, CancellationToken.None);
 
         result.AccessToken.Should().Be("access-token");
-        result.RefreshToken.Should().BeEmpty();
+        result.RefreshToken.Should().Be("refresh-token");
+
+        TokenOrchestrationMock.Verify(
+            x => x.GenerateTokenAsync(
+                It.IsAny<ClaimsPrincipal>(),
+                It.IsAny<CancellationToken>()),
+            Times.Once);
+
+        TokenOrchestrationMock.Verify(
+            x => x.GenerateRefreshTokenAsync(
+                TestUser.Id,
+                "Stub User",
+                It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -69,7 +94,7 @@ public class ExternalLoginCommandHandlerTests : CoordinatorHandlerTestBase
             .Setup(x => x.ValidateAsync("Google", "provider-token", It.IsAny<CancellationToken>()))
             .ReturnsAsync((ExternalLoginIdentity?)null);
 
-        var sut = new Coordinator.Authentication.Handlers.ExternalLoginCommandHandler<StubUser, Guid>(
+        ExternalLoginCommandHandler<StubUser, Guid> sut = new Coordinator.Authentication.Handlers.ExternalLoginCommandHandler<StubUser, Guid>(
             UserManagerMock.Object,
             ExternalLoginIdentityValidatorMock.Object,
             TokenOrchestrationMock.Object);

@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
 
 using Microsoft.Extensions.Options;
 
@@ -72,10 +71,12 @@ public class TokenOrchestrationTests
     }
 
     [Fact]
-    public async Task GenerateTokenAsync_ThrowsInvalidOperationException_WhenPrincipalIsNull()
+    public async Task GenerateTokenAsync_ThrowsArgumentNullException_WhenPrincipalIsNull()
     {
-        await Assert.ThrowsAsync<InvalidOperationException>(async () =>
+        ArgumentNullException ex = await Assert.ThrowsAsync<ArgumentNullException>(async () =>
             await _service.GenerateTokenAsync(null!, TestContext.Current.CancellationToken));
+
+        Assert.Equal("principal", ex.ParamName);
     }
 
     [Fact]
@@ -90,10 +91,12 @@ public class TokenOrchestrationTests
     [Fact]
     public async Task GenerateTokenAsync_ThrowsInvalidOperationException_WhenUserIdIsMissing()
     {
-        ClaimsIdentity identity = new(new[]
+        ClaimsIdentity identity = new(
+            new[]
         {
             new Claim(ClaimTypes.Name, "TestUser")
-        }, "TestAuth");
+        }
+            , "TestAuth");
         ClaimsPrincipal principal = new(identity);
 
         await Assert.ThrowsAsync<InvalidOperationException>(async () =>
@@ -107,12 +110,14 @@ public class TokenOrchestrationTests
         Mock<IJwtUserTokenManager<int>> jwtManager = new();
         TokenOrchestration<int> service = new(options, jwtManager.Object);
 
-        ClaimsIdentity identity = new(new[]
+        ClaimsIdentity identity = new(
+            new[]
         {
             new Claim(ClaimTypes.NameIdentifier, "123"),
             new Claim(ClaimTypes.Name, "TestUser"),
             new Claim(ClaimTypes.Email, "test@example.com")
-        }, "TestAuth");
+        }
+            , "TestAuth");
         ClaimsPrincipal principal = new(identity);
 
         jwtManager
@@ -131,12 +136,14 @@ public class TokenOrchestrationTests
         Mock<IJwtUserTokenManager<long>> jwtManager = new();
         TokenOrchestration<long> service = new(options, jwtManager.Object);
 
-        ClaimsIdentity identity = new(new[]
+        ClaimsIdentity identity = new(
+            new[]
         {
             new Claim(ClaimTypes.NameIdentifier, "999999999999"),
             new Claim(ClaimTypes.Name, "TestUser"),
             new Claim(ClaimTypes.Email, "test@example.com")
-        }, "TestAuth");
+        }
+            , "TestAuth");
         ClaimsPrincipal principal = new(identity);
 
         jwtManager
@@ -151,11 +158,13 @@ public class TokenOrchestrationTests
     [Fact]
     public async Task GenerateTokenAsync_ThrowsInvalidCastException_ForInvalidGuid()
     {
-        ClaimsIdentity identity = new(new[]
+        ClaimsIdentity identity = new(
+            new[]
         {
             new Claim(ClaimTypes.NameIdentifier, "not-a-guid"),
             new Claim(ClaimTypes.Name, "TestUser")
-        }, "TestAuth");
+        }
+            , "TestAuth");
         ClaimsPrincipal principal = new(identity);
 
         await Assert.ThrowsAsync<InvalidCastException>(async () =>
@@ -169,11 +178,13 @@ public class TokenOrchestrationTests
         Mock<IJwtUserTokenManager<int>> jwtManager = new();
         TokenOrchestration<int> service = new(options, jwtManager.Object);
 
-        ClaimsIdentity identity = new(new[]
+        ClaimsIdentity identity = new(
+            new[]
         {
             new Claim(ClaimTypes.NameIdentifier, "not-a-number"),
             new Claim(ClaimTypes.Name, "TestUser")
-        }, "TestAuth");
+        }
+            , "TestAuth");
         ClaimsPrincipal principal = new(identity);
 
         await Assert.ThrowsAsync<InvalidCastException>(async () =>
@@ -187,11 +198,13 @@ public class TokenOrchestrationTests
         Mock<IJwtUserTokenManager<long>> jwtManager = new();
         TokenOrchestration<long> service = new(options, jwtManager.Object);
 
-        ClaimsIdentity identity = new(new[]
+        ClaimsIdentity identity = new(
+            new[]
         {
             new Claim(ClaimTypes.NameIdentifier, "not-a-number"),
             new Claim(ClaimTypes.Name, "TestUser")
-        }, "TestAuth");
+        }
+            , "TestAuth");
         ClaimsPrincipal principal = new(identity);
 
         await Assert.ThrowsAsync<InvalidCastException>(async () =>
@@ -205,11 +218,13 @@ public class TokenOrchestrationTests
         Mock<IJwtUserTokenManager<string>> jwtManager = new();
         TokenOrchestration<string> service = new(options, jwtManager.Object);
 
-        ClaimsIdentity identity = new(new[]
+        ClaimsIdentity identity = new(
+            new[]
         {
             new Claim(ClaimTypes.NameIdentifier, "user123"),
             new Claim(ClaimTypes.Name, "TestUser")
-        }, "TestAuth");
+        }
+            , "TestAuth");
         ClaimsPrincipal principal = new(identity);
 
         jwtManager

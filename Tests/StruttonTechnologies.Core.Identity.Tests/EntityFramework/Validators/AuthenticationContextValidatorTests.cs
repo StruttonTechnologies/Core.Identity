@@ -1,7 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-using Moq;
-
+﻿using StruttonTechnologies.Core.Identity.Data;
+using StruttonTechnologies.Core.Identity.Models;
 using StruttonTechnologies.Core.Identity.Validators.Composite;
 using StruttonTechnologies.Core.Identity.Validators.Identity;
 using StruttonTechnologies.Core.ToolKit.Validation.Abstractions;
@@ -16,21 +14,17 @@ public class AuthenticationContextValidatorTests
 
     public AuthenticationContextValidatorTests()
     {
-        Mock<IValidator<string>> providerValidator = new Mock<IValidator<string>>();
-        providerValidator.Setup(v => v.Validate(It.IsAny<string>()))
-            .Returns(ValidationResult.Success());
-
-        Mock<IValidator<string>> sessionValidator = new Mock<IValidator<string>>();
-        sessionValidator.Setup(v => v.Validate(It.IsAny<string>()))
-            .Returns(ValidationResult.Success());
-
-        Mock<IValidator<IdentityStatus>> statusValidator = new Mock<IValidator<IdentityStatus>>();
-        statusValidator.Setup(v => v.Validate(It.IsAny<IdentityStatus>()))
-            .Returns(ValidationResult.Success());
+        Mock<IValidator<string>> providerValidator = CreateStringValidator(ValidationResult.Success());
+        Mock<IValidator<string>> sessionValidator = CreateStringValidator(ValidationResult.Success());
+        Mock<IValidator<string>> tenantValidator = CreateStringValidator(ValidationResult.Success());
+        Mock<IValidator<IEnumerable<string>>> scopesValidator = CreateScopesValidator(ValidationResult.Success());
+        Mock<IValidator<IdentityStatus>> statusValidator = CreateStatusValidator(ValidationResult.Success());
 
         _validator = new AuthenticationContextValidator(
             providerValidator.Object,
             sessionValidator.Object,
+            tenantValidator.Object,
+            scopesValidator.Object,
             statusValidator.Object);
     }
 
@@ -39,38 +33,199 @@ public class AuthenticationContextValidatorTests
         {
             new object[]
             {
-                new AuthContext("Local", Guid.NewGuid().ToString(), IdentityStatus.Active)
+                CreateContext(
+                    KnownIdentityProviders.Local,
+                    IdentityStatus.Active),
             },
             new object[]
             {
-                new AuthContext("Google", Guid.NewGuid().ToString(), IdentityStatus.Pending)
-            }
+                CreateContext(
+                    KnownIdentityProviders.Google,
+                    IdentityStatus.Pending),
+            },
         };
 
     [Theory]
     [MemberData(nameof(ValidContexts))]
-    public void Should_Return_Success_For_Valid_Contexts(AuthContext context)
+    public void Validate_Should_ReturnSuccess_WhenContextIsValid(AuthenticationContext context)
     {
         ValidationResult result = _validator.Validate(context);
+
         Assert.True(result.IsValid);
     }
 
     [Fact]
-    public void Should_Fail_When_Provider_Is_Invalid()
+    public void Validate_Should_ThrowArgumentNullException_WhenContextIsNull()
     {
-        Mock<IValidator<string>> providerValidator = new Mock<IValidator<string>>();
-        providerValidator.Setup(v => v.Validate(It.IsAny<string>()))
-            .Returns(ValidationResult.Failure("Invalid provider", "InvalidProvider", "Provider"));
+        Assert.Throws<ArgumentNullException>(() => _validator.Validate(null!));
+    }
 
-        AuthenticationContextValidator validator = new AuthenticationContextValidator(
-            providerValidator.Object,
-            new Mock<IValidator<string>>().Object,
-            new Mock<IValidator<IdentityStatus>>().Object);
+    [Fact]
+    public void Validate_Should_ReturnProviderFailure_WhenProviderIsInvalid()
+    {
+        ValidationResult expectedFailure = ValidationResult.Failure(
+            "Invalid provider",
+            "InvalidProvider",
+            "ProviderName");
 
-        AuthContext context = new AuthContext("InvalidProvider", Guid.NewGuid().ToString(), IdentityStatus.Active);
+        Mock<IValidator<string>> providerValidator = CreateStringValidator(expectedFailure);
+
+        AuthenticationContextValidator validator = CreateValidator(providerValidator: providerValidator);
+
+        AuthenticationContext context = CreateContext(
+            "InvalidProvider",
+            IdentityStatus.Active);
+
         ValidationResult result = validator.Validate(context);
 
         Assert.False(result.IsValid);
         Assert.Equal("InvalidProvider", result.Code);
+    }
+
+    [Fact]
+    public void Validate_Should_ReturnSessionFailure_WhenSessionIdIsInvalid()
+    {
+        ValidationResult expectedFailure = ValidationResult.Failure(
+            "Invalid session",
+            "InvalidSessionId",
+            "SessionId");
+
+        Mock<IValidator<string>> sessionValidator = CreateStringValidator(expectedFailure);
+
+        AuthenticationContextValidator validator = CreateValidator(sessionValidator: sessionValidator);
+
+        AuthenticationContext context = CreateContext(
+            KnownIdentityProviders.Local,
+            IdentityStatus.Active);
+
+        ValidationResult result = validator.Validate(context);
+
+        Assert.False(result.IsValid);
+        Assert.Equal("InvalidSessionId", result.Code);
+    }
+
+    [Fact]
+    public void Validate_Should_ReturnTenantFailure_WhenTenantIdIsInvalid()
+    {
+        ValidationResult expectedFailure = ValidationResult.Failure(
+            "Invalid tenant",
+            "InvalidTenantId",
+            "TenantId");
+
+        Mock<IValidator<string>> tenantValidator = CreateStringValidator(expectedFailure);
+
+        AuthenticationContextValidator validator = CreateValidator(tenantValidator: tenantValidator);
+
+        AuthenticationContext context = CreateContext(
+            KnownIdentityProviders.Local,
+            IdentityStatus.Active);
+
+        ValidationResult result = validator.Validate(context);
+
+        Assert.False(result.IsValid);
+        Assert.Equal("InvalidTenantId", result.Code);
+    }
+
+    [Fact]
+    public void Validate_Should_ReturnScopesFailure_WhenScopesAreInvalid()
+    {
+        ValidationResult expectedFailure = ValidationResult.Failure(
+            "Invalid scopes",
+            "InvalidScope",
+            "Scopes");
+
+        Mock<IValidator<IEnumerable<string>>> scopesValidator = CreateScopesValidator(expectedFailure);
+
+        AuthenticationContextValidator validator = CreateValidator(scopesValidator: scopesValidator);
+
+        AuthenticationContext context = CreateContext(
+            KnownIdentityProviders.Local,
+            IdentityStatus.Active);
+
+        ValidationResult result = validator.Validate(context);
+
+        Assert.False(result.IsValid);
+        Assert.Equal("InvalidScope", result.Code);
+    }
+
+    [Fact]
+    public void Validate_Should_ReturnStatusFailure_WhenStatusIsInvalid()
+    {
+        ValidationResult expectedFailure = ValidationResult.Failure(
+            "Invalid status",
+            "InvalidIdentityStatus",
+            "Status");
+
+        Mock<IValidator<IdentityStatus>> statusValidator = CreateStatusValidator(expectedFailure);
+
+        AuthenticationContextValidator validator = CreateValidator(statusValidator: statusValidator);
+
+        AuthenticationContext context = CreateContext(
+            KnownIdentityProviders.Local,
+            IdentityStatus.Locked);
+
+        ValidationResult result = validator.Validate(context);
+
+        Assert.False(result.IsValid);
+        Assert.Equal("InvalidIdentityStatus", result.Code);
+    }
+
+    private static AuthenticationContext CreateContext(
+        string providerName,
+        IdentityStatus status)
+    {
+        return new AuthenticationContext
+        {
+            ProviderName = providerName,
+            SessionId = Guid.NewGuid().ToString(),
+            TenantId = Guid.NewGuid().ToString(),
+            Scopes = new[] { KnownScopes.OpenId, KnownScopes.Profile },
+            Status = status,
+        };
+    }
+
+    private static AuthenticationContextValidator CreateValidator(
+        Mock<IValidator<string>>? providerValidator = null,
+        Mock<IValidator<string>>? sessionValidator = null,
+        Mock<IValidator<string>>? tenantValidator = null,
+        Mock<IValidator<IEnumerable<string>>>? scopesValidator = null,
+        Mock<IValidator<IdentityStatus>>? statusValidator = null)
+    {
+        return new AuthenticationContextValidator(
+            (providerValidator ?? CreateStringValidator(ValidationResult.Success())).Object,
+            (sessionValidator ?? CreateStringValidator(ValidationResult.Success())).Object,
+            (tenantValidator ?? CreateStringValidator(ValidationResult.Success())).Object,
+            (scopesValidator ?? CreateScopesValidator(ValidationResult.Success())).Object,
+            (statusValidator ?? CreateStatusValidator(ValidationResult.Success())).Object);
+    }
+
+    private static Mock<IValidator<string>> CreateStringValidator(ValidationResult result)
+    {
+        Mock<IValidator<string>> validator = new();
+        validator
+            .Setup(v => v.Validate(It.IsAny<string>()))
+            .Returns(result);
+
+        return validator;
+    }
+
+    private static Mock<IValidator<IEnumerable<string>>> CreateScopesValidator(ValidationResult result)
+    {
+        Mock<IValidator<IEnumerable<string>>> validator = new();
+        validator
+            .Setup(v => v.Validate(It.IsAny<IEnumerable<string>>()))
+            .Returns(result);
+
+        return validator;
+    }
+
+    private static Mock<IValidator<IdentityStatus>> CreateStatusValidator(ValidationResult result)
+    {
+        Mock<IValidator<IdentityStatus>> validator = new();
+        validator
+            .Setup(v => v.Validate(It.IsAny<IdentityStatus>()))
+            .Returns(result);
+
+        return validator;
     }
 }

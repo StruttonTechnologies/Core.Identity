@@ -1,6 +1,4 @@
-using System.Diagnostics.CodeAnalysis;
-
-namespace StruttonTechnologies.Core.Identity.Tests.Acceptance;
+﻿namespace StruttonTechnologies.Core.Identity.Tests.Acceptance;
 
 /// <summary>
 /// Documents the API-level acceptance scenarios that must be implemented by consumer API tests.
