@@ -2,60 +2,48 @@
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
-
   <ItemGroup>
-
     <!-- Core Dependencies -->
-    <PackageVersion Include="MediatR" Version="14.1.0" />
+    <PackageVersion Include="MediatR" Version="14.2.0" />
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.4" />
-
     <!-- Microsoft -->
-    <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.9" />
-    <PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.9" />
-    <PackageVersion Include="Microsoft.AspNetCore.Identity.UI" Version="10.0.9" />
-
-    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="10.0.9" />
+    <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.10" />
+    <PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.10" />
+    <PackageVersion Include="Microsoft.AspNetCore.Identity.UI" Version="10.0.10" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="10.0.10" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.9" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.InMemory" Version="10.0.9" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.InMemory" Version="10.0.10" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.9" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.9" />
-
-    <PackageVersion Include="Microsoft.Extensions.Configuration.Abstractions" Version="10.0.9" />
-    <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.9" />
-    <PackageVersion Include="Microsoft.Extensions.Identity.Core" Version="10.0.9" />
-    <PackageVersion Include="Microsoft.Extensions.Identity.Stores" Version="10.0.9" />
-    <PackageVersion Include="Microsoft.Extensions.Logging" Version="10.0.9" />
-    <PackageVersion Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="10.0.9" />
-
-    <PackageVersion Include="Microsoft.IdentityModel.JsonWebTokens" Version="8.19.1" />
-    <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="8.19.1" />
-
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.10" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.Abstractions" Version="10.0.10" />
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.10" />
+    <PackageVersion Include="Microsoft.Extensions.Identity.Core" Version="10.0.10" />
+    <PackageVersion Include="Microsoft.Extensions.Identity.Stores" Version="10.0.10" />
+    <PackageVersion Include="Microsoft.Extensions.Logging" Version="10.0.10" />
+    <PackageVersion Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="10.0.10" />
+    <PackageVersion Include="Microsoft.IdentityModel.JsonWebTokens" Version="8.19.2" />
+    <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="8.19.2" />
     <!-- Testing -->
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
-    <PackageVersion Include="coverlet.collector" Version="6.0.4" />
-    <PackageVersion Include="FluentAssertions" Version="8.7.0" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.8.1" />
+    <PackageVersion Include="coverlet.collector" Version="10.0.1" />
+    <PackageVersion Include="FluentAssertions" Version="8.10.0" />
     <PackageVersion Include="Moq" Version="4.20.72" />
     <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.5" />
     <PackageVersion Include="xunit.v3" Version="3.2.2" />
-
     <!-- Analyzers -->
     <PackageVersion Include="StyleCop.Analyzers" Version="1.2.0-beta.556" />
-    <PackageVersion Include="Roslynator.Analyzers" Version="4.14.0" />
-
+    <PackageVersion Include="Roslynator.Analyzers" Version="4.15.0" />
     <!-- Shared ST Packages -->
     <PackageVersion Include="StruttonTechnologies.Assets.Branding" Version="1.0.0" />
-
     <PackageVersion Include="StruttonTechnologies.Core.API.Controllers" Version="1.0.0-alpha" />
     <PackageVersion Include="StruttonTechnologies.Core.Coordinator" Version="1.0.0-alpha" />
     <PackageVersion Include="StruttonTechnologies.Core.Coordinator.Contracts" Version="1.0.0-alpha" />
     <PackageVersion Include="StruttonTechnologies.Core.Dtos" Version="1.0.0-alpha" />
-
     <PackageVersion Include="StruttonTechnologies.Core.ToolKit.Exceptions" Version="1.0.0-alpha" />
     <PackageVersion Include="StruttonTechnologies.Core.ToolKit.GuardKit" Version="1.0.0-alpha" />
     <PackageVersion Include="StruttonTechnologies.Core.ToolKit.Registration" Version="1.0.0-alpha" />
     <PackageVersion Include="StruttonTechnologies.Core.ToolKit.TestingKit" Version="1.0.0-alpha" />
     <PackageVersion Include="StruttonTechnologies.Core.ToolKit.Validation" Version="1.0.0-alpha" />
-
     <!-- Identity Packages -->
     <PackageVersion Include="StruttonTechnologies.Core.Identity.API" Version="1.0.0-alpha" />
     <PackageVersion Include="StruttonTechnologies.Core.Identity.Coordinator.Contracts" Version="1.0.0-alpha" />
@@ -63,12 +51,10 @@
     <PackageVersion Include="StruttonTechnologies.Core.Identity.Domain.Contracts" Version="1.0.0-alpha" />
     <PackageVersion Include="StruttonTechnologies.Core.Identity.Dtos" Version="1.0.0-alpha" />
     <PackageVersion Include="StruttonTechnologies.Core.Identity.Orchestration.Contracts" Version="1.0.0-alpha" />
-
     <!-- Core.Testing Packages -->
     <PackageVersion Include="StruttonTechnologies.Core.Identity.Fakes" Version="1.0.0-alpha" />
     <PackageVersion Include="StruttonTechnologies.Core.Identity.Mocks" Version="1.0.0-alpha" />
     <PackageVersion Include="StruttonTechnologies.Core.Identity.Stub" Version="1.0.0-alpha" />
     <PackageVersion Include="StruttonTechnologies.Core.Identity.Test.Data" Version="1.0.0-alpha" />
-
   </ItemGroup>
 </Project>
