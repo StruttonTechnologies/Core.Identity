@@ -6,7 +6,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 
-using StruttonTechnologies.Core.Identity.API;
+using STCC.Core.Identity.API;
+
 using StruttonTechnologies.Core.Identity.Coordinator;
 using StruttonTechnologies.Core.Identity.Domain.Models;
 using StruttonTechnologies.Core.Identity.EF;
